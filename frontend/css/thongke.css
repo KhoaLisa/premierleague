@@ -1,0 +1,356 @@
+/* frontend/css/thongke.css
+=========================================================
+Stats — giữ menu từ home.css
+- 1 banner duy nhất
+- Top 10 vừa đúng khuôn (KHÔNG SCROLL)
+- Chữ dịu hơn
+- BỎ khung chứa số (rank + value không đóng khung)
+========================================================= */
+
+:root {
+  --st-max: var(--container, 1440px);
+  --st-pad: var(--gutter, 24px);
+
+  --st-card: rgba(255, 255, 255, 0.06);
+  --st-border: rgba(255, 255, 255, 0.12);
+  --st-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+
+  --st-radius: 22px;
+
+  /* ✅ KHUÔN TOP10 */
+  --st-headH: 54px; /* chiều cao header card */
+  --st-rowH: 56px; /* chiều cao mỗi hàng (x10) */
+  --st-gap: 8px; /* khoảng cách giữa hàng */
+  --st-listPadY: 12px; /* padding top/bot của list */
+  --st-listPadX: 12px; /* padding trái/phải của list */
+
+  /* ✅ tone chữ dịu */
+  --st-txt: rgba(255, 255, 255, 0.9);
+  --st-txt2: rgba(255, 255, 255, 0.72);
+  --st-txt3: rgba(255, 255, 255, 0.62);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* =========================
+   Banner
+========================= */
+.stBanner {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 0;
+
+  padding: 22px 0;
+  background: linear-gradient(90deg, #6d28ff 0%, #3b82f6 45%, #22d3ee 100%);
+}
+
+.stBanner__in {
+  max-width: var(--st-max);
+  margin: 0 auto;
+  padding: 0 var(--st-pad);
+
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.stBanner__title {
+  margin: 0;
+  font-size: clamp(40px, 5.6vw, 68px);
+  font-weight: 950;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  color: rgba(255, 255, 255, 0.98);
+}
+
+.stBanner__sub {
+  margin: 10px 0 0;
+  max-width: 82ch;
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-weight: 700; /* dịu hơn */
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* season control */
+.stBanner__right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.stSeason {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  padding: 10px 10px;
+  border-radius: 18px;
+
+  /* dịu hơn, ít “khung” */
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.stSeason b {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 750;
+}
+
+.stSeason select {
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  outline: none;
+}
+
+.stSeason select:focus {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* =========================
+   Layout
+========================= */
+.stWrap {
+  max-width: var(--st-max);
+  margin: 0 auto;
+  padding: 16px var(--st-pad) 70px;
+}
+
+.stSection {
+  margin-top: 18px;
+}
+
+.sectionRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.sectionRow h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900; /* dịu hơn 950 */
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* =========================
+   Grid cards
+========================= */
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+/* ✅ CARD = KHUÔN TOP 10 (không scroll) */
+.sCard {
+  border-radius: var(--st-radius);
+  background: var(--st-card);
+  border: 1px solid var(--st-border);
+  box-shadow: var(--st-shadow);
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  height: calc(
+    var(--st-headH) + (10 * var(--st-rowH)) + (9 * var(--st-gap)) +
+      (2 * var(--st-listPadY))
+  );
+}
+
+.sCard__head {
+  height: var(--st-headH);
+  padding: 14px 14px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex: 0 0 auto;
+}
+
+.sCard__head b {
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* hint “Top 10” dịu */
+.sCard__head .hint {
+  color: rgba(255, 255, 255, 0.62);
+  font-weight: 700;
+}
+
+/* =========================
+   Rank list: ép vừa đúng 10 hàng
+========================= */
+.rank {
+  margin: 0;
+  padding: var(--st-listPadY) var(--st-listPadX);
+  list-style: none;
+
+  display: grid;
+  grid-template-rows: repeat(10, var(--st-rowH));
+  gap: var(--st-gap);
+
+  overflow: hidden; /* ✅ tuyệt đối không scroll */
+}
+
+/* nếu không có dữ liệu */
+.rank li.hint {
+  grid-row: 1 / -1;
+  align-self: stretch;
+  justify-self: stretch;
+
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 750;
+}
+
+/* row: no | avatar | info | value */
+.rank__row {
+  height: var(--st-rowH);
+  display: grid;
+  grid-template-columns: 22px 46px 1fr auto;
+  gap: 10px;
+  align-items: center;
+
+  padding: 8px 10px;
+  border-radius: 16px;
+
+  /* dịu hơn, ít cảm giác “đóng khung” */
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rank__row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ✅ BỎ KHUNG SỐ THỨ HẠNG */
+.rank__no {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+
+  font-weight: 850;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+
+  display: block;
+  text-align: center;
+}
+
+/* avatar */
+.rank__row .avatar {
+  width: 46px !important;
+  height: 46px !important;
+  max-width: 46px !important;
+  max-height: 46px !important;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* info */
+.rank__info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rank__name {
+  font-weight: 850; /* ✅ dịu hơn */
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--st-txt);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rank__sub {
+  margin-top: 3px;
+  font-weight: 650; /* ✅ dịu hơn */
+  font-size: 12px;
+  color: var(--st-txt3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ✅ BỎ KHUNG SỐ GIÁ TRỊ (không pill/box) */
+.rank__val {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+
+  padding: 0;
+  min-width: 0;
+
+  text-align: right;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 1100px) {
+  .grid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stBanner__in {
+    grid-template-columns: 1fr;
+  }
+  .stBanner__right {
+    justify-content: flex-start;
+  }
+  :root {
+    --st-rowH: 54px;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid4 {
+    grid-template-columns: 1fr;
+  }
+  :root {
+    --st-headH: 52px;
+    --st-rowH: 52px;
+    --st-gap: 7px;
+  }
+  .rank__row {
+    grid-template-columns: 20px 44px 1fr auto;
+    padding: 7px 9px;
+  }
+  .rank__row .avatar {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 13px;
+  }
+  .rank__name {
+    font-size: 14px;
+  }
+}

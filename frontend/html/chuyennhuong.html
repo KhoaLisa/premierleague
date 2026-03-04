@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chuyển nhượng | European Football Insights Platform</title>
+
+    <!-- ✅ Header 2 tầng + dropdown CSS lấy từ home -->
+    <link rel="stylesheet" href="../css/home.css" />
+
+    <!-- ✅ CSS riêng trang chuyển nhượng -->
+    <link rel="stylesheet" href="../css/chuyennhuong.css" />
+  </head>
+
+  <body>
+    <!-- Background effects (giống home) -->
+    <div class="bg">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="grid"></div>
+    </div>
+
+    <!-- ✅ HEADER 2 TẦNG (đồng bộ login dropdown) -->
+    <header class="plHeader">
+      <div class="plTop">
+        <div class="plTop__in">
+          <nav class="plTop__left" aria-label="Thanh phụ">
+            <a href="#" class="plTop__link">Giải Ngoại hạng Anh</a>
+            <a href="#" class="plTop__link">Cửa hàng</a>
+            <a href="#" class="plTop__link">Về chúng tôi</a>
+            <a href="#" class="plTop__link">Bóng đá &amp; Cộng đồng</a>
+            <a href="#" class="plTop__link">Sự kiện</a>
+            <a href="#" class="plTop__link">Phương tiện truyền thông</a>
+            <a href="#" class="plTop__link">Chương trình Mornings Live</a>
+          </nav>
+
+          <div class="plTop__right">
+            <a href="#" class="plTop__sponsor">Copilot by Microsoft</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="plMain">
+        <div class="plMain__in">
+          <input id="plNavChk" class="plNavChk" type="checkbox" />
+          <label class="plIconBtn plBurger" for="plNavChk" aria-label="Mở menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </label>
+
+          <a class="plBrand" href="./home.html" aria-label="Premier League">
+            <span class="plBrand__mark" aria-hidden="true">
+              <img
+                class="plBrand__logoFull"
+                src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/1280px-Premier_League_Logo.svg.png"
+                alt="Premier League"
+              />
+            </span>
+          </a>
+
+          <nav class="plNav" aria-label="Menu chính">
+            <a class="plNav__link" href="./home.html">Trang chủ</a>
+            <a class="plNav__link" href="./lichthidau.html">Các trận đấu</a>
+            <a class="plNav__link" href="./bxh.html">Bảng</a>
+            <a class="plNav__link" href="./thongke.html">Thống kê</a>
+            <a class="plNav__link" href="./news.html">Tin tức</a>
+
+            <a
+              class="plNav__link"
+              href="./chuyennhuong.html"
+              aria-current="page"
+            >
+              Chuyển nhượng
+            </a>
+
+            <a class="plNav__link" href="./chanthuong.html">Chấn thương</a>
+            <a class="plNav__link" href="./player.html">Người chơi</a>
+            <a class="plNav__link" href="./clb.html">Câu lạc bộ</a>
+          </nav>
+
+          <!-- ✅ RIGHT: search + login sync -->
+          <div class="plRight">
+            <button class="plIconBtn" type="button" aria-label="Tìm kiếm">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+            <!-- Khi chưa login -->
+            <button id="btnLogin" class="plLogin" type="button">
+              Đăng nhập
+            </button>
+
+            <!-- Khi đã login: avatar + tên + dropdown -->
+            <div id="userMenuWrap" class="plUserWrap efiHide">
+              <button
+                id="btnUser"
+                class="plUser"
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded="false"
+              >
+                <img id="userAvatar" class="plUser__avt" alt="avatar" />
+                <span id="userName" class="plUser__name"></span>
+                <span class="plUser__chev" aria-hidden="true">▾</span>
+              </button>
+
+              <div
+                id="userMenu"
+                class="plUserMenu hidden"
+                role="menu"
+                aria-label="Tài khoản"
+              >
+                <div class="plUserMenu__head">
+                  <div class="plUserMenu__name" id="userName2">User</div>
+                  <div class="plUserMenu__email" id="userEmail2">email</div>
+                </div>
+
+                <button
+                  id="btnOpenPrefs"
+                  class="plUserMenu__item"
+                  type="button"
+                  role="menuitem"
+                >
+                  ⭐ Chọn quan tâm
+                </button>
+
+                <a
+                  class="plUserMenu__item"
+                  href="./profile.html"
+                  role="menuitem"
+                >
+                  👤 Hồ sơ
+                </a>
+
+                <a class="plUserMenu__item" href="./admin.html" role="menuitem">
+                  🛠️ Quản trị
+                </a>
+
+                <div class="plUserMenu__sep"></div>
+
+                <button
+                  id="btnLogout"
+                  class="plUserMenu__item danger"
+                  type="button"
+                  role="menuitem"
+                >
+                  🚪 Đăng xuất
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- mobile drawer -->
+          <div class="plDrawer" aria-hidden="true">
+            <label
+              class="plDrawer__overlay"
+              for="plNavChk"
+              aria-label="Đóng menu"
+            ></label>
+            <aside
+              class="plDrawer__panel"
+              role="dialog"
+              aria-label="Menu mobile"
+            >
+              <div class="plDrawer__head">
+                <b>Menu</b>
+                <label class="plIconBtn" for="plNavChk" aria-label="Đóng">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M6 6l12 12M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </label>
+              </div>
+
+              <div class="plDrawer__links">
+                <a href="./home.html">Trang chủ</a>
+                <a href="./lichthidau.html">Các trận đấu</a>
+                <a href="./bxh.html">Bảng</a>
+                <a href="./thongke.html">Thống kê</a>
+                <a href="./news.html">Tin tức</a>
+                <a href="./chuyennhuong.html">Chuyển nhượng</a>
+                <a href="./chanthuong.html">Chấn thương</a>
+                <a href="./player.html">Người chơi</a>
+                <a href="./clb.html">Câu lạc bộ</a>
+                <a href="./profile.html">Hồ sơ</a>
+                <a href="./admin.html">Quản trị</a>
+                <a href="./login.html">Trang login</a>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ✅ BANNER (đồng bộ kiểu BXH) -->
+    <section class="trBanner">
+      <div class="trBanner__inner">
+        <h1>Chuyển nhượng</h1>
+        <div class="trBanner__sub">Tin nóng • Đồn đoán • Chính thức</div>
+      </div>
+    </section>
+
+    <!-- ✅ MAIN -->
+    <main class="wrap">
+      <section class="trHero">
+        <div class="trPanel">
+          <div class="trFields">
+            <label class="trField">
+              <span class="trLab">Tìm nhanh</span>
+              <input
+                id="qTim"
+                class="trInp"
+                placeholder="VD: Gallagher, Arsenal, Ajax..."
+              />
+            </label>
+
+            <label class="trField">
+              <span class="trLab">Mùa</span>
+              <select id="selMua" class="trSel">
+                <option value="2025-26">2025-26</option>
+                <option value="2024-25">2024-25</option>
+                <option value="2023-24">2023-24</option>
+              </select>
+            </label>
+
+            <label class="trField">
+              <span class="trLab">Kỳ</span>
+              <select id="selKy" class="trSel">
+                <option value="january">Tháng 1</option>
+                <option value="summer">Mùa hè</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="trActions">
+            <button id="btnReset" class="btn ghost" type="button">Reset</button>
+            <button id="btnReload" class="btn" type="button">
+              Tải lại data
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured -->
+      <section class="trBlock">
+        <div class="trHead">
+          <h2>Tin nổi bật</h2>
+          <div class="trNavBtns">
+            <button
+              class="trIconBtn"
+              id="btnFeatLeft"
+              type="button"
+              aria-label="Trượt trái"
+            >
+              ‹
+            </button>
+            <button
+              class="trIconBtn"
+              id="btnFeatRight"
+              type="button"
+              aria-label="Trượt phải"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+
+        <div class="trHScroll" id="wrapFeatured"></div>
+      </section>
+
+      <!-- News grid -->
+      <section class="trBlock">
+        <div class="trHead">
+          <h2>Chuyển nhượng</h2>
+
+          <div class="trChips" id="wrapChipLoai">
+            <button class="trChip is-active" data-loai="all" type="button">
+              Tất cả
+            </button>
+            <button class="trChip" data-loai="den" type="button">Đến</button>
+            <button class="trChip" data-loai="di" type="button">Đi</button>
+            <button class="trChip" data-loai="chomuon" type="button">
+              Cho mượn
+            </button>
+            <button class="trChip" data-loai="chothue" type="button">
+              Cho thuê
+            </button>
+          </div>
+        </div>
+
+        <div class="trGrid" id="wrapNews"></div>
+
+        <div class="trCenter">
+          <button id="btnXemThem" class="btn" type="button">Xem thêm</button>
+        </div>
+      </section>
+
+      <!-- Club table -->
+      <section class="trBlock">
+        <div class="trHead">
+          <h2>Theo câu lạc bộ</h2>
+          <div class="trClubBar" id="wrapClb"></div>
+        </div>
+
+        <div class="trClubPanel">
+          <div class="trClubHead">
+            <div class="trClubTitle">
+              <img id="imgClb" class="trClubLogo" alt="" />
+              <div>
+                <div id="txtClb" class="trClubName">Arsenal</div>
+                <div class="trClubSub">Danh sách giao dịch trong kỳ</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="trTableWrap">
+            <table class="trTable">
+              <thead>
+                <tr>
+                  <th>Người chơi</th>
+                  <th>Loại chuyển nhượng / Câu lạc bộ</th>
+                  <th class="trRight">Đọc thêm</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyClb"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modal -->
+    <div class="trModal" id="modal" aria-hidden="true">
+      <div class="trModal__bg" data-close="1"></div>
+      <div class="trModal__card" role="dialog" aria-modal="true">
+        <div class="trModal__head">
+          <div class="trModal__ttl" id="modalTitle">Chi tiết</div>
+          <button class="trIconBtn" id="btnCloseModal" aria-label="Đóng">
+            ✕
+          </button>
+        </div>
+        <div class="trModal__body" id="modalBody"></div>
+        <div class="trModal__foot">
+          <a
+            id="modalLink"
+            class="btn ghost"
+            href="#"
+            target="_blank"
+            rel="noreferrer"
+            >Mở nguồn</a
+          >
+          <button class="btn" id="btnOkModal" type="button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/nav-active.js"></script>
+
+    <!-- ✅ login sync -->
+    <script src="../js/auth-ui.js"></script>
+
+    <!-- JS riêng -->
+    <script src="../js/chuyennhuong.js"></script>
+  </body>
+</html>

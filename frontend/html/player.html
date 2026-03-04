@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Players | European Football Insights Platform</title>
+
+    <!-- ✅ Menu/Background dùng chung -->
+    <link rel="stylesheet" href="../css/home.css" />
+
+    <!-- ✅ CSS riêng cho trang Players -->
+    <link rel="stylesheet" href="../css/player.css" />
+  </head>
+
+  <body>
+    <!-- Background effects (giống home) -->
+    <div class="bg">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="grid"></div>
+    </div>
+
+    <!-- ✅ HEADER 2 TẦNG + user dropdown -->
+    <header class="plHeader">
+      <div class="plTop">
+        <div class="plTop__in">
+          <nav class="plTop__left" aria-label="Thanh phụ">
+            <a href="#" class="plTop__link">Giải Ngoại hạng Anh</a>
+            <a href="#" class="plTop__link">Cửa hàng</a>
+            <a href="#" class="plTop__link">Về chúng tôi</a>
+            <a href="#" class="plTop__link">Bóng đá &amp; Cộng đồng</a>
+            <a href="#" class="plTop__link">Sự kiện</a>
+            <a href="#" class="plTop__link">Phương tiện truyền thông</a>
+            <a href="#" class="plTop__link">Chương trình Mornings Live</a>
+          </nav>
+
+          <div class="plTop__right">
+            <a href="#" class="plTop__sponsor">Copilot by Microsoft</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="plMain">
+        <div class="plMain__in">
+          <input id="plNavChk" class="plNavChk" type="checkbox" />
+          <label class="plIconBtn plBurger" for="plNavChk" aria-label="Mở menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </label>
+
+          <a class="plBrand" href="./home.html" aria-label="Premier League">
+            <img
+              class="plBrand__logoFull"
+              src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/1280px-Premier_League_Logo.svg.png"
+              alt="Premier League"
+            />
+          </a>
+
+          <nav class="plNav" aria-label="Menu chính">
+            <a class="plNav__link" href="./home.html">Trang chủ</a>
+            <a class="plNav__link" href="./lichthidau.html">Các trận đấu</a>
+            <a class="plNav__link" href="./bxh.html">Bảng</a>
+            <a class="plNav__link" href="./thongke.html">Thống kê</a>
+            <a class="plNav__link" href="./home.html#news">Tin tức</a>
+            <a class="plNav__link" href="./chuyennhuong.html">Chuyển nhượng</a>
+            <a class="plNav__link" href="./chanthuong.html">Chấn thương</a>
+            <a class="plNav__link active" href="./player.html">Người chơi</a>
+            <a class="plNav__link" href="./clb.html">Câu lạc bộ</a>
+          </nav>
+
+          <div class="plRight">
+            <button class="plIconBtn" type="button" aria-label="Tìm kiếm">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+            <!-- Khi chưa login -->
+            <button id="btnLogin" class="plLogin" type="button">
+              Đăng nhập
+            </button>
+
+            <!-- Khi đã login -->
+            <div id="userMenuWrap" class="plUserWrap efiHide">
+              <button
+                id="btnUser"
+                class="plUser"
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded="false"
+              >
+                <img id="userAvatar" class="plUser__avt" alt="avatar" />
+                <span id="userName" class="plUser__name"></span>
+                <span class="plUser__chev" aria-hidden="true">▾</span>
+              </button>
+
+              <div
+                id="userMenu"
+                class="plUserMenu hidden"
+                role="menu"
+                aria-label="Tài khoản"
+              >
+                <div class="plUserMenu__head">
+                  <div class="plUserMenu__name" id="userName2">User</div>
+                  <div class="plUserMenu__email" id="userEmail2">email</div>
+                </div>
+
+                <button
+                  id="btnOpenPrefs"
+                  class="plUserMenu__item"
+                  type="button"
+                  role="menuitem"
+                >
+                  ⭐ Chọn quan tâm
+                </button>
+
+                <a
+                  class="plUserMenu__item"
+                  href="./profile.html"
+                  role="menuitem"
+                >
+                  👤 Hồ sơ
+                </a>
+
+                <a class="plUserMenu__item" href="./admin.html" role="menuitem">
+                  🛠️ Quản trị
+                </a>
+
+                <div class="plUserMenu__sep"></div>
+
+                <button
+                  id="btnLogout"
+                  class="plUserMenu__item danger"
+                  type="button"
+                  role="menuitem"
+                >
+                  🚪 Đăng xuất
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drawer mobile -->
+          <div class="plDrawer" aria-hidden="true">
+            <label
+              class="plDrawer__overlay"
+              for="plNavChk"
+              aria-label="Đóng menu"
+            ></label>
+            <aside
+              class="plDrawer__panel"
+              role="dialog"
+              aria-label="Menu mobile"
+            >
+              <div class="plDrawer__head">
+                <b>Menu</b>
+                <label class="plIconBtn" for="plNavChk" aria-label="Đóng">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M6 6l12 12M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </label>
+              </div>
+
+              <div class="plDrawer__links">
+                <a href="./home.html">Trang chủ</a>
+                <a href="./lichthidau.html">Các trận đấu</a>
+                <a href="./bxh.html">Bảng</a>
+                <a href="./thongke.html">Thống kê</a>
+                <a href="./home.html#news">Tin tức</a>
+                <a href="./chuyennhuong.html">Chuyển nhượng</a>
+                <a href="./chanthuong.html">Chấn thương</a>
+                <a href="./player.html">Người chơi</a>
+                <a href="./clb.html">Câu lạc bộ</a>
+                <a href="./profile.html">Hồ sơ</a>
+                <a href="./admin.html">Quản trị</a>
+                <a href="./login.html">Trang login</a>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ✅ BANNER đơn giản kiểu "Câu lạc bộ" -->
+    <section class="pageBanner" aria-label="Players banner">
+      <div class="pageBanner__in">
+        <h1 class="pageBanner__title">Players</h1>
+        <p class="pageBanner__sub">
+          Tìm kiếm, lọc theo mùa giải / CLB / vị trí, và theo dõi cầu thủ bạn
+          thích ✨
+        </p>
+      </div>
+    </section>
+
+    <!-- ✅ MAIN -->
+    <main class="wrap pWrap">
+      <!-- ✅ Filter panel -->
+      <section class="pPanel" aria-label="Bộ lọc cầu thủ">
+        <div class="pToolbar" role="group" aria-label="Bộ lọc cầu thủ">
+          <label class="pSearch" aria-label="Search">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <input id="q" type="search" placeholder="Search player..." />
+          </label>
+
+          <select id="season" class="pSel" aria-label="Season">
+            <option value="2025">2025/26</option>
+            <option value="2024">2024/25</option>
+            <option value="2023">2023/24</option>
+          </select>
+
+          <select id="club" class="pSel" aria-label="Club">
+            <option value="">Club</option>
+          </select>
+
+          <select id="pos" class="pSel" aria-label="Position">
+            <option value="">Position</option>
+            <option value="Goalkeeper">Goalkeeper</option>
+            <option value="Defender">Defender</option>
+            <option value="Midfielder">Midfielder</option>
+            <option value="Forward">Forward</option>
+          </select>
+
+          <button id="btnReset" class="pBtn" type="button">Reset</button>
+        </div>
+      </section>
+
+      <!-- ✅ List -->
+      <section class="pCard" aria-label="Danh sách cầu thủ" id="playersCard">
+        <div class="pTableHead" id="playersHead">
+          <div>Player</div>
+          <div>Club</div>
+          <div>Position</div>
+          <div>Nationality</div>
+          <div class="pColRight">Follow</div>
+        </div>
+
+        <!-- ✅ JS render vào #rows -->
+        <div id="rows" class="pRows"></div>
+
+        <div id="msg" class="pMsg" aria-live="polite"></div>
+
+        <div class="pPager" aria-label="Phân trang">
+          <button
+            id="btnPrev"
+            class="pBtn ghost"
+            type="button"
+            aria-label="Trang trước"
+          >
+            ◀
+          </button>
+          <div id="pageInfo" class="pPageInfo" aria-live="polite">1 / 1</div>
+          <button
+            id="btnNext"
+            class="pBtn ghost"
+            type="button"
+            aria-label="Trang sau"
+          >
+            ▶
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <script src="../js/nav-active.js"></script>
+    <script src="../js/auth-ui.js"></script>
+    <script src="../js/player.js"></script>
+
+    <!-- ✅ GUARD FIX (khỏi sửa player.js): kéo row về đúng #rows + giữ header đúng chỗ -->
+    <script>
+      (function () {
+        function normalizePlayersCard() {
+          const card =
+            document.getElementById("playersCard") ||
+            document.querySelector(".pCard");
+          const head =
+            document.getElementById("playersHead") ||
+            card?.querySelector(".pTableHead");
+          const rows =
+            document.getElementById("rows") || card?.querySelector(".pRows");
+          if (!card || !head || !rows) return;
+
+          // 1) đảm bảo head là con trực tiếp của card và đứng trước rows
+          if (rows.contains(head)) card.insertBefore(head, rows);
+          if (head.parentElement !== card) card.insertBefore(head, rows);
+          if (head.nextElementSibling !== rows) card.insertBefore(head, rows);
+
+          // 2) kéo mọi playerRow lạc chỗ (nằm ngoài #rows) về lại #rows
+          const stray = Array.from(card.querySelectorAll(".playerRow")).filter(
+            (el) => !rows.contains(el),
+          );
+          stray.forEach((el) => rows.appendChild(el));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+          normalizePlayersCard();
+
+          const card =
+            document.getElementById("playersCard") ||
+            document.querySelector(".pCard");
+          if (!card) return;
+
+          const ob = new MutationObserver(() => normalizePlayersCard());
+          ob.observe(card, { childList: true, subtree: true });
+        });
+      })();
+    </script>
+  </body>
+</html>

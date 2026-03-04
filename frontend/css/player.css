@@ -1,0 +1,380 @@
+/* frontend/css/player.css
+=========================================================
+Players page — SIMPLE BANNER + clean table
+✅ OVERWRITE toàn bộ file này
+========================================================= */
+
+/* dùng biến từ home.css cho đồng bộ */
+:root {
+  --p-max: var(--container, 1440px);
+  --p-padX: var(--gutter, 24px);
+
+  --p-card-bg: rgba(255, 255, 255, 0.06);
+  --p-border: rgba(255, 255, 255, 0.12);
+  --p-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+
+  --p-radius: 22px;
+  --p-pill: 999px;
+}
+
+/* =========================================================
+   ✅ Banner đơn giản (full-bleed) kiểu "Câu lạc bộ"
+========================================================= */
+.pageBanner {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  padding: 26px 0;
+
+  background: linear-gradient(90deg, #6d28ff 0%, #3b82f6 45%, #22d3ee 100%);
+}
+
+.pageBanner__in {
+  max-width: var(--p-max);
+  margin: 0 auto;
+  padding: 0 var(--p-padX);
+}
+
+.pageBanner__title {
+  margin: 0;
+  font-size: clamp(44px, 6vw, 74px);
+  font-weight: 950;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  color: #fff;
+}
+
+.pageBanner__sub {
+  margin: 10px 0 0;
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-weight: 750;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 78ch;
+}
+
+/* =========================================================
+   Layout container
+========================================================= */
+.pWrap {
+  max-width: var(--p-max);
+  margin: 0 auto;
+  padding: 16px var(--p-padX) 70px;
+}
+
+/* =========================================================
+   Panel filter (nhẹ, gọn)
+========================================================= */
+.pPanel {
+  margin-top: 14px;
+}
+
+.pToolbar {
+  display: grid;
+  grid-template-columns:
+    minmax(240px, 1.35fr)
+    minmax(170px, 0.9fr)
+    minmax(170px, 1fr)
+    minmax(170px, 1fr)
+    auto;
+  gap: 12px;
+  align-items: center;
+
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.pSearch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.pSearch svg {
+  opacity: 0.9;
+}
+
+.pSearch input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+}
+
+.pSearch input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.pSel {
+  appearance: none;
+  padding: 10px 40px 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.95);
+  outline: none;
+  cursor: pointer;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255, 255, 255, 0.8) 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.8) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+}
+
+.pBtn {
+  padding: 10px 18px;
+  border-radius: var(--p-pill);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.pBtn:hover {
+  filter: brightness(1.06);
+}
+
+.pBtn.ghost {
+  background: transparent;
+}
+
+/* =========================================================
+   Card/Table
+========================================================= */
+.pCard {
+  margin-top: 18px;
+  border-radius: var(--p-radius);
+  background: var(--p-card-bg);
+  border: 1px solid var(--p-border);
+  box-shadow: var(--p-shadow);
+  overflow: hidden;
+}
+
+.pColRight {
+  text-align: right;
+}
+
+.pTableHead {
+  display: grid;
+  grid-template-columns: 1.7fr 1.25fr 1.1fr 1.1fr 0.65fr;
+  gap: 14px;
+  align-items: center;
+
+  padding: 13px 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 900;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pRows {
+  padding: 6px 0;
+}
+
+.playerRow {
+  display: grid;
+  grid-template-columns: 1.7fr 1.25fr 1.1fr 1.1fr 0.65fr;
+  gap: 14px;
+  align-items: center;
+
+  padding: 13px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.playerRow:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.playerCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.playerAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.playerName {
+  font-weight: 900;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clubCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.clubCrest {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.35));
+}
+
+.clubName {
+  font-weight: 850;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.followBtn {
+  justify-self: end;
+  border-radius: var(--p-pill);
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.followBtn:hover {
+  filter: brightness(1.06);
+}
+
+/* Msg / Pager */
+.pMsg {
+  padding: 10px 18px 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+}
+
+.pPager {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 18px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pPageInfo {
+  min-width: 92px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 900;
+}
+
+/* Nationality */
+.natCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.natFlag {
+  width: 26px;
+  height: 18px;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.natCode {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.natCode.show {
+  display: inline-flex;
+}
+.natText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================================================
+   ✅ Đồng bộ “sư tử trắng” (KHÔNG TÍM)
+========================================================= */
+.plBrand__logoFull {
+  filter: brightness(0) invert(1) !important;
+  opacity: 0.98 !important;
+}
+
+/* =========================================================
+   Responsive
+========================================================= */
+@media (max-width: 1100px) {
+  .pToolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pToolbar .pBtn {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 960px) {
+  .pTableHead,
+  .playerRow {
+    grid-template-columns: 1.6fr 1.2fr 1fr 0.9fr;
+  }
+  .pTableHead > div:nth-child(5) {
+    display: none;
+  }
+  .playerRow > button.followBtn {
+    grid-column: 4 / 5;
+  }
+}
+
+@media (max-width: 560px) {
+  .pTableHead,
+  .playerRow {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 10px;
+  }
+  .playerRow > div:nth-child(3),
+  .playerRow > div:nth-child(4) {
+    display: none;
+  }
+  .followBtn {
+    justify-self: start;
+    margin-top: 6px;
+  }
+}

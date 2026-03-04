@@ -1,0 +1,491 @@
+/* frontend/css/chuyennhuong.css
+   CSS này CHỈ cho trang chuyển nhượng.
+   Header 2 tầng lấy từ ../css/home.css rồi. */
+
+/* =========================================================
+   ✅ BANNER full-bleed (SIMPLE / giống "Câu lạc bộ")
+========================================================= */
+.trBanner {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 0;
+
+  background: linear-gradient(90deg, #6d28ff 0%, #3b82f6 45%, #22d3ee 100%);
+  padding: 26px 0;
+}
+
+.trBanner__inner {
+  max-width: var(--container, 1440px);
+  margin: 0 auto;
+  padding: 0 var(--gutter, 24px);
+
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+
+  position: relative;
+  overflow: visible;
+}
+
+/* ✅ nếu file/override cũ còn sót, tắt luôn pseudo */
+.trBanner__inner::before,
+.trBanner__inner::after {
+  content: none !important;
+}
+
+.trBanner__inner h1 {
+  margin: 0;
+  font-size: clamp(44px, 6vw, 74px);
+  font-weight: 950;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  color: rgba(255, 255, 255, 0.98);
+  text-shadow: none;
+}
+
+.trBanner__sub {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 800;
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.55;
+}
+
+/* ✅ sát banner giống BXH (tránh khoảng trống) */
+.wrap {
+  padding-top: 0 !important;
+}
+
+.trHero {
+  margin-top: 14px;
+}
+
+/* ====== phần bạn đang có (giữ nguyên) ====== */
+
+.trTitle {
+  margin: 0 0 14px;
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.trPanel {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  padding: 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.trFields {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.trField {
+  display: grid;
+  gap: 6px;
+}
+
+.trLab {
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.trInp,
+.trSel {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  color: #fff;
+  outline: none;
+}
+
+.trInp {
+  width: min(420px, 78vw);
+}
+
+.trActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* block head */
+.trBlock {
+  margin-top: 18px;
+}
+
+.trHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.trHead h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.trNavBtns {
+  display: flex;
+  gap: 8px;
+}
+
+.trIconBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.trIconBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* featured horizontal */
+.trHScroll {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+}
+
+.trHScroll::-webkit-scrollbar {
+  height: 10px;
+}
+.trHScroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+/* cards */
+.trCard {
+  scroll-snap-align: start;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.trCard:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.085);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.trCard__img {
+  height: 150px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 59, 212, 0.2),
+    rgba(123, 255, 234, 0.14)
+  );
+}
+
+.trCard__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.trCard__body {
+  padding: 12px 14px 14px;
+}
+
+.trBadge {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.18);
+  font-weight: 900;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 10px;
+}
+
+.trCard__ttl {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.25;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.trMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.trPill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* chips */
+.trChips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.trChip {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.trChip:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.trChip.is-active {
+  background: rgba(255, 59, 212, 0.2);
+  border-color: rgba(255, 59, 212, 0.32);
+}
+
+/* grid news */
+.trGrid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.trGrid .trCard {
+  grid-column: span 3;
+}
+
+@media (max-width: 1100px) {
+  .trGrid .trCard {
+    grid-column: span 4;
+  }
+}
+@media (max-width: 820px) {
+  .trGrid .trCard {
+    grid-column: span 6;
+  }
+}
+@media (max-width: 520px) {
+  .trGrid .trCard {
+    grid-column: span 12;
+  }
+}
+
+.trCenter {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* club bar + table */
+.trClubBar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.trClubBtn {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.trClubBtn img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.trClubBtn.is-active {
+  background: rgba(123, 255, 234, 0.16);
+  border-color: rgba(123, 255, 234, 0.28);
+}
+
+.trClubPanel {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.trClubHead {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.trClubTitle {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.trClubLogo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  padding: 6px;
+  object-fit: contain;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.trClubName {
+  font-weight: 1000;
+  font-size: 16px;
+}
+
+.trClubSub {
+  color: rgba(255, 255, 255, 0.68);
+  font-weight: 700;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.trTableWrap {
+  overflow: auto;
+}
+
+.trTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.trTable th,
+.trTable td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.trTable thead th {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.14);
+  font-weight: 900;
+}
+
+.trRight {
+  text-align: right;
+}
+
+.trLink {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.trLink:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* modal */
+.trModal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 120;
+}
+.trModal.is-open {
+  display: grid;
+}
+.trModal__bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+.trModal__card {
+  position: relative;
+  margin: auto;
+  width: min(720px, calc(100% - 24px));
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 12, 20, 0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+.trModal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.trModal__ttl {
+  font-weight: 1000;
+}
+.trModal__body {
+  padding: 14px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.5;
+}
+.trModal__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}

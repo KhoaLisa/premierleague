@@ -1,0 +1,113 @@
+{
+  "featured": [
+    {
+      "id": "f1",
+      "tieu_de": "Man City chiêu mộ Semenyo từ Bournemouth.",
+      "tag": "Chuyển nhượng",
+      "clb": "Man City",
+      "loai": "den",
+      "loai_nhan": "Chuyển đến",
+      "mua": "2025-26",
+      "ky": "january",
+      "ngay": "2026-01-05",
+      "anh": "https://images.unsplash.com/photo-1522778526097-ce0a22ceb253?q=80&w=1400&auto=format&fit=crop",
+      "mo_ta": "Thương vụ hoàn tất sau khi chốt điều khoản + kiểm tra y tế.",
+      "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+    },
+    {
+      "id": "f2",
+      "tieu_de": "Liverpool đạt thỏa thuận chiêu mộ hậu vệ Jacquet từ Rennes.",
+      "tag": "Chuyển nhượng",
+      "clb": "Liverpool",
+      "loai": "den",
+      "loai_nhan": "Chuyển đến",
+      "mua": "2025-26",
+      "ky": "january",
+      "ngay": "2026-01-12",
+      "anh": "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?q=80&w=1400&auto=format&fit=crop",
+      "mo_ta": "Bổ sung xoay tua do lịch đấu dày.",
+      "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+    }
+  ],
+  "news": [
+    {
+      "id": "n1",
+      "tieu_de": "West Ham chiêu mộ tiền đạo Castellanos từ Lazio.",
+      "tag": "Chuyển nhượng",
+      "clb": "West Ham",
+      "loai": "den",
+      "loai_nhan": "Chuyển đến từ",
+      "mua": "2025-26",
+      "ky": "january",
+      "ngay": "2026-01-08",
+      "anh": "https://images.unsplash.com/photo-1520975869018-0c3f615d6886?q=80&w=1400&auto=format&fit=crop",
+      "mo_ta": "Bổ sung phương án ghi bàn trong vòng cấm.",
+      "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+    },
+    {
+      "id": "n2",
+      "tieu_de": "Spurs chiêu mộ Gallagher từ Atletico Madrid.",
+      "tag": "Chuyển nhượng",
+      "clb": "Tottenham",
+      "loai": "den",
+      "loai_nhan": "Chuyển đến",
+      "mua": "2025-26",
+      "ky": "january",
+      "ngay": "2026-01-15",
+      "anh": "https://images.unsplash.com/photo-1522778034537-20a2486be803?q=80&w=1400&auto=format&fit=crop",
+      "mo_ta": "Bản hợp đồng giàu năng lượng cho tuyến giữa.",
+      "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+    },
+    {
+      "id": "n3",
+      "tieu_de": "Arsenal đẩy Zinchenko sang Ajax (đàm phán nâng cao).",
+      "tag": "Chuyển nhượng",
+      "clb": "Arsenal",
+      "loai": "di",
+      "loai_nhan": "Chuyển nhượng ra đi",
+      "mua": "2025-26",
+      "ky": "january",
+      "ngay": "2026-01-03",
+      "anh": "https://images.unsplash.com/photo-1509023464722-18d996393ca8?q=80&w=1400&auto=format&fit=crop",
+      "mo_ta": "Tối ưu quỹ lương + mở slot cho tân binh.",
+      "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+    }
+  ],
+  "clubs": [
+    {
+      "id": "arsenal",
+      "ten": "Arsenal",
+      "logo": "https://resources.premierleague.com/premierleague/badges/70/t3.png",
+      "giao_dich": [
+        {
+          "cau_thu": "Oleksandr Zinchenko",
+          "loai": "di",
+          "loai_nhan": "Chuyển nhượng ra đi",
+          "doi": "Ajax",
+          "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+        },
+        {
+          "cau_thu": "Ethan Nwaneri",
+          "loai": "chomuon",
+          "loai_nhan": "Cho mượn",
+          "doi": "Marseille",
+          "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+        }
+      ]
+    },
+    {
+      "id": "tottenham",
+      "ten": "Tottenham",
+      "logo": "https://resources.premierleague.com/premierleague/badges/70/t6.png",
+      "giao_dich": [
+        {
+          "cau_thu": "Conor Gallagher",
+          "loai": "den",
+          "loai_nhan": "Chuyển đến từ",
+          "doi": "Atletico Madrid",
+          "url": "https://www.premierleague.com/en/transfers/2025-26/january"
+        }
+      ]
+    }
+  ]
+}

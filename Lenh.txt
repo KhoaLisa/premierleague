@@ -1,0 +1,10 @@
+cd "/d/test WEB/test nha/backend"
+source venv/Scripts/activate
+
+export FOOTBALL_DATA_TOKEN="7776f1f37e5a4dfc8634538ddc9eae8f"
+python app.py
+export MSSQL_CONN_STR='DRIVER={ODBC Driver 17 for SQL Server};SERVER=LalisaManoban\SQLEXPRESS02;DATABASE=myPremierLeague;Trusted_Connection=yes;Encrypt=no;TrustServerCertificate=yes;'
+export FOOTBALL_DATA_TOKEN="7776f1f37e5a4dfc8634538ddc9eae8f"
+python app.py
+
+player.css cần update lại lần nữa 

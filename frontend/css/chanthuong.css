@@ -1,0 +1,432 @@
+/* frontend/css/chanthuong.css */
+/* Layout giống kiểu CLB: banner đơn giản + thanh filter dưới banner */
+
+:root {
+  --injCard: rgba(255, 255, 255, 0.06);
+  --injBorder: rgba(255, 255, 255, 0.12);
+  --injText: rgba(255, 255, 255, 0.9);
+  --injMuted: rgba(255, 255, 255, 0.68);
+}
+
+/* (tuỳ home.css có bg hay không) */
+html,
+body {
+  color: var(--injText);
+}
+
+/* =========================================================
+   Banner full-bleed (giống CLB)
+========================================================= */
+.pageBanner {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 0;
+}
+
+.pageBanner__inner {
+  width: 100%;
+  max-width: none;
+
+  margin: 0 0 18px 0;
+  padding: 36px 32px;
+
+  border: 0;
+  border-radius: 0;
+
+  background: linear-gradient(90deg, #7a2cff 0%, #4b6bff 35%, #00e5ff 100%);
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.pageBanner__inner::after {
+  content: "";
+  position: absolute;
+  inset: -120px -140px auto auto;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.22),
+    transparent 65%
+  );
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.pageBanner__title {
+  margin: 0;
+  font-size: 54px;
+  letter-spacing: 0.2px;
+  line-height: 1.05;
+}
+
+.pageBanner__sub {
+  margin: 10px 0 0;
+  font-weight: 650;
+  color: rgba(255, 255, 255, 0.92);
+  opacity: 0.92;
+}
+
+.pageBanner__dot {
+  display: inline-block;
+  margin: 0 8px;
+  opacity: 0.8;
+}
+
+/* =========================================================
+   Toolbar card (filter/search dưới banner)
+========================================================= */
+.toolWrap {
+  margin-top: 0;
+}
+
+.toolCard {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.35);
+  padding: 14px;
+}
+
+.toolGrid {
+  display: grid;
+  grid-template-columns: 1fr 220px 220px 120px;
+  gap: 12px;
+  align-items: end;
+}
+
+.toolField--wide {
+  min-width: 280px;
+}
+
+.toolLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 850;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0 0 8px 2px;
+}
+
+.toolInput,
+.toolSelect {
+  width: 100%;
+  height: 44px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10px 12px;
+  outline: none;
+}
+
+.toolInput::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.toolActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toolBtn {
+  height: 44px;
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+.toolBtn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.toolHint {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.5;
+}
+
+/* mobile */
+@media (max-width: 980px) {
+  .pageBanner__title {
+    font-size: 42px;
+  }
+  .toolGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   Content sections
+========================================================= */
+.injMain {
+  margin-top: 16px;
+}
+
+.injSection {
+  margin-top: 18px;
+}
+
+.injSecHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.injH2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+.injNote {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+/* arrows */
+.injSecActions {
+  display: flex;
+  gap: 10px;
+}
+
+.injArrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+.injArrow:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+/* =========================================================
+   Important cards carousel
+========================================================= */
+.injImp {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.injImp::-webkit-scrollbar {
+  height: 0;
+}
+
+.injCard {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.42);
+}
+
+.injCard__img {
+  height: 120px;
+  position: relative;
+  overflow: hidden;
+}
+.injCard__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.02);
+}
+.injCard__img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.62)
+  );
+}
+
+.injCard__body {
+  padding: 12px 12px 13px;
+}
+
+.injCard__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.2px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.injCard__title {
+  margin: 8px 0 6px;
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 820;
+}
+
+.injCard__sub {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.injCard__meta {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+/* =========================================================
+   Club list + table
+========================================================= */
+.injClubList {
+  display: grid;
+  gap: 14px;
+}
+
+.injClubCard {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+}
+
+.injClubHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.injClubLogo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.injClubName {
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.injClubCount {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 850;
+  color: rgba(255, 255, 255, 0.74);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.injTableWrap {
+  padding: 0 10px 10px;
+}
+
+.injTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.injTable thead th {
+  text-align: left;
+  font-size: 12px;
+  letter-spacing: 0.2px;
+  padding: 10px 12px;
+  color: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.injTable tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+  vertical-align: top;
+}
+
+.injTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.injRight {
+  text-align: right;
+}
+
+.injStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 850;
+}
+
+.injStatus::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.injStatus[data-s="Injured"]::before {
+  background: #ff2d6d;
+}
+.injStatus[data-s="Suspended"]::before {
+  background: #ff9a2f;
+}
+.injStatus[data-s="Doubtful"]::before {
+  background: #ffd000;
+}
+.injStatus[data-s="Returning"]::before {
+  background: #2f7bff;
+}
+
+.injMuted {
+  color: rgba(255, 255, 255, 0.62);
+  font-weight: 650;
+  font-size: 12px;
+}

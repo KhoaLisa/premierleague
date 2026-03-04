@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sign in • myPremierLeague (demo)</title>
+    <link rel="stylesheet" href="../css/login.css" />
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+
+  <body>
+    <div id="fb-root"></div>
+    <div class="bg"></div>
+
+    <main class="shell">
+      <!-- LEFT -->
+      <section class="left">
+        <div class="brand">
+          <div class="plMark">PL</div>
+          <div>
+            <div class="brandTitle">Premier League</div>
+            <div class="brandSub">myPremierLeague • demo login</div>
+          </div>
+
+          <div class="brandBadges">
+            <span class="badge">⚡ Live</span>
+            <span class="badge ghost">🧠 Personalized</span>
+          </div>
+        </div>
+
+        <h1>
+          Sign in to <span class="grad">myPremier</span><br />
+          League
+        </h1>
+
+        <p class="subHero">
+          Đăng nhập để unlock <b>news feed cá nhân hoá</b>, ranking “hot”, và
+          gợi ý theo CLB/cầu thủ bạn follow.
+        </p>
+
+        <div class="featureRow">
+          <div class="feat">
+            <div class="featIco">🧩</div>
+            <div class="featTxt">
+              <div class="featTitle">Mix 70/30</div>
+              <div class="featSub">Ưu tiên + vẫn đa dạng</div>
+            </div>
+          </div>
+
+          <div class="feat">
+            <div class="featIco">📈</div>
+            <div class="featTxt">
+              <div class="featTitle">Trending score</div>
+              <div class="featSub">click + impression</div>
+            </div>
+          </div>
+
+          <div class="feat">
+            <div class="featIco">⚙️</div>
+            <div class="featTxt">
+              <div class="featTitle">SQL cache</div>
+              <div class="featSub">load nhanh, ổn định</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form">
+          <label>Email address</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Email address"
+            autocomplete="email"
+          />
+
+          <label style="margin-top: 12px">Password</label>
+          <div class="pwRow">
+            <input
+              id="password"
+              type="password"
+              placeholder="Password"
+              autocomplete="current-password"
+            />
+            <button id="togglePw" class="eye" type="button" title="Show/Hide">
+              👁️
+            </button>
+          </div>
+
+          <button id="btnSignIn" class="btnPrimary" type="button">
+            Sign in
+          </button>
+
+          <div class="orRow"><span></span><b>or</b><span></span></div>
+
+          <!-- ✅ Google (thật) -->
+          <div id="googleBtnWrap" class="googleWrap"></div>
+
+          <!-- ✅ Facebook (bấm được - popup demo) -->
+          <button id="btnFbLogin" class="btnOauth fb" type="button">
+            <span class="ico">f</span>
+            <span class="label">Sign in with Facebook</span>
+          </button>
+
+          <!-- demo-only -->
+          <button class="btnOauth apple" type="button" data-provider="apple">
+            <span class="ico"></span>
+            <span class="label">Sign in with Apple</span>
+          </button>
+
+          <button class="btnOauth x" type="button" data-provider="x">
+            <span class="ico">X</span>
+            <span class="label">Sign in with X</span>
+          </button>
+
+          <!-- ✅ Clear session -->
+          <button id="btnClearSession" class="btnOauth" type="button">
+            <span class="ico">↺</span>
+            <span class="label">Dùng tài khoản khác (xoá session)</span>
+          </button>
+
+          <div class="links">
+            <a href="#" onclick="return false;">No account? Join now</a>
+            <a href="#" onclick="return false;">Reset password</a>
+          </div>
+
+          <div class="trustRow">
+            <span class="trust">🔒 Secure session</span>
+            <span class="trust">🧾 Stored locally</span>
+            <span class="trust">🧪 Demo project</span>
+          </div>
+
+          <div id="msg" class="msg"></div>
+
+          <div class="backRow">
+            <a class="back" href="./home.html">← Back to Home</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <section class="right">
+        <div class="promoCard">
+          <div class="promoTop">
+            <h2>Shape the Premier League<br />around you</h2>
+            <div class="miniPills">
+              <span class="pill">Rank</span>
+              <span class="pill">Feed</span>
+              <span class="pill">Chat</span>
+            </div>
+          </div>
+
+          <div class="heroMedia">
+            <div class="liveTag">Live</div>
+
+            <div class="playerCard">
+              <div class="pcHead">
+                <div class="pcAvatar"></div>
+                <div class="pcMeta">
+                  <div class="pcName shimmer">Recommended</div>
+                  <div class="pcSub shimmer">Based on your interests</div>
+                </div>
+              </div>
+
+              <div class="pcRows">
+                <div class="pcRow shimmer"></div>
+                <div class="pcRow shimmer"></div>
+                <div class="pcRow shimmer"></div>
+              </div>
+
+              <div class="pcFoot">
+                <span class="chip">🔥 Hot</span>
+                <span class="chip ghost">⚡ Fast</span>
+                <span class="chip ghost">🧠 Smart</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="promoGrid">
+            <div class="miniCard">
+              <div class="mcTop">
+                <span class="mcIco">📰</span>
+                <span class="mcTitle">Personal feed</span>
+              </div>
+              <div class="mcSub">CLB/cầu thủ quan tâm → ưu tiên</div>
+              <div class="mcBar"><span style="width: 72%"></span></div>
+            </div>
+
+            <div class="miniCard">
+              <div class="mcTop">
+                <span class="mcIco">📊</span>
+                <span class="mcTitle">Match insights</span>
+              </div>
+              <div class="mcSub">Fixtures, BXH, scorers (demo)</div>
+              <div class="mcBar"><span style="width: 58%"></span></div>
+            </div>
+
+            <div class="miniCard">
+              <div class="mcTop">
+                <span class="mcIco">💬</span>
+                <span class="mcTitle">Chat assist</span>
+              </div>
+              <div class="mcSub">Hỏi nhanh BXH/lịch đấu/top goals</div>
+              <div class="mcBar"><span style="width: 64%"></span></div>
+            </div>
+          </div>
+
+          <p class="promoNote">
+            Every goal, every match, every story with myPremierLeague
+          </p>
+          <div class="dots">
+            <span class="dot on"></span><span class="dot"></span
+            ><span class="dot"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="../js/login.js"></script>
+  </body>
+</html>

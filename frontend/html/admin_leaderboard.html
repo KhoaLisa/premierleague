@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin - Leaderboard</title>
+
+    <!-- Nếu bạn muốn dùng style sẵn của thống kê -->
+    <link rel="stylesheet" href="../css/thongke.css" />
+
+    <style>
+      :root {
+        --bd: #e9e9e9;
+        --muted: #666;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial,
+          sans-serif;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+      h2 {
+        margin: 0 0 8px;
+      }
+      .sub {
+        color: var(--muted);
+        margin: 0 0 16px;
+      }
+
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: end;
+        margin: 12px 0 16px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 14px;
+      }
+      select,
+      button,
+      input {
+        padding: 10px 12px;
+        border: 1px solid var(--bd);
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+        background: #fff;
+      }
+      button {
+        cursor: pointer;
+      }
+      button.primary {
+        border-color: #111;
+        background: #111;
+        color: #fff;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .card {
+        border: 1px solid var(--bd);
+        border-radius: 14px;
+        padding: 14px;
+        background: #fff;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border-bottom: 1px solid var(--bd);
+        padding: 10px;
+        vertical-align: top;
+      }
+      th {
+        text-align: left;
+        font-size: 13px;
+        color: #333;
+      }
+      td small {
+        color: var(--muted);
+      }
+      input[type="number"] {
+        width: 120px;
+      }
+      .rank {
+        width: 56px;
+        color: var(--muted);
+      }
+
+      .msg {
+        margin-top: 12px;
+        font-size: 14px;
+      }
+      .msg.ok {
+        color: #0a7b2e;
+      }
+      .msg.bad {
+        color: #b00020;
+      }
+
+      .tools {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .right {
+        margin-left: auto;
+      }
+
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .pill {
+        display: inline-block;
+        padding: 4px 10px;
+        border: 1px solid var(--bd);
+        border-radius: 999px;
+        font-size: 12px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h2>Admin Leaderboard 🛠️</h2>
+      <p class="sub">
+        Sửa trực tiếp Top 10 trong SQL Server (khỏi mở SSMS).
+        <span class="pill">Load</span> để xem dữ liệu hiện có,
+        <span class="pill">Save</span> để ghi lại.
+      </p>
+
+      <div class="card">
+        <div class="row">
+          <label>
+            Mùa giải
+            <select id="season"></select>
+          </label>
+
+          <label>
+            Loại
+            <select id="type">
+              <option value="player">Player</option>
+              <option value="club">Club</option>
+            </select>
+          </label>
+
+          <label>
+            Metric
+            <select id="metric"></select>
+          </label>
+
+          <div class="tools">
+            <button id="btnLoad">Tải dữ liệu</button>
+            <button id="btnClear">Xóa form</button>
+            <button id="btnSave" class="primary">Lưu</button>
+          </div>
+
+          <div class="right"></div>
+        </div>
+
+        <div class="hint">
+          Player metrics: goals / assists / passes / clean_sheets • Club
+          metrics: goals / tackles / blocks / passes
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 14px">
+        <table>
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+
+        <div id="msg" class="msg"></div>
+      </div>
+    </div>
+
+    <script src="../js/admin_leaderboard.js"></script>
+  </body>
+</html>

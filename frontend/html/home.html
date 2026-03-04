@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>European Football Insights Platform</title>
+
+    <link rel="stylesheet" href="../css/home.css" />
+    <link rel="stylesheet" href="../css/chat.css" />
+  </head>
+
+  <body>
+    <div class="bg">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="grid"></div>
+    </div>
+
+    <header class="plHeader">
+      <div class="plTop">
+        <div class="plTop__in">
+          <nav class="plTop__left" aria-label="Thanh phụ">
+            <a href="#" class="plTop__link">Giải Ngoại hạng Anh</a>
+            <a href="#" class="plTop__link">Cửa hàng</a>
+            <a href="#" class="plTop__link">Về chúng tôi</a>
+            <a href="#" class="plTop__link">Bóng đá &amp; Cộng đồng</a>
+            <a href="#" class="plTop__link">Sự kiện</a>
+            <a href="#" class="plTop__link">Phương tiện truyền thông</a>
+            <a href="#" class="plTop__link">Chương trình Mornings Live</a>
+          </nav>
+
+          <div class="plTop__right">
+            <a href="#" class="plTop__sponsor">Copilot by Microsoft</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="plMain">
+        <div class="plMain__in">
+          <input id="plNavChk" class="plNavChk" type="checkbox" />
+          <label class="plIconBtn plBurger" for="plNavChk" aria-label="Mở menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </label>
+
+          <a class="plBrand" href="./home.html" aria-label="Premier League">
+            <img
+              class="plBrand__logoFull"
+              src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/1280px-Premier_League_Logo.svg.png"
+              alt="Premier League"
+            />
+          </a>
+
+          <nav class="plNav" aria-label="Menu chính">
+            <a class="plNav__link" href="./home.html" aria-current="page"
+              >Trang chủ</a
+            >
+            <a class="plNav__link" href="./lichthidau.html">Các trận đấu</a>
+            <a class="plNav__link" href="./bxh.html">Bảng</a>
+            <a class="plNav__link" href="./thongke.html">Thống kê</a>
+            <a class="plNav__link" href="./news.html">Tin tức</a>
+            <a class="plNav__link" href="./chuyennhuong.html">Chuyển nhượng</a>
+            <a class="plNav__link" href="./chanthuong.html">Chấn thương</a>
+            <a class="plNav__link" href="./player.html">Người chơi</a>
+            <a class="plNav__link" href="./clb.html">Câu lạc bộ</a>
+          </nav>
+          <div class="plRight">
+            <button class="plIconBtn" type="button" aria-label="Tìm kiếm">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+            <!-- Khi chưa login -->
+            <button id="btnLogin" class="plLogin" type="button">
+              Đăng nhập
+            </button>
+
+            <!-- Khi đã login: avatar + tên + menu -->
+            <div id="userMenuWrap" class="plUserWrap efiHide">
+              <button
+                id="btnUser"
+                class="plUser"
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded="false"
+              >
+                <img id="userAvatar" class="plUser__avt" alt="avatar" />
+                <span id="userName" class="plUser__name"></span>
+                <span class="plUser__chev" aria-hidden="true">▾</span>
+              </button>
+
+              <div
+                id="userMenu"
+                class="plUserMenu hidden"
+                role="menu"
+                aria-label="Tài khoản"
+              >
+                <div class="plUserMenu__head">
+                  <div class="plUserMenu__name" id="userName2">User</div>
+                  <div class="plUserMenu__email" id="userEmail2">email</div>
+                </div>
+
+                <button
+                  id="btnOpenPrefs"
+                  class="plUserMenu__item"
+                  type="button"
+                  role="menuitem"
+                >
+                  ⭐ Chọn quan tâm
+                </button>
+
+                <a
+                  class="plUserMenu__item"
+                  href="./profile.html"
+                  role="menuitem"
+                >
+                  👤 Hồ sơ
+                </a>
+
+                <a class="plUserMenu__item" href="./admin.html" role="menuitem">
+                  🛠️ Quản trị
+                </a>
+
+                <div class="plUserMenu__sep"></div>
+
+                <button
+                  id="btnLogout"
+                  class="plUserMenu__item danger"
+                  type="button"
+                  role="menuitem"
+                >
+                  🚪 Đăng xuất
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="plDrawer" aria-hidden="true">
+            <label
+              class="plDrawer__overlay"
+              for="plNavChk"
+              aria-label="Đóng menu"
+            ></label>
+            <aside
+              class="plDrawer__panel"
+              role="dialog"
+              aria-label="Menu mobile"
+            >
+              <div class="plDrawer__head">
+                <b>Menu</b>
+                <label class="plIconBtn" for="plNavChk" aria-label="Đóng">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M6 6l12 12M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </label>
+              </div>
+
+              <div class="plDrawer__links">
+                <a href="./home.html">Trang chủ</a>
+                <a href="./index.html">Các trận đấu</a>
+                <a href="./bxh.html">Bảng</a>
+                <a href="./thongke.html">Thống kê</a>
+                <a href="./news.html">Tin tức</a>
+                <a href="./chuyennhuong.html">Chuyển nhượng</a>
+                <a href="./chanthuong.html">Chấn thương</a>
+                <a href="./player.html">Người chơi</a>
+                <a href="./clb.html">Câu lạc bộ</a>
+                <a href="./profile.html">Hồ sơ</a>
+                <a href="./admin.html">Quản trị</a>
+                <a href="./login.html">Trang login</a>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="plShowcase">
+        <article class="plCard plFeat">
+          <div class="plFeat__media">
+            <img
+              src="https://cdn.coccoc.com/news_feed/20260302/8172714863493434568.jpg"
+              alt="Tin nổi bật"
+            />
+            <div class="plFeat__overlay"></div>
+          </div>
+
+          <div class="plFeat__body">
+            <h1 class="plFeat__title">
+              Cuộc đua vô địch Premier League: tình hình hiện tại & lịch còn lại
+            </h1>
+            <p class="plFeat__desc">
+              Tóm tắt nhanh cho fan: đội nào đang dẫn đầu, còn bao nhiêu trận,
+              và lịch đấu quyết định danh hiệu mùa này.
+            </p>
+
+            <div class="plFeat__search">
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="Tìm CLB / cầu thủ / chủ đề..."
+              />
+              <button id="btnSearch" type="button">Tìm</button>
+            </div>
+
+            <div class="plFeat__foot">
+              <a class="plFeat__tag" href="#news">Tin tức</a>
+              <div id="loginHint" class="plHint">
+                Bạn chưa đăng nhập → đang xem feed chung.
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <aside class="plCard plList">
+          <div class="plList__head">
+            <div class="plList__hTitle">Tin mới</div>
+            <button class="plMiniBtn" id="btnRefreshNews" type="button">
+              Làm mới
+            </button>
+          </div>
+
+          <div class="plList__body">
+            <div class="muted" style="padding: 10px">Đang tải…</div>
+          </div>
+        </aside>
+
+        <aside class="plCard plFix">
+          <div class="plFix__head">
+            <div class="plFix__ttl">
+              <div class="plFix__league">Premier League</div>
+              <div class="plFix__date">Lịch sắp tới</div>
+            </div>
+            <a class="plFix__btn" href="./index.html">Xem tất cả →</a>
+          </div>
+
+          <div class="plFix__scroll">
+            <div id="matchList">
+              <div class="muted" style="padding: 10px">Đang tải lịch…</div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="fixtures" class="section">
+        <div class="sectionHead">
+          <h2>Lịch thi đấu & Kết quả</h2>
+          <div class="sectionHint">
+            Demo layout. Sau này nối API matches thật từ SQL cache.
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="recent">Gần đây</button>
+          <button class="tab" data-tab="upcoming">Sắp tới</button>
+        </div>
+
+        <div class="fixturesGrid" id="fixturesGrid"></div>
+      </section>
+
+      <section class="section twoCols">
+        <div id="table" class="card">
+          <div class="cardHead">
+            <h3>Bảng xếp hạng (demo)</h3>
+            <button class="smallBtn">Tổng</button>
+          </div>
+          <div class="tableWrap" id="tableWrap"></div>
+        </div>
+
+        <div id="scorers" class="card">
+          <div class="cardHead">
+            <h3>Top ghi bàn (demo)</h3>
+            <button class="smallBtn">Mùa</button>
+          </div>
+          <div class="listWrap" id="scorersWrap"></div>
+        </div>
+      </section>
+
+      <section id="news" class="section">
+        <div class="sectionHead">
+          <h2>Tin tức</h2>
+          <div class="sectionHint">
+            Feed lấy từ DB articles. Đăng nhập + chọn quan tâm → bài “Ưu tiên”
+            xuất hiện nhiều hơn.
+          </div>
+        </div>
+
+        <div class="sectionScroll">
+          <div class="newsGrid" id="newsGrid"></div>
+        </div>
+      </section>
+
+      <section id="videos" class="section">
+        <div class="sectionHead">
+          <h2>Video</h2>
+          <div class="sectionHint">Demo UI (nối data video sau).</div>
+        </div>
+
+        <div class="videoGrid">
+          <div class="videoCard">
+            <div class="videoThumb"></div>
+            <div class="videoMeta">
+              <div class="videoTitle">Highlights: Matchweek recap</div>
+              <div class="muted">2:13 • demo</div>
+            </div>
+          </div>
+
+          <div class="videoCard">
+            <div class="videoThumb"></div>
+            <div class="videoMeta">
+              <div class="videoTitle">Tactics breakdown</div>
+              <div class="muted">6:44 • demo</div>
+            </div>
+          </div>
+
+          <div class="videoCard">
+            <div class="videoThumb"></div>
+            <div class="videoMeta">
+              <div class="videoTitle">Top goals</div>
+              <div class="muted">3:09 • demo</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="shop" class="section">
+        <div class="sectionHead">
+          <h2>Shop / QR (module bonus)</h2>
+          <div class="sectionHint">Bạn sẽ gắn QR checkout ở đây.</div>
+        </div>
+
+        <div class="shopRow">
+          <div class="shopCard">
+            <div class="shopTitle">Club Bundle</div>
+            <div class="muted">Áo • Sticker • Wallpaper</div>
+            <button class="btn">Mua (demo)</button>
+          </div>
+          <div class="shopCard">
+            <div class="shopTitle">Matchday Pass</div>
+            <div class="muted">Mini package cho fan</div>
+            <button class="btn ghost">Xem QR</button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footLeft">
+          <div class="footTitle">European Football Insights Platform</div>
+          <div class="muted">Educational project • Not affiliated.</div>
+        </div>
+        <div class="footRight muted">
+          Built with Flask + SQL cache + ranking/mixing + chat bubble.
+        </div>
+      </footer>
+    </main>
+
+    <div id="drawerOverlay" class="drawerOverlay hidden"></div>
+    <aside id="prefsDrawer" class="drawer hidden" aria-hidden="true">
+      <div class="drawerHead">
+        <div>
+          <div class="drawerTitle">Chọn CLB / Cầu thủ quan tâm</div>
+          <div class="muted">Hệ ưu tiên bài liên quan + mix 70/30.</div>
+        </div>
+        <button id="btnClosePrefs" class="iconBtn">✕</button>
+      </div>
+
+      <div class="drawerBody">
+        <div class="drawerCols">
+          <div>
+            <h4>CLB</h4>
+            <div id="clubList" class="checkList"></div>
+          </div>
+          <div>
+            <h4>Cầu thủ</h4>
+            <div id="playerList" class="checkList"></div>
+          </div>
+        </div>
+
+        <div class="drawerActions">
+          <div id="prefStatus" class="muted"></div>
+          <button id="btnSavePrefs" class="btn">Lưu quan tâm</button>
+        </div>
+      </div>
+    </aside>
+
+    <div id="chatBubble" class="chatBubble">
+      <button id="chatToggle" class="chatToggle" aria-label="Open chat">
+        💬
+      </button>
+
+      <div id="chatWindow" class="chatWindow hidden">
+        <div class="chatHeader">
+          <div class="chatTitle">PL Assistant (Demo)</div>
+          <button id="chatClose" class="chatClose">✕</button>
+        </div>
+
+        <div id="chatMsgs" class="chatMsgs"></div>
+
+        <div class="chatInputRow">
+          <input
+            id="chatInput"
+            class="chatInput"
+            placeholder="Gõ: BXH PL / lịch đấu / top ghi bàn / gợi ý tin..."
+          />
+          <button id="chatSend" class="chatSend">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/home.js"></script>
+    <script src="../js/chat.js"></script>
+  </body>
+</html>

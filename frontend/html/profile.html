@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Profile • myPremierLeague</title>
+    <style>
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          Segoe UI,
+          Roboto,
+          Arial;
+        background: #0b0614;
+        color: #fff;
+      }
+      .wrap {
+        max-width: 920px;
+        margin: 40px auto;
+        padding: 0 16px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        padding: 22px;
+        backdrop-filter: blur(12px);
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .ava {
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .name {
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1.1;
+        margin: 0;
+      }
+      .sub {
+        opacity: 0.8;
+        margin-top: 6px;
+      }
+      .row {
+        margin-top: 18px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="top">
+          <img id="ava" class="ava" src="" alt="avatar" />
+          <div>
+            <h1 id="hello" class="name">Hello</h1>
+            <div id="email" class="sub"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="btn" onclick="location.href = './home.html'">
+            Vào Home
+          </button>
+          <button class="btn" id="btnLogout">Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const KEY_USER = "efi_user";
+      function getUser() {
+        try {
+          return JSON.parse(localStorage.getItem(KEY_USER) || "null");
+        } catch {
+          return null;
+        }
+      }
+      const u = getUser();
+      if (!u) {
+        location.href = "./login.html";
+      }
+
+      document.getElementById("hello").textContent =
+        "Hello " + (u.name || "Người dùng");
+      document.getElementById("email").textContent = u.email || "";
+      const ava = document.getElementById("ava");
+      ava.src = u.picture_url || "https://via.placeholder.com/56?text=U";
+
+      document.getElementById("btnLogout").onclick = () => {
+        localStorage.removeItem(KEY_USER);
+        location.href = "./login.html";
+      };
+    </script>
+  </body>
+</html>

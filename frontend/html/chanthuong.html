@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chấn thương | European Football Insights Platform</title>
+
+    <!-- ✅ đồng bộ header/menu -->
+    <link rel="stylesheet" href="../css/home.css" />
+    <!-- ✅ css riêng -->
+    <link rel="stylesheet" href="../css/chanthuong.css" />
+  </head>
+
+  <body>
+    <!-- background effects (nếu home.css có bg thì vẫn ok, không có cũng không sao) -->
+    <div class="bg" aria-hidden="true">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="grid"></div>
+    </div>
+
+    <!-- ✅ HEADER đồng bộ (giữ như home để có user name/avatar) -->
+    <header class="plHeader">
+      <div class="plTop">
+        <div class="plTop__in">
+          <nav class="plTop__left" aria-label="Thanh phụ">
+            <a href="#" class="plTop__link">Giải Ngoại hạng Anh</a>
+            <a href="#" class="plTop__link">Cửa hàng</a>
+            <a href="#" class="plTop__link">Về chúng tôi</a>
+            <a href="#" class="plTop__link">Bóng đá &amp; Cộng đồng</a>
+            <a href="#" class="plTop__link">Sự kiện</a>
+            <a href="#" class="plTop__link">Phương tiện truyền thông</a>
+            <a href="#" class="plTop__link">Chương trình Mornings Live</a>
+          </nav>
+
+          <div class="plTop__right">
+            <a href="#" class="plTop__sponsor">Copilot by Microsoft</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="plMain">
+        <div class="plMain__in">
+          <input id="plNavChk" class="plNavChk" type="checkbox" />
+          <label class="plIconBtn plBurger" for="plNavChk" aria-label="Mở menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </label>
+
+          <a class="plBrand" href="./home.html" aria-label="Premier League">
+            <img
+              class="plBrand__logoFull"
+              src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/1280px-Premier_League_Logo.svg.png"
+              alt="Premier League"
+            />
+          </a>
+
+          <nav class="plNav" aria-label="Menu chính">
+            <a class="plNav__link" href="./home.html">Trang chủ</a>
+            <a class="plNav__link" href="./index.html">Các trận đấu</a>
+            <a class="plNav__link" href="./bxh.html">Bảng</a>
+            <a class="plNav__link" href="./thongke.html">Thống kê</a>
+            <a class="plNav__link" href="./news.html">Tin tức</a>
+            <a class="plNav__link" href="./chuyennhuong.html">Chuyển nhượng</a>
+            <a class="plNav__link" href="./chanthuong.html" aria-current="page"
+              >Chấn thương</a
+            >
+            <a class="plNav__link" href="./player.html">Người chơi</a>
+            <a class="plNav__link" href="./clb.html">Câu lạc bộ</a>
+          </nav>
+
+          <div class="plRight">
+            <button class="plIconBtn" type="button" aria-label="Tìm kiếm">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+            <button id="btnLogin" class="plLogin" type="button">
+              Đăng nhập
+            </button>
+
+            <div id="userMenuWrap" class="plUserWrap efiHide">
+              <button
+                id="btnUser"
+                class="plUser"
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded="false"
+              >
+                <img id="userAvatar" class="plUser__avt" alt="avatar" />
+                <span id="userName" class="plUser__name"></span>
+                <span class="plUser__chev" aria-hidden="true">▾</span>
+              </button>
+
+              <div
+                id="userMenu"
+                class="plUserMenu hidden"
+                role="menu"
+                aria-label="Tài khoản"
+              >
+                <div class="plUserMenu__head">
+                  <div class="plUserMenu__name" id="userName2">User</div>
+                  <div class="plUserMenu__email" id="userEmail2">email</div>
+                </div>
+
+                <button
+                  id="btnOpenPrefs"
+                  class="plUserMenu__item"
+                  type="button"
+                  role="menuitem"
+                >
+                  ⭐ Chọn quan tâm
+                </button>
+
+                <a
+                  class="plUserMenu__item"
+                  href="./profile.html"
+                  role="menuitem"
+                  >👤 Hồ sơ</a
+                >
+                <a class="plUserMenu__item" href="./admin.html" role="menuitem"
+                  >🛠️ Quản trị</a
+                >
+
+                <div class="plUserMenu__sep"></div>
+
+                <button
+                  id="btnLogout"
+                  class="plUserMenu__item danger"
+                  type="button"
+                  role="menuitem"
+                >
+                  🚪 Đăng xuất
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="plDrawer" aria-hidden="true">
+            <label
+              class="plDrawer__overlay"
+              for="plNavChk"
+              aria-label="Đóng menu"
+            ></label>
+            <aside
+              class="plDrawer__panel"
+              role="dialog"
+              aria-label="Menu mobile"
+            >
+              <div class="plDrawer__head">
+                <b>Menu</b>
+                <label class="plIconBtn" for="plNavChk" aria-label="Đóng">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M6 6l12 12M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </label>
+              </div>
+
+              <div class="plDrawer__links">
+                <a href="./home.html">Trang chủ</a>
+                <a href="./index.html">Các trận đấu</a>
+                <a href="./bxh.html">Bảng</a>
+                <a href="./thongke.html">Thống kê</a>
+                <a href="./news.html">Tin tức</a>
+                <a href="./chuyennhuong.html">Chuyển nhượng</a>
+                <a href="./chanthuong.html">Chấn thương</a>
+                <a href="./player.html">Người chơi</a>
+                <a href="./clb.html">Câu lạc bộ</a>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ✅ BANNER đơn giản giống kiểu CLB -->
+    <section class="pageBanner">
+      <div class="pageBanner__inner">
+        <h1 class="pageBanner__title">Chấn thương</h1>
+        <p class="pageBanner__sub">
+          Tin tức chấn thương • Treo giò • Dự kiến trở lại
+          <span class="pageBanner__dot">•</span>
+          Cập nhật: <b id="injUpdated">—</b>
+        </p>
+      </div>
+    </section>
+
+    <!-- ✅ Thanh tìm kiếm/bộ lọc nằm dưới banner -->
+    <section class="wrap toolWrap">
+      <div class="toolCard">
+        <div class="toolGrid">
+          <div class="toolField toolField--wide">
+            <label class="toolLabel">Tìm nhanh</label>
+            <input
+              id="q"
+              class="toolInput"
+              type="search"
+              placeholder="VD: Saka, gân kheo, treo giò..."
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="toolField">
+            <label class="toolLabel">CLB</label>
+            <select id="club" class="toolSelect"></select>
+          </div>
+
+          <div class="toolField">
+            <label class="toolLabel">Trạng thái</label>
+            <select id="status" class="toolSelect">
+              <option value="">Tất cả</option>
+              <option value="Injured">Chấn thương</option>
+              <option value="Suspended">Treo giò</option>
+              <option value="Doubtful">Nghi ngờ</option>
+              <option value="Returning">Sắp trở lại</option>
+            </select>
+          </div>
+
+          <div class="toolActions">
+            <button id="btnReset" class="toolBtn" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="toolHint" id="injLead">
+          Tổng hợp chấn thương mới nhất (demo) — thay data bằng API/DB là chạy
+          ngon 😄
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ Nội dung -->
+    <main class="wrap injMain">
+      <!-- Tin quan trọng -->
+      <section class="injSection">
+        <div class="injSecHead">
+          <h2 class="injH2">Tin chấn thương quan trọng</h2>
+          <div class="injSecActions">
+            <button
+              id="btnImpLeft"
+              class="injArrow"
+              type="button"
+              aria-label="Trượt trái"
+            >
+              ‹
+            </button>
+            <button
+              id="btnImpRight"
+              class="injArrow"
+              type="button"
+              aria-label="Trượt phải"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="impWrap"
+          class="injImp"
+          aria-label="Danh sách tin quan trọng"
+        ></div>
+      </section>
+
+      <!-- Danh sách theo CLB -->
+      <section class="injSection">
+        <div class="injSecHead">
+          <h2 class="injH2">Danh sách theo CLB</h2>
+          <div class="injNote">Auto-fit để không lệch / không thừa</div>
+        </div>
+
+        <div id="clubsWrap" class="injClubList"></div>
+      </section>
+    </main>
+
+    <!-- scripts -->
+    <script src="../js/nav-active.js"></script>
+    <script src="../js/home.js"></script>
+    <script src="../js/chanthuong.js"></script>
+  </body>
+</html>

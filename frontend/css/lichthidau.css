@@ -1,0 +1,381 @@
+/* frontend/css/lichthidau.css */
+/* ✅ Đồng bộ banner + layout theo bxh.css */
+
+:root {
+  /* chỉ giữ biến phụ cho lịch (không override nền chung) */
+  --txt: rgba(255, 255, 255, 0.86);
+  --txt2: rgba(255, 255, 255, 0.78);
+  --muted: rgba(255, 255, 255, 0.58);
+  --line: rgba(255, 255, 255, 0.1);
+
+  /* ✅ NUDGE: dịch cụm lịch qua trái 10% (desktop) */
+  --fixturesNudgeX: 0%;
+}
+
+/* Mobile: không dịch để khỏi hụt màn */
+@media (max-width: 900px) {
+  :root {
+    --fixturesNudgeX: 0px;
+  }
+}
+
+body {
+  /* ✅ KHÔNG override background nữa để đồng bộ bxh/home */
+  color: var(--txt);
+}
+
+/* =========================================================
+   ✅ BANNER FULL-BLEED (GIỐNG BXH)
+========================================================= */
+.pl-banner {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 0;
+}
+
+.pl-banner__inner {
+  width: 100%;
+  max-width: none;
+
+  margin: 0 0 18px 0;
+  padding: 30px 32px;
+
+  border: 0;
+  border-radius: 0;
+
+  background: linear-gradient(90deg, #7a2cff 0%, #4b6bff 35%, #00e5ff 100%);
+
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.pl-banner__inner::after {
+  content: "";
+  position: absolute;
+  top: -70px;
+  right: -160px;
+  width: 760px;
+  height: 320px;
+  transform: rotate(-18deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.16),
+    transparent 70%
+  );
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.pl-banner h1 {
+  margin: 0;
+  font-size: 56px;
+  font-weight: 950;
+  letter-spacing: 0.2px;
+  line-height: 1.05;
+  color: rgba(255, 255, 255, 0.98);
+
+  text-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.45),
+    0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================================
+   ✅ WRAP (GIỐNG BXH)
+========================================================= */
+.wrap {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 18px var(--gutter) 80px;
+}
+
+/* =========================================================
+   Matchweek control (✅ cân + dịch trái 10%)
+========================================================= */
+.mw {
+  width: min(1100px, 100%);
+  margin: 26px auto 18px;
+
+  display: grid;
+  grid-template-columns: 50px minmax(260px, 1fr) 50px;
+  align-items: center;
+  gap: 22px;
+
+  /* ✅ dịch trái 10% */
+  transform: translateX(var(--fixturesNudgeX));
+  will-change: transform;
+}
+
+.mw__btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 28px;
+  cursor: pointer;
+}
+.mw__btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.mw__mid {
+  text-align: center;
+  min-width: 0;
+}
+.mw__title {
+  font-weight: 850;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.88);
+}
+.mw__sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* =========================================================
+   ✅ BOARD (giữ style bạn nhưng cân theo container + dịch trái 10%)
+========================================================= */
+.board {
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 22px;
+  padding: 18px;
+
+  background:
+    radial-gradient(
+      1400px 650px at 50% 0%,
+      rgba(124, 34, 255, 0.24),
+      transparent 62%
+    ),
+    radial-gradient(
+      900px 450px at 20% 40%,
+      rgba(0, 229, 255, 0.08),
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.02)
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 26px 80px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px);
+
+  /* ✅ dịch trái 10% */
+  transform: translateX(var(--fixturesNudgeX));
+  will-change: transform;
+}
+
+/* =========================================================
+   Day group (✅ Desktop: label không chiếm cột => match cân giữa thật)
+========================================================= */
+.day {
+  position: relative;
+  padding: 18px 10px;
+}
+.day + .day {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.day__label {
+  position: absolute;
+  left: 10px;
+  top: 18px;
+  width: 120px;
+
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.6);
+  padding-top: 12px;
+}
+
+.matches {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ✅ Match: cân giữa */
+.match {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(330px, 1fr) 170px minmax(330px, 1fr);
+  align-items: center;
+  gap: 18px;
+
+  padding: 18px 18px;
+  border-radius: 14px;
+}
+
+.match + .match {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.match:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.045),
+    rgba(255, 255, 255, 0.015)
+  );
+}
+
+/* sides */
+.side {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.side.left {
+  justify-content: flex-end;
+}
+.side.right {
+  justify-content: flex-start;
+}
+
+/* team name */
+.team {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--txt2);
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* logo */
+.badge {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
+  flex: 0 0 auto;
+}
+
+/* center */
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+}
+.kickoff {
+  font-size: 17px;
+  font-weight: 850;
+  letter-spacing: 0.25px;
+  color: rgba(255, 255, 255, 0.86);
+}
+.score {
+  font-size: 14px;
+  font-weight: 850;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* status pill */
+.status {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.82);
+}
+.status.live {
+  border-color: rgba(255, 90, 90, 0.45);
+  background: rgba(255, 90, 90, 0.12);
+}
+.status.ft {
+  border-color: rgba(110, 255, 170, 0.35);
+  background: rgba(110, 255, 170, 0.1);
+}
+.status.scheduled {
+  border-color: rgba(80, 180, 255, 0.35);
+  background: rgba(80, 180, 255, 0.1);
+}
+
+.board__empty {
+  padding: 18px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* =========================================================
+   Responsive (match BXH vibe)
+========================================================= */
+@media (max-width: 1100px) {
+  .pl-banner h1 {
+    font-size: 40px;
+    padding: 0;
+  }
+}
+
+/* ✅ Mobile/tablet: trả lại grid cột day để khỏi đè */
+@media (max-width: 980px) {
+  .day {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 14px;
+    padding: 18px 10px;
+    position: relative;
+  }
+  .day__label {
+    position: static;
+    width: auto;
+    padding-top: 12px;
+  }
+
+  .match {
+    width: 100%;
+    grid-template-columns: 1fr 150px 1fr;
+    gap: 12px;
+    padding: 14px 12px;
+  }
+  .team {
+    font-size: 13px;
+  }
+  .badge {
+    width: 30px;
+    height: 30px;
+  }
+  .kickoff {
+    font-size: 14px;
+  }
+  .status {
+    font-size: 10px;
+    padding: 4px 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mw__mid {
+    min-width: 180px;
+  }
+  .mw__title {
+    font-size: 14px;
+  }
+  .mw__sub {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>EFI Admin</title>
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+
+  <body>
+    <header class="adminTop">
+      <div class="left">
+        <a class="back" href="./home.html">← Home</a>
+        <div class="title">
+          <b>Admin Panel</b>
+          <span class="muted small">EFI • quản trị bài viết</span>
+        </div>
+      </div>
+
+      <div class="right">
+        <span id="who" class="muted small">Chưa đăng nhập</span>
+        <button id="btnLogout" class="btn ghost">Logout</button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <!-- LOGIN -->
+      <section class="card loginCard" id="loginBox">
+        <div class="cardHead">
+          <h2>Đăng nhập Admin</h2>
+          <span class="pill">demo: admin / 123456</span>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Username</label>
+            <input id="u" placeholder="username" value="admin" />
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <input
+              id="p"
+              placeholder="password"
+              type="password"
+              value="123456"
+            />
+          </div>
+
+          <div class="field fieldBtn">
+            <label>&nbsp;</label>
+            <button id="btnLogin" class="btn">Login</button>
+          </div>
+        </div>
+
+        <div id="loginMsg" class="muted"></div>
+      </section>
+
+      <!-- MAIN GRID -->
+      <section id="mainGrid" class="grid hidden">
+        <!-- CREATE -->
+        <section class="card">
+          <div class="cardHead">
+            <h2>Đăng bài</h2>
+            <span class="muted small"
+              >Bài mới có thể lên Hero (Home) nếu bạn pin hoặc mới đăng.</span
+            >
+          </div>
+
+          <div class="form">
+            <div class="field">
+              <label>Title</label>
+              <input id="title" placeholder="Tiêu đề bài" />
+            </div>
+
+            <div class="field">
+              <label>Summary</label>
+              <textarea
+                id="summary"
+                placeholder="Mô tả ngắn (1-3 câu)"
+              ></textarea>
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <label>URL bài (https://...)</label>
+                <input id="url" placeholder="https://..." />
+              </div>
+
+              <div class="field">
+                <label>Image URL (cover)</label>
+                <input id="image" placeholder="https://...jpg/png" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Tags (phân tách bằng dấu phẩy)</label>
+              <input id="tags" placeholder="VD: MUN,PL,TRANSFER" />
+            </div>
+
+            <div class="opts">
+              <label class="chk"
+                ><input id="pub" type="checkbox" checked /> Publish</label
+              >
+              <label class="chk"
+                ><input id="feat" type="checkbox" /> Pin lên trang nhất
+                (Featured)</label
+              >
+            </div>
+
+            <div class="actions">
+              <button id="btnCreate" class="btn">Đăng bài</button>
+              <button id="btnClear" class="btn ghost">Clear</button>
+            </div>
+
+            <div id="createMsg" class="muted"></div>
+
+            <div class="preview">
+              <div class="previewLeft">
+                <div class="previewTitle">Preview cover</div>
+                <div class="muted small">
+                  Nếu để trống, Home sẽ dùng ảnh mặc định.
+                </div>
+              </div>
+              <div class="previewImg">
+                <img id="imgPreview" alt="" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TRENDING -->
+        <section class="card">
+          <div class="headRow">
+            <div>
+              <h2>Trending Score</h2>
+              <div class="muted small">
+                score = impressions*1 + clicks*3 + decay(48h)
+              </div>
+            </div>
+            <button id="btnReload" class="btn ghost">Reload</button>
+          </div>
+
+          <div class="toolbar">
+            <input id="q" class="search" placeholder="Tìm theo title/tag..." />
+            <select id="filter" class="select">
+              <option value="all">Tất cả</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+              <option value="featured">Featured</option>
+            </select>
+          </div>
+
+          <div id="list" class="list"></div>
+          <div id="listMsg" class="muted"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="../js/admin.js"></script>
+  </body>
+</html>

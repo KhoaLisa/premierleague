@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BXH - Premier League</title>
+
+    <!-- ✅ header/background y hệt home -->
+    <link rel="stylesheet" href="../css/home.css" />
+
+    <!-- ✅ CSS riêng bxh -->
+    <link rel="stylesheet" href="../css/bxh.css?v=999" />
+  </head>
+
+  <body>
+    <div class="bg">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="grid"></div>
+    </div>
+
+    <header class="plHeader">
+      <div class="plTop">
+        <div class="plTop__in">
+          <nav class="plTop__left" aria-label="Thanh phụ">
+            <a class="plTop__link" href="#">Giải Ngoại hạng Anh</a>
+            <a class="plTop__link" href="#">Cửa hàng</a>
+            <a class="plTop__link" href="#">Về chúng tôi</a>
+            <a class="plTop__link" href="#">Bóng đá &amp; Cộng đồng</a>
+            <a class="plTop__link" href="#">Sự kiện</a>
+            <a class="plTop__link" href="#">Phương tiện truyền thông</a>
+            <a class="plTop__link" href="#">Chương trình Mornings Live</a>
+          </nav>
+          <div class="plTop__right">
+            <a href="#" class="plTop__sponsor">Copilot by Microsoft</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="plMain">
+        <div class="plMain__in">
+          <input id="plNavChk" class="plNavChk" type="checkbox" />
+          <label class="plIconBtn plBurger" for="plNavChk" aria-label="Mở menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </label>
+
+          <a class="plBrand" href="./home.html" aria-label="Premier League">
+            <img
+              class="plBrand__logoFull"
+              src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/1280px-Premier_League_Logo.svg.png"
+              alt="Premier League"
+            />
+          </a>
+
+          <nav class="plNav" aria-label="Menu chính">
+            <a class="plNav__link" href="./home.html">Trang chủ</a>
+            <a class="plNav__link" href="./lichthidau.html">Các trận đấu</a>
+            <a class="plNav__link" href="./bxh.html" aria-current="page"
+              >Bảng</a
+            >
+            <a class="plNav__link" href="./thongke.html">Thống kê</a>
+            <a class="plNav__link" href="./news.html">Tin tức</a>
+            <a class="plNav__link" href="./chuyennhuong.html">Chuyển nhượng</a>
+            <a class="plNav__link" href="./chanthuong.html">Chấn thương</a>
+            <a class="plNav__link" href="./player.html">Người chơi</a>
+            <a class="plNav__link" href="./home.html#table">Câu lạc bộ</a>
+          </nav>
+
+          <div class="plRight">
+            <button class="plIconBtn" type="button" aria-label="Tìm kiếm">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+
+            <button id="btnLogin" class="plLogin" type="button">
+              Đăng nhập
+            </button>
+
+            <div id="userMenuWrap" class="plUserWrap efiHide">
+              <button
+                id="btnUser"
+                class="plUser"
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded="false"
+              >
+                <img id="userAvatar" class="plUser__avt" alt="avatar" />
+                <span id="userName" class="plUser__name"></span>
+                <span class="plUser__chev" aria-hidden="true">▾</span>
+              </button>
+
+              <div
+                id="userMenu"
+                class="plUserMenu hidden"
+                role="menu"
+                aria-label="Tài khoản"
+              >
+                <div class="plUserMenu__head">
+                  <div class="plUserMenu__name" id="userName2">User</div>
+                  <div class="plUserMenu__email" id="userEmail2">email</div>
+                </div>
+
+                <button
+                  id="btnOpenPrefs"
+                  class="plUserMenu__item"
+                  type="button"
+                  role="menuitem"
+                >
+                  ⭐ Chọn quan tâm
+                </button>
+
+                <a
+                  class="plUserMenu__item"
+                  href="./profile.html"
+                  role="menuitem"
+                  >👤 Hồ sơ</a
+                >
+                <a class="plUserMenu__item" href="./admin.html" role="menuitem"
+                  >🛠️ Quản trị</a
+                >
+
+                <div class="plUserMenu__sep"></div>
+
+                <button
+                  id="btnLogout"
+                  class="plUserMenu__item danger"
+                  type="button"
+                  role="menuitem"
+                >
+                  🚪 Đăng xuất
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="plDrawer" aria-hidden="true">
+            <label
+              class="plDrawer__overlay"
+              for="plNavChk"
+              aria-label="Đóng menu"
+            ></label>
+            <aside
+              class="plDrawer__panel"
+              role="dialog"
+              aria-label="Menu mobile"
+            >
+              <div class="plDrawer__head">
+                <b>Menu</b>
+                <label class="plIconBtn" for="plNavChk" aria-label="Đóng">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M6 6l12 12M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </label>
+              </div>
+
+              <div class="plDrawer__links">
+                <a href="./home.html">Trang chủ</a>
+                <a href="./lichthidau.html">Các trận đấu</a>
+                <a href="./bxh.html">Bảng</a>
+                <a href="./thongke.html">Thống kê</a>
+                <a href="./news.html">Tin tức</a>
+                <a href="./chuyennhuong.html">Chuyển nhượng</a>
+                <a href="./chanthuong.html">Chấn thương</a>
+                <a href="./player.html">Người chơi</a>
+                <a href="./clb.html">Câu lạc bộ</a>
+                <a href="./profile.html">Hồ sơ</a>
+                <a href="./admin.html">Quản trị</a>
+                <a href="./login.html">Trang login</a>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="heroTitle">
+        <h1 class="pageTitle">Bảng xếp hạng Premier League</h1>
+      </div>
+
+      <section class="filters">
+        <div class="field">
+          <div class="label">Mùa</div>
+          <select id="seasonSelect" class="select"></select>
+        </div>
+
+        <div class="field">
+          <div class="label">Giải</div>
+          <select id="leagueSelect" class="select">
+            <option value="PL">Premier League</option>
+            <option value="PD">LaLiga</option>
+            <option value="SA">Serie A</option>
+            <option value="BL1">Bundesliga</option>
+            <option value="FL1">Ligue 1</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <div class="label">Sân</div>
+          <div class="seg">
+            <button class="seg__btn active" data-scope="ALL" type="button">
+              All
+            </button>
+            <button class="seg__btn" data-scope="HOME" type="button">
+              Home
+            </button>
+            <button class="seg__btn" data-scope="AWAY" type="button">
+              Away
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="label">Tìm đội</div>
+          <input id="searchInput" class="input" />
+        </div>
+
+        <button id="reloadBtn" class="btn" type="button">Refresh</button>
+      </section>
+
+      <section class="card">
+        <div class="cardHead">
+          <h2>Bảng xếp hạng</h2>
+        </div>
+
+        <div class="gridWrap">
+          <div class="gridTable">
+            <div class="gridHead">
+              <button class="gth gth--pos" data-sort="pos">Vị trí</button>
+              <button class="gth gth--team" data-sort="team">Đội</button>
+              <button class="gth" data-sort="pld">PL</button>
+              <button class="gth" data-sort="w">W</button>
+              <button class="gth" data-sort="d">D</button>
+              <button class="gth" data-sort="l">L</button>
+              <button class="gth" data-sort="gf">GF</button>
+              <button class="gth" data-sort="ga">GA</button>
+              <button class="gth" data-sort="gd">GD</button>
+              <button class="gth gth--pts" data-sort="pts">Điểm</button>
+              <div class="gth gth--form">Hình thức</div>
+              <div class="gth gth--next">Trận tới</div>
+            </div>
+
+            <div id="gridBody" class="gridBody"></div>
+          </div>
+        </div>
+
+        <div class="cardFoot">
+          <div class="legend">
+            <span class="lg"><i class="lgDot ucl"></i> Champions League</span>
+            <span class="lg"><i class="lgDot uel"></i> Europa League</span>
+            <span class="lg"><i class="lgDot rel"></i> Xuống hạng</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="../js/auth-ui.js"></script>
+    <script src="../js/bxh.js?v=999"></script>
+  </body>
+</html>

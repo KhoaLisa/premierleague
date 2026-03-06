@@ -1,0 +1,507 @@
+/* frontend/css/shop.css */
+
+:root {
+  --shopPad: 22px;
+  --shopR: 18px;
+  --shopR2: 22px;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+}
+
+.wrap {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 18px var(--gutter) 64px;
+}
+
+/* =========================================================
+   NAV (danh mục) trong main header
+========================================================= */
+.shopNav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: 4px;
+  overflow: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.shopNav::-webkit-scrollbar {
+  height: 0;
+}
+.shopNav__a {
+  font-weight: 750;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.82);
+  padding: 10px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.shopNav__a:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.shopNav__a.isActive {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.shopActions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.shopActions__badge {
+  position: absolute;
+  transform: translate(12px, -12px);
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  padding: 0 6px;
+  display: inline-grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2b0038;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+/* =========================================================
+   HERO giống mẫu (ảnh lớn + caption)
+========================================================= */
+.shopHero {
+  margin-top: 12px;
+}
+
+.shopHero__inner {
+  border-radius: var(--shopR2);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+/* "ảnh" tự dựng bằng CSS (không cần asset) */
+.shopHero__media {
+  height: min(380px, 50vh);
+  width: 100%;
+  background:
+    radial-gradient(
+      1200px 500px at 20% 40%,
+      rgba(255, 255, 255, 0.35),
+      transparent 60%
+    ),
+    radial-gradient(
+      600px 400px at 55% 55%,
+      rgba(88, 240, 217, 0.36),
+      transparent 60%
+    ),
+    radial-gradient(
+      500px 420px at 75% 35%,
+      rgba(47, 123, 255, 0.35),
+      transparent 60%
+    ),
+    linear-gradient(135deg, rgba(25, 3, 34, 0.95), rgba(4, 10, 25, 0.92));
+  position: relative;
+  isolation: isolate;
+}
+
+/* quả bóng giả lập */
+.shopHero__media::before {
+  content: "";
+  position: absolute;
+  right: 7%;
+  bottom: -18%;
+  width: min(520px, 62vw);
+  aspect-ratio: 1/1;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 255, 255, 0.68) 34%,
+      rgba(255, 255, 255, 0.14) 64%,
+      transparent 70%
+    ),
+    conic-gradient(
+      from 220deg,
+      rgba(88, 240, 217, 0.75),
+      rgba(47, 123, 255, 0.75),
+      rgba(176, 86, 255, 0.75),
+      rgba(88, 240, 217, 0.75)
+    );
+  filter: blur(0.2px);
+  opacity: 0.95;
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 18px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  z-index: 0;
+}
+.shopHero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.55), transparent 50%),
+    linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.35));
+  z-index: 1;
+}
+
+.shopHero__cap {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 720px;
+  z-index: 2;
+}
+.shopHero__kicker {
+  font-weight: 850;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 16px;
+}
+.shopHero__title {
+  margin: 0;
+  font-size: clamp(22px, 2.2vw, 34px);
+  letter-spacing: 0.2px;
+}
+.shopHero__sub {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.5;
+  max-width: 62ch;
+}
+.shopHero__cta {
+  margin-top: 10px;
+  width: fit-content;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.shopHero__cta:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* =========================================================
+   BLOCK TITLE BAR (giống mẫu: thanh tím + chữ)
+========================================================= */
+.shopBlock {
+  margin-top: 18px;
+}
+.shopBlock__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(54, 0, 74, 0.95),
+    rgba(18, 3, 26, 0.6)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.35);
+}
+.shopBlock__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+.shopBlock__line {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent);
+}
+
+/* =========================================================
+   GRID + CARD
+========================================================= */
+.shopGrid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 1280px) {
+  .shopGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .shopGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.shopCard {
+  border-radius: var(--shopR);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+  position: relative;
+}
+.shopCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.shopCard__img {
+  height: 150px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  background:
+    radial-gradient(
+      500px 220px at 30% 20%,
+      rgba(255, 255, 255, 0.25),
+      transparent 60%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.02)
+    );
+}
+
+.shopCard__blob {
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      circle at 30% 30%,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.55) 35%,
+      rgba(255, 255, 255, 0.18) 65%,
+      transparent 72%
+    ),
+    conic-gradient(
+      from 210deg,
+      rgba(88, 240, 217, 0.8),
+      rgba(47, 123, 255, 0.8),
+      rgba(176, 86, 255, 0.8),
+      rgba(88, 240, 217, 0.8)
+    );
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 12px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  opacity: 0.95;
+}
+
+.shopCard__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 950;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.shopCard__body {
+  padding: 12px 12px 14px;
+}
+.shopCard__brand {
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.78);
+}
+.shopCard__name {
+  margin-top: 6px;
+  font-weight: 900;
+  line-height: 1.25;
+  min-height: 40px;
+}
+
+.shopCard__meta {
+  margin-top: 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.shopCard__price {
+  font-weight: 950;
+  letter-spacing: 0.1px;
+}
+.shopCard__was {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: line-through;
+}
+.shopCard__colors {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.shopCard__actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+.shopBtn {
+  flex: 1;
+  padding: 9px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.shopBtn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.shopBtn.isGhost {
+  flex: 0 0 auto;
+  width: 44px;
+  display: grid;
+  place-items: center;
+}
+
+/* =========================================================
+   SEARCH MODAL + TOAST
+========================================================= */
+.shopModal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 80;
+}
+.shopModal.isOpen {
+  display: block;
+}
+.shopModal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+}
+.shopModal__panel {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 28px));
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(16, 6, 22, 0.92);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+.shopModal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.shopModal__ttl {
+  font-weight: 950;
+}
+.shopModal__body {
+  padding: 14px;
+}
+.shopSearch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 10px 12px;
+}
+.shopSearch__icon {
+  opacity: 0.9;
+}
+.shopSearch__inp {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+}
+.shopModal__hint {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12px;
+}
+
+.shopToast {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(16, 6, 22, 0.92);
+  backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.shopToast.isShow {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* =========================================================
+   RESPONSIVE header nav
+========================================================= */
+@media (max-width: 980px) {
+  .shopNav {
+    display: none;
+  }
+  .plBurger {
+    display: grid;
+  }
+}

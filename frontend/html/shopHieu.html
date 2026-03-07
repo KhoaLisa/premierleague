@@ -158,6 +158,9 @@
                     <span>Tạm tính</span>
                     <strong id="cartTotal">£0.00</strong>
                   </div>
+                  <button class="cartDrop__pay" id="btnCheckout" type="button">
+                    Thanh toán
+                  </button>
                   <button class="cartDrop__btn" id="btnClearCart" type="button">
                     Xóa giỏ
                   </button>
@@ -232,6 +235,37 @@
                 </div>
               </div>
             </div>
+
+            <button
+              class="plIconBtn"
+              id="btnOrders"
+              type="button"
+              aria-label="Lịch sử giao dịch"
+              aria-controls="ordModal"
+              aria-expanded="false"
+            >
+              <span class="shopActions__badge" id="orderCount">0</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M7 3h10a2 2 0 0 1 2 2v16l-4-2-4 2-4-2-4 2V5a2 2 0 0 1 2-2Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M9 7h6M9 11h6M9 15h4"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
 
             <button
               class="plIconBtn"
@@ -507,6 +541,196 @@
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Orders (Transaction History) Modal -->
+      <div class="ordModal" id="ordModal" aria-hidden="true">
+        <div class="ordModal__overlay" data-ord-close="1"></div>
+
+        <div
+          class="ordModal__panel"
+          role="dialog"
+          aria-label="Lịch sử giao dịch"
+        >
+          <div class="ordModal__head">
+            <div class="ordModal__ttl">Lịch sử giao dịch</div>
+            <button
+              class="plIconBtn"
+              type="button"
+              data-ord-close="1"
+              aria-label="Đóng"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M6 6l12 12M18 6 6 18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="ordModal__body">
+            <div class="ordEmpty" id="ordEmpty">Chưa có giao dịch nào 📄</div>
+            <div class="ordList" id="ordList"></div>
+          </div>
+
+          <div class="ordModal__foot">
+            <button class="ordBtn" id="btnClearOrders" type="button">
+              Xóa lịch sử
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Checkout Modal -->
+      <div class="ckModal" id="ckModal" aria-hidden="true">
+        <div class="ckModal__overlay" data-ck-close="1"></div>
+
+        <div class="ckModal__panel" role="dialog" aria-label="Thanh toán">
+          <div class="ckModal__head">
+            <div class="ckModal__ttl">Thanh toán</div>
+            <button
+              class="plIconBtn"
+              type="button"
+              data-ck-close="1"
+              aria-label="Đóng"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M6 6l12 12M18 6 6 18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="ckModal__body">
+            <div class="ckGrid">
+              <div class="ckBox">
+                <div class="ckBox__ttl">Đơn hàng</div>
+                <div class="ckList" id="ckList"></div>
+                <div class="ckTotalRow">
+                  <span>Tổng</span>
+                  <strong id="ckTotal">£0.00</strong>
+                </div>
+              </div>
+
+              <div class="ckBox">
+                <div class="ckBox__ttl">Thông tin khách</div>
+
+                <div class="ckForm">
+                  <label class="ckField">
+                    <span>Họ tên</span>
+                    <input
+                      id="ckName"
+                      placeholder="VD: Lisa"
+                      autocomplete="name"
+                    />
+                  </label>
+
+                  <label class="ckField">
+                    <span>Số điện thoại</span>
+                    <input
+                      id="ckPhone"
+                      placeholder="VD: 09xxxxxxxx"
+                      autocomplete="tel"
+                    />
+                  </label>
+
+                  <label class="ckField">
+                    <span>Địa chỉ</span>
+                    <textarea
+                      id="ckAddr"
+                      rows="3"
+                      placeholder="VD: 123 Nguyễn Trãi, Q1"
+                    ></textarea>
+                  </label>
+
+                  <label class="ckField">
+                    <span>Phương thức thanh toán</span>
+                    <select id="ckPay">
+                      <option value="COD">
+                        COD (Thanh toán khi nhận hàng)
+                      </option>
+                      <option value="CARD">Thẻ (Demo)</option>
+                      <option value="BANK">Chuyển khoản (Demo)</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ckModal__foot">
+            <button class="ckBtn isGhost" type="button" data-ck-close="1">
+              Hủy
+            </button>
+            <button class="ckBtn" id="btnPayConfirm" type="button">
+              Xác nhận thanh toán
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ Invoice Modal -->
+      <div class="invModal" id="invModal" aria-hidden="true">
+        <div class="invModal__overlay" data-inv-close="1"></div>
+
+        <div class="invModal__panel" role="dialog" aria-label="Hóa đơn">
+          <div class="invModal__head">
+            <div class="invModal__ttl">Hóa đơn</div>
+            <button
+              class="plIconBtn"
+              type="button"
+              data-inv-close="1"
+              aria-label="Đóng"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M6 6l12 12M18 6 6 18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="invModal__body">
+            <div id="invBody"></div>
+          </div>
+
+          <div class="invModal__foot">
+            <button class="invBtn isGhost" type="button" data-inv-close="1">
+              Đóng
+            </button>
+            <button class="invBtn" id="btnInvPrint" type="button">
+              In hóa đơn
+            </button>
           </div>
         </div>
       </div>

@@ -619,6 +619,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 10px;
 }
 .cartDrop__total {
@@ -659,6 +660,29 @@
 ========================================================= */
 .shopFavWrap {
   position: relative;
+}
+
+/* cart checkout button */
+.cartDrop__pay {
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(
+    90deg,
+    rgba(122, 44, 255, 0.9),
+    rgba(75, 107, 255, 0.9),
+    rgba(0, 229, 255, 0.85)
+  );
+  color: rgba(255, 255, 255, 0.98);
+  font-weight: 950;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+.cartDrop__pay:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 .favDrop {
@@ -974,4 +998,295 @@ LIKE
   object-fit: cover;
   display: block;
   opacity: 0.96;
+}
+
+/* =========================================================
+   CHECKOUT / INVOICE / ORDERS MODALS
+========================================================= */
+.ckModal,
+.invModal,
+.ordModal {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: none;
+}
+.ckModal.isOpen,
+.invModal.isOpen,
+.ordModal.isOpen {
+  display: block;
+}
+
+.ckModal__overlay,
+.invModal__overlay,
+.ordModal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.ckModal__panel,
+.invModal__panel,
+.ordModal__panel {
+  position: relative;
+  width: min(920px, calc(100vw - 26px));
+  margin: 72px auto 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(10, 8, 18, 0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+
+@media (max-width: 820px) {
+  .ckModal__panel,
+  .invModal__panel,
+  .ordModal__panel {
+    margin-top: 56px;
+  }
+}
+
+.ckModal__head,
+.invModal__head,
+.ordModal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.ckModal__ttl,
+.invModal__ttl,
+.ordModal__ttl {
+  font-weight: 950;
+  letter-spacing: 0.2px;
+}
+
+.ckModal__body,
+.invModal__body,
+.ordModal__body {
+  padding: 14px;
+}
+
+.ckGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 820px) {
+  .ckGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ckBox {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+}
+.ckBox__ttl {
+  font-weight: 950;
+  margin-bottom: 10px;
+}
+
+.ckList {
+  display: grid;
+  gap: 10px;
+}
+.ckItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+.ckItem__name {
+  font-weight: 900;
+  font-size: 13px;
+  line-height: 1.25;
+}
+.ckItem__meta {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.ckItem__price {
+  font-weight: 950;
+  font-size: 13px;
+}
+
+.ckTotalRow {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: rgba(255, 255, 255, 0.78);
+}
+.ckTotalRow strong {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 15px;
+}
+
+.ckForm {
+  display: grid;
+  gap: 10px;
+}
+.ckField span {
+  display: block;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 6px;
+}
+.ckField input,
+.ckField textarea,
+.ckField select {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+  padding: 10px 12px;
+  outline: none;
+}
+.ckField textarea {
+  resize: vertical;
+}
+
+.ckModal__foot,
+.invModal__foot,
+.ordModal__foot {
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ckBtn,
+.invBtn,
+.ordBtn {
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 950;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.ckBtn:hover,
+.invBtn:hover,
+.ordBtn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+.ckBtn.isGhost,
+.invBtn.isGhost {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.ordEmpty {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  padding: 10px 2px;
+}
+.ordList {
+  display: grid;
+  gap: 10px;
+}
+.ordItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+.ordItem:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.ordItem__id {
+  font-weight: 950;
+  font-size: 13px;
+}
+.ordItem__sub {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.ordItem__amt {
+  font-weight: 950;
+  font-size: 13px;
+}
+
+.invCard {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+}
+.invTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.invTop__ttl {
+  font-weight: 950;
+}
+.invTop__sub {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.invTable {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+.invRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+.invRow__name {
+  font-weight: 900;
+  font-size: 13px;
+}
+.invRow__meta {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.invRow__amt {
+  font-weight: 950;
+  font-size: 13px;
+}
+.invTotal {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: rgba(255, 255, 255, 0.78);
+}
+.invTotal strong {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 15px;
 }

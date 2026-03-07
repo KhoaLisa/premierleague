@@ -3,16 +3,23 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 
+  const LS_ORDERS = "shop_orders_v1";
+
   const els = {
+    // grid
     grid: $("#shopGrid"),
+
+    // badges + toast
     cartCount: $("#cartCount"),
+    favCount: $("#favCount"),
+    orderCount: $("#orderCount"),
     toast: $("#toast"),
 
     // top actions
     btnSearch: $("#btnSearch"),
     btnCart: $("#btnCart"),
-
     btnFav: $("#btnFav"),
+    btnOrders: $("#btnOrders"),
 
     // search modal
     modal: $("#searchModal"),
@@ -24,6 +31,7 @@
     cartDrop: $("#cartDrop"),
     btnCartClose: $("#btnCartClose"),
     btnClearCart: $("#btnClearCart"),
+    btnCheckout: $("#btnCheckout"),
     cartList: $("#cartList"),
     cartEmpty: $("#cartEmpty"),
     cartTotal: $("#cartTotal"),
@@ -31,7 +39,6 @@
     // favorites dropdown
     favWrap: $("#favWrap"),
     favDrop: $("#favDrop"),
-    favCount: $("#favCount"),
     btnFavClose: $("#btnFavClose"),
     btnClearFav: $("#btnClearFav"),
     favList: $("#favList"),
@@ -50,10 +57,31 @@
     pdQty: $("#pdQty"),
     pdAdd: $("#pdAdd"),
     pdLike: $("#pdLike"),
+
+    // orders modal
+    ordModal: $("#ordModal"),
+    ordList: $("#ordList"),
+    ordEmpty: $("#ordEmpty"),
+    btnClearOrders: $("#btnClearOrders"),
+
+    // checkout modal
+    ckModal: $("#ckModal"),
+    ckList: $("#ckList"),
+    ckTotal: $("#ckTotal"),
+    ckName: $("#ckName"),
+    ckPhone: $("#ckPhone"),
+    ckAddr: $("#ckAddr"),
+    ckPay: $("#ckPay"),
+    btnPayConfirm: $("#btnPayConfirm"),
+
+    // invoice modal
+    invModal: $("#invModal"),
+    invBody: $("#invBody"),
+    btnInvPrint: $("#btnInvPrint"),
   };
 
   // ---------------------------------------------------------
-  // Demo data (bạn thay bằng API sau cũng được)
+  // Demo data (thay bằng API sau cũng OK)
   // ---------------------------------------------------------
   function svgDataUrl(title) {
     const t = String(title || "Product").slice(0, 28);
@@ -150,17 +178,15 @@
   const state = {
     cart: new Map(), // id -> qty
     likes: new Set(), // id
+    orders: [], // [{id, createdAt, customer, items, total}]
     q: "",
     activeId: null, // product detail modal
+    activeOrderId: null, // invoice modal
   };
 
   // ---------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------
-  function byId(id) {
-    return products.find((p) => p.id === id) || null;
-  }
-
   function esc(s) {
     return String(s ?? "")
       .replaceAll("&", "&amp;")
@@ -181,6 +207,10 @@
     els.toast.classList.add("isShow");
     clearTimeout(toast._t);
     toast._t = setTimeout(() => els.toast.classList.remove("isShow"), 1600);
+  }
+
+  function byId(id) {
+    return products.find((p) => p.id === id) || null;
   }
 
   function getQty(id) {
@@ -214,8 +244,48 @@
     return sum;
   }
 
+  function lockScroll() {
+    document.documentElement.style.overflow = "hidden";
+  }
+  function unlockScroll() {
+    document.documentElement.style.overflow = "";
+  }
+
+  function safeJsonParse(s, fallback) {
+    try {
+      return JSON.parse(s);
+    } catch {
+      return fallback;
+    }
+  }
+
+  function loadOrders() {
+    const raw = localStorage.getItem(LS_ORDERS);
+    const data = safeJsonParse(raw, []);
+    if (Array.isArray(data)) state.orders = data;
+    else state.orders = [];
+  }
+
+  function saveOrders() {
+    localStorage.setItem(LS_ORDERS, JSON.stringify(state.orders));
+  }
+
+  function genOrderId() {
+    const d = new Date();
+    const ymd = d.toISOString().slice(0, 10).replaceAll("-", "");
+    const hms = d.toTimeString().slice(0, 8).replaceAll(":", "");
+    const rand = Math.random().toString(16).slice(2, 6).toUpperCase();
+    return `ODR-${ymd}-${hms}-${rand}`;
+  }
+
+  function payLabel(code) {
+    if (code === "CARD") return "Thẻ (Demo)";
+    if (code === "BANK") return "Chuyển khoản (Demo)";
+    return "COD";
+  }
+
   // ---------------------------------------------------------
-  // Render
+  // Render cards / dropdowns
   // ---------------------------------------------------------
   function cardHTML(p) {
     const qty = getQty(p.id);
@@ -287,24 +357,6 @@
     `;
   }
 
-  function renderCartDrop() {
-    if (!els.cartList || !els.cartTotal || !els.cartEmpty) return;
-
-    const items = Array.from(state.cart.entries())
-      .map(([id, qty]) => [byId(id), qty])
-      .filter(([p]) => !!p);
-
-    els.cartList.innerHTML = items
-      .map(([p, qty]) => cartItemHTML(p, qty))
-      .join("");
-    els.cartTotal.textContent = fmtGBP(cartSubtotal());
-
-    const empty = items.length === 0;
-    els.cartEmpty.style.display = empty ? "block" : "none";
-    els.cartList.style.display = empty ? "none" : "grid";
-    if (els.btnClearCart) els.btnClearCart.disabled = empty;
-  }
-
   function favItemHTML(p) {
     return `
       <div class="favItem" data-id="${esc(p.id)}" role="button" tabindex="0" aria-label="Xem chi tiết ${esc(p.name)}">
@@ -322,17 +374,64 @@
     `;
   }
 
+  function orderItemHTML(o) {
+    const dt = new Date(o.createdAt || Date.now());
+    const dateStr = dt.toLocaleString("vi-VN");
+    const count = (o.items || []).reduce((s, it) => s + Number(it.qty || 0), 0);
+    return `
+      <div class="ordItem" data-oid="${esc(o.id)}" role="button" tabindex="0" aria-label="Xem hóa đơn ${esc(o.id)}">
+        <div>
+          <div class="ordItem__id">${esc(o.id)}</div>
+          <div class="ordItem__sub">${dateStr} • ${count} món • ${esc(payLabel(o.customer?.pay))}</div>
+        </div>
+        <div class="ordItem__amt">${fmtGBP(o.total || 0)}</div>
+      </div>
+    `;
+  }
+
+  function renderCartDrop() {
+    if (!els.cartList || !els.cartTotal || !els.cartEmpty) return;
+
+    const items = Array.from(state.cart.entries())
+      .map(([id, qty]) => [byId(id), qty])
+      .filter(([p]) => !!p);
+
+    els.cartList.innerHTML = items
+      .map(([p, qty]) => cartItemHTML(p, qty))
+      .join("");
+    els.cartTotal.textContent = fmtGBP(cartSubtotal());
+
+    const empty = items.length === 0;
+    els.cartEmpty.style.display = empty ? "block" : "none";
+    els.cartList.style.display = empty ? "none" : "grid";
+    if (els.btnClearCart) els.btnClearCart.disabled = empty;
+    if (els.btnCheckout) els.btnCheckout.disabled = empty;
+  }
+
   function renderFavDrop() {
     if (!els.favList || !els.favEmpty) return;
 
     const items = Array.from(state.likes).map(byId).filter(Boolean);
-
     els.favList.innerHTML = items.map(favItemHTML).join("");
 
     const empty = items.length === 0;
     els.favEmpty.style.display = empty ? "block" : "none";
     els.favList.style.display = empty ? "none" : "grid";
     if (els.btnClearFav) els.btnClearFav.disabled = empty;
+  }
+
+  function renderOrders() {
+    if (!els.ordList || !els.ordEmpty) return;
+
+    const list = Array.from(state.orders || [])
+      .slice()
+      .reverse(); // newest first
+    els.ordList.innerHTML = list.map(orderItemHTML).join("");
+
+    const empty = list.length === 0;
+    els.ordEmpty.style.display = empty ? "block" : "none";
+    els.ordList.style.display = empty ? "none" : "grid";
+    if (els.btnClearOrders) els.btnClearOrders.disabled = empty;
   }
 
   function render() {
@@ -347,17 +446,23 @@
 
     if (els.cartCount) els.cartCount.textContent = String(cartCountTotal());
     if (els.favCount) els.favCount.textContent = String(state.likes.size);
+    if (els.orderCount)
+      els.orderCount.textContent = String((state.orders || []).length);
 
     renderCartDrop();
     renderFavDrop();
+    renderOrders();
   }
 
   // ---------------------------------------------------------
-  // Search modal
+  // Open/close: Search modal
   // ---------------------------------------------------------
   function openSearch() {
     closeCart();
     closeFav();
+    closeOrders();
+    closeCheckout();
+    closeInvoice();
     closeProduct();
 
     if (!els.modal) return;
@@ -380,6 +485,9 @@
   function openCart() {
     closeSearch();
     closeFav();
+    closeOrders();
+    closeCheckout();
+    closeInvoice();
     closeProduct();
 
     if (!els.cartDrop) return;
@@ -406,7 +514,9 @@
   function openFav() {
     closeSearch();
     closeCart();
-    closeFav();
+    closeOrders();
+    closeCheckout();
+    closeInvoice();
     closeProduct();
 
     if (!els.favDrop) return;
@@ -453,6 +563,9 @@
     closeSearch();
     closeCart();
     closeFav();
+    closeOrders();
+    closeCheckout();
+    closeInvoice();
 
     const p = byId(id);
     if (!p || !els.pdModal) return;
@@ -488,7 +601,7 @@
 
     els.pdModal.classList.add("isOpen");
     els.pdModal.setAttribute("aria-hidden", "false");
-    document.documentElement.style.overflow = "hidden";
+    lockScroll();
   }
 
   function closeProduct() {
@@ -496,8 +609,296 @@
 
     els.pdModal.classList.remove("isOpen");
     els.pdModal.setAttribute("aria-hidden", "true");
-    document.documentElement.style.overflow = "";
+    unlockScroll();
     state.activeId = null;
+  }
+
+  // ---------------------------------------------------------
+  // Orders modal (history)
+  // ---------------------------------------------------------
+  function openOrders() {
+    closeSearch();
+    closeCart();
+    closeFav();
+    closeCheckout();
+    closeInvoice();
+    closeProduct();
+
+    if (!els.ordModal) return;
+    renderOrders();
+
+    els.ordModal.classList.add("isOpen");
+    els.ordModal.setAttribute("aria-hidden", "false");
+    els.btnOrders?.setAttribute("aria-expanded", "true");
+    lockScroll();
+  }
+
+  function closeOrders() {
+    if (!els.ordModal) return;
+    els.ordModal.classList.remove("isOpen");
+    els.ordModal.setAttribute("aria-hidden", "true");
+    els.btnOrders?.setAttribute("aria-expanded", "false");
+    unlockScroll();
+  }
+
+  // ---------------------------------------------------------
+  // Checkout modal
+  // ---------------------------------------------------------
+  function ckItemHTML(p, qty) {
+    const lineTotal = Number(p.price || 0) * Number(qty || 0);
+    return `
+      <div class="ckItem">
+        <div>
+          <div class="ckItem__name">${esc(p.name)}</div>
+          <div class="ckItem__meta">x${qty} • ${fmtGBP(p.price)} / món</div>
+        </div>
+        <div class="ckItem__price">${fmtGBP(lineTotal)}</div>
+      </div>
+    `;
+  }
+
+  function renderCheckout() {
+    if (!els.ckList || !els.ckTotal) return;
+
+    const items = Array.from(state.cart.entries())
+      .map(([id, qty]) => [byId(id), qty])
+      .filter(([p]) => !!p);
+
+    els.ckList.innerHTML = items.map(([p, qty]) => ckItemHTML(p, qty)).join("");
+    els.ckTotal.textContent = fmtGBP(cartSubtotal());
+  }
+
+  function openCheckout() {
+    closeSearch();
+    closeCart();
+    closeFav();
+    closeOrders();
+    closeInvoice();
+    closeProduct();
+
+    if (!els.ckModal) return;
+    if (!state.cart.size) {
+      toast("Giỏ đang trống 😄");
+      return;
+    }
+
+    renderCheckout();
+
+    els.ckModal.classList.add("isOpen");
+    els.ckModal.setAttribute("aria-hidden", "false");
+    lockScroll();
+    setTimeout(() => els.ckName?.focus(), 30);
+  }
+
+  function closeCheckout() {
+    if (!els.ckModal) return;
+    els.ckModal.classList.remove("isOpen");
+    els.ckModal.setAttribute("aria-hidden", "true");
+    unlockScroll();
+  }
+
+  function buildOrderFromCart() {
+    const items = Array.from(state.cart.entries())
+      .map(([id, qty]) => {
+        const p = byId(id);
+        if (!p) return null;
+        return {
+          id: p.id,
+          name: p.name,
+          price: Number(p.price || 0),
+          qty: Number(qty || 0),
+        };
+      })
+      .filter(Boolean);
+
+    return items;
+  }
+
+  function confirmPayment() {
+    if (!state.cart.size) {
+      toast("Giỏ đang trống 😄");
+      return;
+    }
+
+    const name = (els.ckName?.value || "").trim();
+    const phone = (els.ckPhone?.value || "").trim();
+    const addr = (els.ckAddr?.value || "").trim();
+    const pay = String(els.ckPay?.value || "COD");
+
+    if (!name || !phone || !addr) {
+      toast("Vui lòng nhập đủ thông tin khách hàng ✍️");
+      return;
+    }
+
+    const items = buildOrderFromCart();
+    const total = cartSubtotal();
+
+    const order = {
+      id: genOrderId(),
+      createdAt: new Date().toISOString(),
+      customer: { name, phone, addr, pay },
+      items,
+      total,
+      currency: "GBP",
+    };
+
+    state.orders.push(order);
+    saveOrders();
+
+    // clear cart
+    state.cart.clear();
+    render();
+
+    closeCheckout();
+    toast("Thanh toán thành công ✅");
+    openInvoice(order.id);
+  }
+
+  // ---------------------------------------------------------
+  // Invoice modal
+  // ---------------------------------------------------------
+  function invoiceHTML(o) {
+    const dt = new Date(o.createdAt || Date.now());
+    const dateStr = dt.toLocaleString("vi-VN");
+
+    const rows = (o.items || [])
+      .map((it) => {
+        const line = Number(it.price || 0) * Number(it.qty || 0);
+        return `
+        <div class="invRow">
+          <div>
+            <div class="invRow__name">${esc(it.name)}</div>
+            <div class="invRow__meta">x${it.qty} • ${fmtGBP(it.price)} / món</div>
+          </div>
+          <div class="invRow__amt">${fmtGBP(line)}</div>
+        </div>
+      `;
+      })
+      .join("");
+
+    return `
+      <div class="invCard">
+        <div class="invTop">
+          <div>
+            <div class="invTop__ttl">European Football Shop</div>
+            <div class="invTop__sub">Mã đơn: <strong>${esc(o.id)}</strong></div>
+            <div class="invTop__sub">${dateStr}</div>
+          </div>
+          <div>
+            <div class="invTop__sub"><strong>Khách:</strong> ${esc(o.customer?.name || "")}</div>
+            <div class="invTop__sub"><strong>SĐT:</strong> ${esc(o.customer?.phone || "")}</div>
+            <div class="invTop__sub"><strong>ĐC:</strong> ${esc(o.customer?.addr || "")}</div>
+            <div class="invTop__sub"><strong>TT:</strong> ${esc(payLabel(o.customer?.pay))}</div>
+          </div>
+        </div>
+
+        <div class="invTable">
+          ${rows || ""}
+        </div>
+
+        <div class="invTotal">
+          <span>Tổng thanh toán</span>
+          <strong>${fmtGBP(o.total || 0)}</strong>
+        </div>
+      </div>
+    `;
+  }
+
+  function openInvoice(orderId) {
+    closeSearch();
+    closeCart();
+    closeFav();
+    closeOrders();
+    closeCheckout();
+    closeProduct();
+
+    const o = (state.orders || []).find((x) => x.id === orderId);
+    if (!o || !els.invModal || !els.invBody) return;
+
+    state.activeOrderId = o.id;
+    els.invBody.innerHTML = invoiceHTML(o);
+
+    els.invModal.classList.add("isOpen");
+    els.invModal.setAttribute("aria-hidden", "false");
+    lockScroll();
+  }
+
+  function closeInvoice() {
+    if (!els.invModal) return;
+    els.invModal.classList.remove("isOpen");
+    els.invModal.setAttribute("aria-hidden", "true");
+    unlockScroll();
+    state.activeOrderId = null;
+  }
+
+  function printInvoice() {
+    const id = state.activeOrderId;
+    const o = (state.orders || []).find((x) => x.id === id);
+    if (!o) return;
+
+    const w = window.open("", "_blank");
+    if (!w) {
+      toast("Trình duyệt chặn popup 😅 Hãy cho phép để in.");
+      return;
+    }
+
+    const html = `
+      <!doctype html>
+      <html>
+        <head>
+          <meta charset="utf-8"/>
+          <meta name="viewport" content="width=device-width,initial-scale=1"/>
+          <title>Invoice ${esc(o.id)}</title>
+          <style>
+            body{ font-family: system-ui, -apple-system, Segoe UI, Roboto; padding: 18px; }
+            .box{ border:1px solid #ddd; border-radius: 12px; padding: 14px; }
+            h2{ margin: 0 0 10px; }
+            .meta{ font-size: 12px; color:#555; margin-bottom: 10px; }
+            .row{ display:flex; justify-content:space-between; gap:10px; padding: 10px 0; border-bottom: 1px dashed #ddd; }
+            .row:last-child{ border-bottom:0; }
+            .name{ font-weight: 700; }
+            .small{ font-size: 12px; color:#555; margin-top: 4px; }
+            .total{ display:flex; justify-content:space-between; margin-top: 12px; font-weight: 800; }
+          </style>
+        </head>
+        <body>
+          <div class="box">
+            <h2>European Football Shop</h2>
+            <div class="meta">Mã đơn: <strong>${esc(o.id)}</strong> • ${new Date(o.createdAt).toLocaleString("vi-VN")}</div>
+            <div class="meta">Khách: <strong>${esc(o.customer?.name || "")}</strong> • SĐT: ${esc(o.customer?.phone || "")}</div>
+            <div class="meta">Địa chỉ: ${esc(o.customer?.addr || "")}</div>
+            <div class="meta">Thanh toán: ${esc(payLabel(o.customer?.pay))}</div>
+
+            ${(o.items || [])
+              .map((it) => {
+                const line = Number(it.price || 0) * Number(it.qty || 0);
+                return `
+                <div class="row">
+                  <div>
+                    <div class="name">${esc(it.name)}</div>
+                    <div class="small">x${it.qty} • ${fmtGBP(it.price)} / món</div>
+                  </div>
+                  <div><strong>${fmtGBP(line)}</strong></div>
+                </div>
+              `;
+              })
+              .join("")}
+
+            <div class="total">
+              <span>Tổng</span>
+              <span>${fmtGBP(o.total || 0)}</span>
+            </div>
+          </div>
+
+          <script>
+            window.onload = () => { window.print(); setTimeout(() => window.close(), 250); };
+          </script>
+        </body>
+      </html>
+    `;
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
   }
 
   // ---------------------------------------------------------
@@ -564,7 +965,7 @@
       render();
     });
 
-    // ✅ Enter => đóng textField (đóng modal + blur)
+    // Enter => đóng textField (đóng modal + blur)
     els.q?.addEventListener("keydown", (e) => {
       if (e.key !== "Enter") return;
       e.preventDefault();
@@ -579,6 +980,57 @@
       closeSearch();
       els.q.blur();
       toast(`Đã lọc: ${count} sản phẩm 🔎`);
+    });
+
+    // cart dropdown open/close
+    els.btnCart?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleCart();
+    });
+    els.btnCartClose?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeCart();
+    });
+    els.btnClearCart?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!state.cart.size) return;
+      state.cart.clear();
+      toast("Đã xóa giỏ 🧹");
+      render();
+    });
+    els.btnCheckout?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openCheckout();
+    });
+
+    // cart dropdown interactions
+    els.cartDrop?.addEventListener("click", (e) => {
+      // remove
+      const rm = e.target.closest?.("[data-rm]");
+      if (rm) {
+        e.stopPropagation();
+        const item = e.target.closest(".cartItem");
+        const id = item?.getAttribute("data-id");
+        if (!id) return;
+
+        state.cart.delete(id);
+        toast("Đã bỏ khỏi giỏ 🧺");
+        render();
+        return;
+      }
+
+      // open product detail when clicking cart item
+      const item = e.target.closest?.(".cartItem");
+      const id = item?.getAttribute("data-id");
+      if (id) openProduct(id);
+    });
+
+    // click outside to close cart dropdown
+    document.addEventListener("click", (e) => {
+      if (!els.cartDrop || !els.cartWrap) return;
+      if (!els.cartDrop.classList.contains("isOpen")) return;
+      const inside = els.cartWrap.contains(e.target);
+      if (!inside) closeCart();
     });
 
     // favorites dropdown open/close
@@ -626,55 +1078,6 @@
       if (!inside) closeFav();
     });
 
-    // cart dropdown open/close
-    els.btnCart?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleCart();
-    });
-    els.btnCartClose?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      closeCart();
-    });
-    els.btnClearCart?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (!state.cart.size) return;
-      state.cart.clear();
-      toast("Đã xóa giỏ 🧹");
-      render();
-    });
-
-    // cart dropdown interactions
-    els.cartDrop?.addEventListener("click", (e) => {
-      // remove
-      const rm = e.target.closest?.("[data-rm]");
-      if (rm) {
-        e.stopPropagation();
-        const item = e.target.closest(".cartItem");
-        const id = item?.getAttribute("data-id");
-        if (!id) return;
-
-        state.cart.delete(id);
-        toast("Đã bỏ khỏi giỏ 🧺");
-        render();
-        return;
-      }
-
-      // open product detail when clicking cart item
-      const item = e.target.closest?.(".cartItem");
-      const id = item?.getAttribute("data-id");
-      if (id) {
-        openProduct(id);
-      }
-    });
-
-    // click outside to close cart dropdown
-    document.addEventListener("click", (e) => {
-      if (!els.cartDrop || !els.cartWrap) return;
-      if (!els.cartDrop.classList.contains("isOpen")) return;
-      const inside = els.cartWrap.contains(e.target);
-      if (!inside) closeCart();
-    });
-
     // product modal close
     els.pdModal?.addEventListener("click", (e) => {
       if (e.target && e.target.dataset && e.target.dataset.pdClose)
@@ -696,8 +1099,6 @@
       setQty(id, qty);
       toast(`Đã cập nhật giỏ: x${qty} ✅`);
       render();
-      // giữ modal mở để user tiếp tục, nếu bạn muốn auto close thì bật dòng dưới:
-      // closeProduct();
     });
 
     // product like
@@ -716,16 +1117,54 @@
       render();
     });
 
+    // orders history
+    els.btnOrders?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openOrders();
+    });
+    els.ordModal?.addEventListener("click", (e) => {
+      if (e.target && e.target.dataset && e.target.dataset.ordClose)
+        closeOrders();
+    });
+    els.btnClearOrders?.addEventListener("click", () => {
+      state.orders = [];
+      saveOrders();
+      toast("Đã xóa lịch sử giao dịch 🧹");
+      render();
+    });
+    els.ordList?.addEventListener("click", (e) => {
+      const it = e.target.closest?.(".ordItem");
+      const oid = it?.getAttribute("data-oid");
+      if (oid) openInvoice(oid);
+    });
+
+    // checkout modal close + confirm
+    els.ckModal?.addEventListener("click", (e) => {
+      if (e.target && e.target.dataset && e.target.dataset.ckClose)
+        closeCheckout();
+    });
+    els.btnPayConfirm?.addEventListener("click", confirmPayment);
+
+    // invoice modal close + print
+    els.invModal?.addEventListener("click", (e) => {
+      if (e.target && e.target.dataset && e.target.dataset.invClose)
+        closeInvoice();
+    });
+    els.btnInvPrint?.addEventListener("click", printInvoice);
+
     // global ESC: close all overlays
     window.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
       closeSearch();
       closeCart();
       closeFav();
+      closeOrders();
+      closeCheckout();
+      closeInvoice();
       closeProduct();
     });
 
-    // active nav highlight (nhìn cho giống mẫu)
+    // active nav highlight
     els.navLinks?.forEach((a) => {
       a.addEventListener("click", () => {
         els.navLinks.forEach((x) => x.classList.remove("isActive"));
@@ -735,6 +1174,7 @@
   }
 
   // init
+  loadOrders();
   render();
   bind();
 })();

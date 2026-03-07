@@ -335,6 +335,114 @@
         </div>
       </div>
 
+      <!-- ✅ Product Detail Modal -->
+      <div class="pdModal" id="pdModal" aria-hidden="true">
+        <div class="pdModal__overlay" data-pd-close="1"></div>
+
+        <div
+          class="pdModal__panel"
+          role="dialog"
+          aria-label="Chi tiết sản phẩm"
+        >
+          <div class="pdModal__head">
+            <div class="pdModal__brand" id="pdBrand">Premier League</div>
+
+            <button
+              class="plIconBtn"
+              type="button"
+              data-pd-close="1"
+              aria-label="Đóng"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M6 6l12 12M18 6 6 18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="pdModal__body">
+            <div class="pdMedia">
+              <img id="pdImg" class="pdMedia__img" alt="Ảnh sản phẩm" />
+            </div>
+
+            <div class="pdInfo">
+              <h3 class="pdInfo__name" id="pdName">Tên sản phẩm</h3>
+              <p class="pdInfo__desc" id="pdDesc">Mô tả sản phẩm</p>
+
+              <div class="pdPriceRow">
+                <div class="pdPrice" id="pdPrice">£0.00</div>
+                <div class="pdWas" id="pdWas" style="display: none">£0.00</div>
+              </div>
+
+              <div class="pdActions">
+                <div class="pdQty" aria-label="Số lượng">
+                  <button
+                    class="pdQty__btn"
+                    id="pdMinus"
+                    type="button"
+                    aria-label="Giảm"
+                  >
+                    −
+                  </button>
+                  <input
+                    class="pdQty__inp"
+                    id="pdQty"
+                    type="number"
+                    min="1"
+                    value="1"
+                  />
+                  <button
+                    class="pdQty__btn"
+                    id="pdPlus"
+                    type="button"
+                    aria-label="Tăng"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button class="pdAddBtn" id="pdAdd" type="button">
+                  Thêm vào giỏ
+                </button>
+
+                <button
+                  class="shopBtn isGhost shopLike"
+                  id="pdLike"
+                  type="button"
+                  aria-label="Yêu thích"
+                  aria-pressed="false"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 21s-7-4.6-9.5-9.2C.7 8.1 2.9 5 6.5 5c2 0 3.3 1 4.1 2.2C11.4 6 12.7 5 14.7 5c3.6 0 5.8 3.1 4 6.8C19 16.4 12 21 12 21Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ✅ Toast -->
       <div class="shopToast" id="toast" aria-live="polite"></div>
     </main>

@@ -74,148 +74,6 @@
 }
 
 /* =========================================================
-   CART DROPDOWN (click icon cart)
-========================================================= */
-.shopCartWrap {
-  position: relative;
-}
-
-.cartDrop {
-  position: absolute;
-  top: 52px;
-  right: 0;
-  width: min(360px, calc(100vw - 28px));
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(16, 6, 22, 0.92);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
-  z-index: 90;
-  display: none;
-}
-
-.cartDrop.isOpen {
-  display: block;
-}
-
-.cartDrop__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.cartDrop__ttl {
-  font-weight: 950;
-  letter-spacing: 0.2px;
-}
-
-.cartDrop__body {
-  padding: 10px 12px 12px;
-}
-
-.cartDrop__empty {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 13px;
-  padding: 10px 0;
-}
-
-.cartDrop__list {
-  display: grid;
-  gap: 10px;
-}
-
-.cartItem {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  padding: 10px 10px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.cartItem__name {
-  font-weight: 900;
-  line-height: 1.25;
-  font-size: 13px;
-}
-
-.cartItem__price {
-  margin-top: 4px;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 13px;
-}
-
-.cartItem__rm {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.88);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.cartItem__rm:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.cartDrop__foot {
-  padding: 12px 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.cartDrop__total {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 12px;
-}
-
-.cartDrop__total strong {
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
-  letter-spacing: 0.2px;
-}
-
-.cartDrop__btn {
-  padding: 9px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.07);
-  color: rgba(255, 255, 255, 0.92);
-  font-weight: 900;
-  cursor: pointer;
-  transition:
-    transform 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.cartDrop__btn:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* =========================================================
    HERO giống mẫu (ảnh lớn + caption)
 ========================================================= */
 .shopHero {
@@ -402,6 +260,7 @@
 }
 
 .shopCard {
+  cursor: pointer;
   border-radius: var(--shopR);
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
@@ -544,31 +403,6 @@
 }
 
 /* =========================================================
-   LIKE (yêu thích) - đổi màu trái tim
-========================================================= */
-.shopBtn.isGhost.shopLike {
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.shopBtn.isGhost.shopLike svg path {
-  fill: none;
-  stroke: currentColor;
-  transition:
-    fill 0.15s ease,
-    stroke 0.15s ease;
-}
-
-.shopBtn.isGhost.shopLike.isLiked {
-  color: rgba(255, 77, 109, 0.98);
-  border-color: rgba(255, 77, 109, 0.35);
-  background: rgba(255, 77, 109, 0.12);
-}
-
-.shopBtn.isGhost.shopLike.isLiked svg path {
-  fill: currentColor;
-}
-
-/* =========================================================
    SEARCH MODAL + TOAST
 ========================================================= */
 .shopModal {
@@ -671,4 +505,344 @@
   .plBurger {
     display: grid;
   }
+}
+
+/* =========================================================
+   CART DROPDOWN (click icon cart)
+========================================================= */
+.shopCartWrap {
+  position: relative;
+}
+
+.cartDrop {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: min(380px, calc(100vw - 28px));
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(16, 6, 22, 0.92);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  z-index: 90;
+  display: none;
+}
+.cartDrop.isOpen {
+  display: block;
+}
+
+.cartDrop__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.cartDrop__ttl {
+  font-weight: 950;
+  letter-spacing: 0.2px;
+}
+
+.cartDrop__body {
+  padding: 10px 12px 12px;
+}
+.cartDrop__empty {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  padding: 10px 0;
+}
+.cartDrop__list {
+  display: grid;
+  gap: 10px;
+}
+
+.cartItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+.cartItem:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+}
+.cartItem__name {
+  font-weight: 900;
+  line-height: 1.25;
+  font-size: 13px;
+}
+.cartItem__sub {
+  margin-top: 4px;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.cartItem__qty {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.cartItem__price {
+  font-weight: 950;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.cartItem__rm {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.cartItem__rm:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.cartDrop__foot {
+  padding: 12px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.cartDrop__total {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+.cartDrop__total strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+.cartDrop__btn {
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.cartDrop__btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================================
+   LIKE (yêu thích) - đổi màu trái tim
+========================================================= */
+.shopBtn.isGhost.shopLike {
+  color: rgba(255, 255, 255, 0.88);
+}
+.shopBtn.isGhost.shopLike svg path {
+  fill: none;
+  stroke: currentColor;
+  transition:
+    fill 0.15s ease,
+    stroke 0.15s ease;
+}
+.shopBtn.isGhost.shopLike.isLiked {
+  color: rgba(255, 77, 109, 0.98);
+  border-color: rgba(255, 77, 109, 0.35);
+  background: rgba(255, 77, 109, 0.12);
+}
+.shopBtn.isGhost.shopLike.isLiked svg path {
+  fill: currentColor;
+}
+
+/* =========================================================
+   PRODUCT DETAIL MODAL (overlay + blur)
+========================================================= */
+.pdModal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: none;
+}
+.pdModal.isOpen {
+  display: block;
+}
+
+.pdModal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.pdModal__panel {
+  position: relative;
+  width: min(860px, calc(100vw - 26px));
+  margin: 72px auto 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(10, 8, 18, 0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+
+.pdModal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.pdModal__brand {
+  font-weight: 950;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.pdModal__body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 14px;
+  padding: 14px;
+}
+@media (max-width: 820px) {
+  .pdModal__panel {
+    margin-top: 56px;
+  }
+  .pdModal__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pdMedia {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+}
+.pdMedia__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  max-height: 360px;
+}
+
+.pdInfo {
+  padding: 4px 2px;
+}
+.pdInfo__name {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 1.25;
+}
+.pdInfo__desc {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.pdPriceRow {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.pdPrice {
+  font-weight: 950;
+  font-size: 18px;
+}
+.pdWas {
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: line-through;
+  font-weight: 900;
+}
+
+.pdActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pdQty {
+  display: flex;
+  align-items: center;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+.pdQty__btn {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 950;
+}
+.pdQty__inp {
+  width: 58px;
+  height: 40px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.92);
+  text-align: center;
+  font-weight: 950;
+}
+.pdAddBtn {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 950;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.pdAddBtn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* product card photo */
+.shopCard__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.96;
 }

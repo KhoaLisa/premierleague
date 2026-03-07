@@ -262,12 +262,27 @@
   function loadOrders() {
     const raw = localStorage.getItem(LS_ORDERS);
     const data = safeJsonParse(raw, []);
-    if (Array.isArray(data)) state.orders = data;
+    if (Array.isArray(data)) state.orders = data.map(ensureOrderShape);
     else state.orders = [];
   }
 
   function saveOrders() {
     localStorage.setItem(LS_ORDERS, JSON.stringify(state.orders));
+  }
+
+  function setOrderStatus(orderId, status) {
+    const s = normalizeStatus(status);
+    const i = (state.orders || []).findIndex((x) => x.id === orderId);
+    if (i < 0) return;
+
+    state.orders[i] = { ...state.orders[i], status: s };
+    saveOrders();
+    render();
+
+    // if invoice of same order is open => refresh invoice content
+    if (state.activeOrderId === orderId) {
+      openInvoice(orderId);
+    }
   }
 
   function genOrderId() {
@@ -282,6 +297,35 @@
     if (code === "CARD") return "Thẻ (Demo)";
     if (code === "BANK") return "Chuyển khoản (Demo)";
     return "COD";
+  }
+
+  const STATUS_FLOW = ["pending", "paid", "shipping", "done"];
+
+  function statusLabel(s) {
+    if (s === "paid") return "Đã thanh toán";
+    if (s === "shipping") return "Đang giao";
+    if (s === "done") return "Hoàn tất";
+    return "Chờ xử lý";
+  }
+
+  function normalizeStatus(s) {
+    return STATUS_FLOW.includes(s) ? s : "pending";
+  }
+
+  function nextStatus(s) {
+    const cur = normalizeStatus(s);
+    const i = STATUS_FLOW.indexOf(cur);
+    return STATUS_FLOW[(i + 1) % STATUS_FLOW.length];
+  }
+
+  function ensureOrderShape(o) {
+    // backward-compat for old saved data
+    const x = { ...o };
+    x.status = normalizeStatus(x.status || "paid");
+    x.items = Array.isArray(x.items) ? x.items : [];
+    x.customer = x.customer || {};
+    x.total = Number(x.total || 0);
+    return x;
   }
 
   // ---------------------------------------------------------
@@ -375,16 +419,29 @@
   }
 
   function orderItemHTML(o) {
-    const dt = new Date(o.createdAt || Date.now());
+    const oo = ensureOrderShape(o);
+    const dt = new Date(oo.createdAt || Date.now());
     const dateStr = dt.toLocaleString("vi-VN");
-    const count = (o.items || []).reduce((s, it) => s + Number(it.qty || 0), 0);
+    const count = (oo.items || []).reduce(
+      (s, it) => s + Number(it.qty || 0),
+      0,
+    );
+    const st = normalizeStatus(oo.status);
+    const stLabel = statusLabel(st);
+
     return `
-      <div class="ordItem" data-oid="${esc(o.id)}" role="button" tabindex="0" aria-label="Xem hóa đơn ${esc(o.id)}">
+      <div class="ordItem" data-oid="${esc(oo.id)}" role="button" tabindex="0" aria-label="Xem hóa đơn ${esc(oo.id)}">
         <div>
-          <div class="ordItem__id">${esc(o.id)}</div>
-          <div class="ordItem__sub">${dateStr} • ${count} món • ${esc(payLabel(o.customer?.pay))}</div>
+          <div class="ordItem__id">${esc(oo.id)}</div>
+          <div class="ordItem__sub">${dateStr} • ${count} món • ${esc(payLabel(oo.customer?.pay))}</div>
         </div>
-        <div class="ordItem__amt">${fmtGBP(o.total || 0)}</div>
+
+        <div class="ordItem__right">
+          <div class="ordItem__amt">${fmtGBP(oo.total || 0)}</div>
+          <button class="ordStatus ordStatus--${esc(st)}" type="button" data-ord-status="1" aria-label="Đổi trạng thái đơn">
+            ${esc(stLabel)}
+          </button>
+        </div>
       </div>
     `;
   }
@@ -737,6 +794,7 @@
       id: genOrderId(),
       createdAt: new Date().toISOString(),
       customer: { name, phone, addr, pay },
+      status: pay === "COD" ? "pending" : "paid",
       items,
       total,
       currency: "GBP",
@@ -758,10 +816,13 @@
   // Invoice modal
   // ---------------------------------------------------------
   function invoiceHTML(o) {
-    const dt = new Date(o.createdAt || Date.now());
+    const oo = ensureOrderShape(o);
+    const dt = new Date(oo.createdAt || Date.now());
     const dateStr = dt.toLocaleString("vi-VN");
+    const st = normalizeStatus(oo.status);
+    const stLabel = statusLabel(st);
 
-    const rows = (o.items || [])
+    const rows = (oo.items || [])
       .map((it) => {
         const line = Number(it.price || 0) * Number(it.qty || 0);
         return `
@@ -781,14 +842,20 @@
         <div class="invTop">
           <div>
             <div class="invTop__ttl">European Football Shop</div>
-            <div class="invTop__sub">Mã đơn: <strong>${esc(o.id)}</strong></div>
+            <div class="invTop__sub">Mã đơn: <strong>${esc(oo.id)}</strong></div>
             <div class="invTop__sub">${dateStr}</div>
           </div>
           <div>
-            <div class="invTop__sub"><strong>Khách:</strong> ${esc(o.customer?.name || "")}</div>
-            <div class="invTop__sub"><strong>SĐT:</strong> ${esc(o.customer?.phone || "")}</div>
-            <div class="invTop__sub"><strong>ĐC:</strong> ${esc(o.customer?.addr || "")}</div>
-            <div class="invTop__sub"><strong>TT:</strong> ${esc(payLabel(o.customer?.pay))}</div>
+            <div class="invTop__sub"><strong>Khách:</strong> ${esc(oo.customer?.name || "")}</div>
+            <div class="invTop__sub"><strong>SĐT:</strong> ${esc(oo.customer?.phone || "")}</div>
+            <div class="invTop__sub"><strong>ĐC:</strong> ${esc(oo.customer?.addr || "")}</div>
+            <div class="invTop__sub"><strong>TT:</strong> ${esc(payLabel(oo.customer?.pay))}</div>
+            <div class="invTop__sub">
+              <strong>Trạng thái:</strong>
+              <button class="invStatus invStatus--${esc(st)}" type="button" data-inv-status="1" aria-label="Đổi trạng thái đơn">
+                ${esc(stLabel)}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -798,7 +865,7 @@
 
         <div class="invTotal">
           <span>Tổng thanh toán</span>
-          <strong>${fmtGBP(o.total || 0)}</strong>
+          <strong>${fmtGBP(oo.total || 0)}</strong>
         </div>
       </div>
     `;
@@ -868,6 +935,7 @@
             <div class="meta">Khách: <strong>${esc(o.customer?.name || "")}</strong> • SĐT: ${esc(o.customer?.phone || "")}</div>
             <div class="meta">Địa chỉ: ${esc(o.customer?.addr || "")}</div>
             <div class="meta">Thanh toán: ${esc(payLabel(o.customer?.pay))}</div>
+            <div class="meta">Trạng thái: ${esc(statusLabel(normalizeStatus(o.status)))}</div>
 
             ${(o.items || [])
               .map((it) => {
@@ -1133,6 +1201,20 @@
       render();
     });
     els.ordList?.addEventListener("click", (e) => {
+      const statusBtn = e.target.closest?.("[data-ord-status]");
+      if (statusBtn) {
+        e.stopPropagation();
+        const it = e.target.closest?.(".ordItem");
+        const oid = it?.getAttribute("data-oid");
+        if (!oid) return;
+
+        const o = (state.orders || []).find((x) => x.id === oid);
+        const next = nextStatus(o?.status);
+        setOrderStatus(oid, next);
+        toast(`Trạng thái: ${statusLabel(next)} ✅`);
+        return;
+      }
+
       const it = e.target.closest?.(".ordItem");
       const oid = it?.getAttribute("data-oid");
       if (oid) openInvoice(oid);
@@ -1147,6 +1229,18 @@
 
     // invoice modal close + print
     els.invModal?.addEventListener("click", (e) => {
+      const st = e.target.closest?.("[data-inv-status]");
+      if (st) {
+        e.stopPropagation();
+        const oid = state.activeOrderId;
+        if (!oid) return;
+        const o = (state.orders || []).find((x) => x.id === oid);
+        const next = nextStatus(o?.status);
+        setOrderStatus(oid, next);
+        toast(`Trạng thái: ${statusLabel(next)} ✅`);
+        return;
+      }
+
       if (e.target && e.target.dataset && e.target.dataset.invClose)
         closeInvoice();
     });

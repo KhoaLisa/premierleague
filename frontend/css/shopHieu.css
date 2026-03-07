@@ -1290,3 +1290,60 @@ LIKE
   color: rgba(255, 255, 255, 0.95);
   font-size: 15px;
 }
+
+/* =========================================================
+   ORDER STATUS (pending/paid/shipping/done)
+========================================================= */
+.ordItem {
+  align-items: center;
+}
+.ordItem__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ordStatus,
+.invStatus {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 950;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
+    filter 0.15s ease;
+}
+.ordStatus:hover,
+.invStatus:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* color accents */
+.ordStatus--pending,
+.invStatus--pending {
+  border-color: rgba(255, 205, 0, 0.38);
+  background: rgba(255, 205, 0, 0.12);
+}
+.ordStatus--paid,
+.invStatus--paid {
+  border-color: rgba(88, 240, 217, 0.38);
+  background: rgba(88, 240, 217, 0.12);
+}
+.ordStatus--shipping,
+.invStatus--shipping {
+  border-color: rgba(47, 123, 255, 0.42);
+  background: rgba(47, 123, 255, 0.14);
+}
+.ordStatus--done,
+.invStatus--done {
+  border-color: rgba(110, 255, 130, 0.38);
+  background: rgba(110, 255, 130, 0.12);
+}

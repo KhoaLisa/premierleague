@@ -12,6 +12,8 @@
     btnSearch: $("#btnSearch"),
     btnCart: $("#btnCart"),
 
+    btnFav: $("#btnFav"),
+
     // search modal
     modal: $("#searchModal"),
     q: $("#q"),
@@ -25,6 +27,15 @@
     cartList: $("#cartList"),
     cartEmpty: $("#cartEmpty"),
     cartTotal: $("#cartTotal"),
+
+    // favorites dropdown
+    favWrap: $("#favWrap"),
+    favDrop: $("#favDrop"),
+    favCount: $("#favCount"),
+    btnFavClose: $("#btnFavClose"),
+    btnClearFav: $("#btnClearFav"),
+    favList: $("#favList"),
+    favEmpty: $("#favEmpty"),
 
     // product detail modal
     pdModal: $("#pdModal"),
@@ -294,6 +305,36 @@
     if (els.btnClearCart) els.btnClearCart.disabled = empty;
   }
 
+  function favItemHTML(p) {
+    return `
+      <div class="favItem" data-id="${esc(p.id)}" role="button" tabindex="0" aria-label="Xem chi tiết ${esc(p.name)}">
+        <div>
+          <div class="favItem__name">${esc(p.name)}</div>
+          <div class="favItem__price">${fmtGBP(p.price)}</div>
+        </div>
+
+        <button class="favItem__rm" type="button" data-fav-rm="1" aria-label="Bỏ yêu thích">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    `;
+  }
+
+  function renderFavDrop() {
+    if (!els.favList || !els.favEmpty) return;
+
+    const items = Array.from(state.likes).map(byId).filter(Boolean);
+
+    els.favList.innerHTML = items.map(favItemHTML).join("");
+
+    const empty = items.length === 0;
+    els.favEmpty.style.display = empty ? "block" : "none";
+    els.favList.style.display = empty ? "none" : "grid";
+    if (els.btnClearFav) els.btnClearFav.disabled = empty;
+  }
+
   function render() {
     const q = state.q.trim().toLowerCase();
     const list = !q
@@ -305,8 +346,10 @@
     if (els.grid) els.grid.innerHTML = list.map(cardHTML).join("");
 
     if (els.cartCount) els.cartCount.textContent = String(cartCountTotal());
+    if (els.favCount) els.favCount.textContent = String(state.likes.size);
 
     renderCartDrop();
+    renderFavDrop();
   }
 
   // ---------------------------------------------------------
@@ -314,6 +357,7 @@
   // ---------------------------------------------------------
   function openSearch() {
     closeCart();
+    closeFav();
     closeProduct();
 
     if (!els.modal) return;
@@ -335,6 +379,7 @@
   // ---------------------------------------------------------
   function openCart() {
     closeSearch();
+    closeFav();
     closeProduct();
 
     if (!els.cartDrop) return;
@@ -353,6 +398,33 @@
   function toggleCart() {
     if (!els.cartDrop) return;
     els.cartDrop.classList.contains("isOpen") ? closeCart() : openCart();
+  }
+
+  // ---------------------------------------------------------
+  // Favorites dropdown
+  // ---------------------------------------------------------
+  function openFav() {
+    closeSearch();
+    closeCart();
+    closeFav();
+    closeProduct();
+
+    if (!els.favDrop) return;
+    els.favDrop.classList.add("isOpen");
+    els.favDrop.setAttribute("aria-hidden", "false");
+    els.btnFav?.setAttribute("aria-expanded", "true");
+  }
+
+  function closeFav() {
+    if (!els.favDrop) return;
+    els.favDrop.classList.remove("isOpen");
+    els.favDrop.setAttribute("aria-hidden", "true");
+    els.btnFav?.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleFav() {
+    if (!els.favDrop) return;
+    els.favDrop.classList.contains("isOpen") ? closeFav() : openFav();
   }
 
   // ---------------------------------------------------------
@@ -378,6 +450,10 @@
   }
 
   function openProduct(id) {
+    closeSearch();
+    closeCart();
+    closeFav();
+
     const p = byId(id);
     if (!p || !els.pdModal) return;
 
@@ -505,6 +581,51 @@
       toast(`Đã lọc: ${count} sản phẩm 🔎`);
     });
 
+    // favorites dropdown open/close
+    els.btnFav?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleFav();
+    });
+    els.btnFavClose?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeFav();
+    });
+    els.btnClearFav?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!state.likes.size) return;
+      state.likes.clear();
+      toast("Đã xóa yêu thích 💔");
+      render();
+    });
+
+    // favorites dropdown interactions
+    els.favDrop?.addEventListener("click", (e) => {
+      const rm = e.target.closest?.("[data-fav-rm]");
+      if (rm) {
+        e.stopPropagation();
+        const item = e.target.closest(".favItem");
+        const id = item?.getAttribute("data-id");
+        if (!id) return;
+
+        state.likes.delete(id);
+        toast("Đã bỏ yêu thích 💔");
+        render();
+        return;
+      }
+
+      const item = e.target.closest?.(".favItem");
+      const id = item?.getAttribute("data-id");
+      if (id) openProduct(id);
+    });
+
+    // click outside to close favorites dropdown
+    document.addEventListener("click", (e) => {
+      if (!els.favDrop || !els.favWrap) return;
+      if (!els.favDrop.classList.contains("isOpen")) return;
+      const inside = els.favWrap.contains(e.target);
+      if (!inside) closeFav();
+    });
+
     // cart dropdown open/close
     els.btnCart?.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -600,6 +721,7 @@
       if (e.key !== "Escape") return;
       closeSearch();
       closeCart();
+      closeFav();
       closeProduct();
     });
 

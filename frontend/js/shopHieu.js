@@ -1,4 +1,4 @@
-/* frontend/js/shop.js */
+/* frontend/js/shopHieu.js */
 (() => {
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
@@ -7,11 +7,21 @@
     grid: $("#shopGrid"),
     cartCount: $("#cartCount"),
     toast: $("#toast"),
+
     btnSearch: $("#btnSearch"),
     btnCart: $("#btnCart"),
+    btnCartClose: $("#btnCartClose"),
+    btnClearCart: $("#btnClearCart"),
+
     modal: $("#searchModal"),
     q: $("#q"),
     navLinks: $$(".shopNav__a"),
+
+    cartWrap: $("#cartWrap"),
+    cartDrop: $("#cartDrop"),
+    cartList: $("#cartList"),
+    cartEmpty: $("#cartEmpty"),
+    cartTotal: $("#cartTotal"),
   };
 
   // Demo data (bạn thay bằng API sau cũng được)
@@ -73,17 +83,22 @@
   ];
 
   const state = {
-    cart: new Set(),
+    cart: new Set(), // lưu id sản phẩm đã thêm
+    likes: new Set(), // lưu id sản phẩm đã yêu thích
     q: "",
   };
 
+  function byId(id) {
+    return products.find((p) => p.id === id) || null;
+  }
+
   function fmtGBP(n) {
-    // giữ format kiểu shop mẫu (GBP)
     const v = Number(n || 0);
-    return "£" + v.toFixed(v % 1 === 0 ? 2 : 2);
+    return "£" + v.toFixed(2);
   }
 
   function toast(msg) {
+    if (!els.toast) return;
     els.toast.textContent = msg;
     els.toast.classList.add("isShow");
     clearTimeout(toast._t);
@@ -101,6 +116,8 @@
 
   function cardHTML(p) {
     const inCart = state.cart.has(p.id);
+    const liked = state.likes.has(p.id);
+
     return `
       <article class="shopCard" data-id="${esc(p.id)}">
         <div class="shopCard__img">
@@ -120,7 +137,14 @@
 
           <div class="shopCard__actions">
             <button class="shopBtn" data-add="1" type="button">${inCart ? "Đã thêm" : "Add"}</button>
-            <button class="shopBtn isGhost" data-like="1" type="button" aria-label="Yêu thích">
+
+            <button
+              class="shopBtn isGhost shopLike ${liked ? "isLiked" : ""}"
+              data-like="1"
+              type="button"
+              aria-label="Yêu thích"
+              aria-pressed="${liked ? "true" : "false"}"
+            >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path
                   d="M12 21s-7-4.6-9.5-9.2C.7 8.1 2.9 5 6.5 5c2 0 3.3 1 4.1 2.2C11.4 6 12.7 5 14.7 5c3.6 0 5.8 3.1 4 6.8C19 16.4 12 21 12 21Z"
@@ -136,6 +160,39 @@
     `;
   }
 
+  function cartItemHTML(p) {
+    return `
+      <div class="cartItem" data-id="${esc(p.id)}">
+        <div>
+          <div class="cartItem__name">${esc(p.name)}</div>
+          <div class="cartItem__price">${fmtGBP(p.price)}</div>
+        </div>
+        <button class="cartItem__rm" type="button" data-rm="1" aria-label="Bỏ sản phẩm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    `;
+  }
+
+  function renderCartDrop() {
+    if (!els.cartList || !els.cartTotal || !els.cartEmpty) return;
+
+    const ids = Array.from(state.cart);
+    const items = ids.map(byId).filter(Boolean);
+
+    els.cartList.innerHTML = items.map(cartItemHTML).join("");
+
+    const total = items.reduce((sum, p) => sum + Number(p.price || 0), 0);
+    els.cartTotal.textContent = fmtGBP(total);
+
+    const empty = items.length === 0;
+    els.cartEmpty.style.display = empty ? "block" : "none";
+    els.cartList.style.display = empty ? "none" : "grid";
+    if (els.btnClearCart) els.btnClearCart.disabled = empty;
+  }
+
   function render() {
     const q = state.q.trim().toLowerCase();
     const list = !q
@@ -144,29 +201,64 @@
           (p.brand + " " + p.name).toLowerCase().includes(q),
         );
 
-    els.grid.innerHTML = list.map(cardHTML).join("");
-    els.cartCount.textContent = String(state.cart.size);
+    if (els.grid) els.grid.innerHTML = list.map(cardHTML).join("");
+    if (els.cartCount) els.cartCount.textContent = String(state.cart.size);
+
+    renderCartDrop();
   }
 
   function openModal() {
+    closeCart(); // tránh đè UI
+    if (!els.modal) return;
+
     els.modal.classList.add("isOpen");
     els.modal.setAttribute("aria-hidden", "false");
-    setTimeout(() => els.q?.focus(), 50);
+    if (els.btnSearch) els.btnSearch.setAttribute("aria-expanded", "true");
+    setTimeout(() => els.q?.focus(), 30);
   }
 
   function closeModal() {
+    if (!els.modal) return;
+
     els.modal.classList.remove("isOpen");
     els.modal.setAttribute("aria-hidden", "true");
+    if (els.btnSearch) els.btnSearch.setAttribute("aria-expanded", "false");
+  }
+
+  function openCart() {
+    closeModal(); // tránh đè UI
+    if (!els.cartDrop) return;
+
+    els.cartDrop.classList.add("isOpen");
+    els.cartDrop.setAttribute("aria-hidden", "false");
+    if (els.btnCart) els.btnCart.setAttribute("aria-expanded", "true");
+  }
+
+  function closeCart() {
+    if (!els.cartDrop) return;
+
+    els.cartDrop.classList.remove("isOpen");
+    els.cartDrop.setAttribute("aria-hidden", "true");
+    if (els.btnCart) els.btnCart.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleCart() {
+    if (!els.cartDrop) return;
+    const open = els.cartDrop.classList.contains("isOpen");
+    if (open) closeCart();
+    else openCart();
   }
 
   function bind() {
-    // add-to-cart
-    els.grid.addEventListener("click", (e) => {
+    // add-to-cart + like (event delegation)
+    els.grid?.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       const card = e.target.closest(".shopCard");
       if (!btn || !card) return;
 
       const id = card.getAttribute("data-id");
+      if (!id) return;
+
       if (btn.dataset.add) {
         if (state.cart.has(id)) {
           state.cart.delete(id);
@@ -179,36 +271,100 @@
       }
 
       if (btn.dataset.like) {
-        toast("Đã lưu yêu thích 💜");
+        if (state.likes.has(id)) {
+          state.likes.delete(id);
+          toast("Đã bỏ yêu thích 💔");
+        } else {
+          state.likes.add(id);
+          toast("Đã lưu yêu thích 💜");
+        }
+        render();
       }
     });
 
-    // modal open/close
-    els.btnSearch.addEventListener("click", openModal);
-    els.modal.addEventListener("click", (e) => {
-      if (e.target && e.target.dataset && e.target.dataset.close) closeModal();
-    });
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeModal();
+    // cart open/close + actions inside dropdown
+    els.btnCart?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleCart();
     });
 
-    // search input
-    els.q.addEventListener("input", () => {
+    els.btnCartClose?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeCart();
+    });
+
+    els.btnClearCart?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!state.cart.size) return;
+      state.cart.clear();
+      toast("Đã xóa giỏ 🧹");
+      render();
+    });
+
+    els.cartDrop?.addEventListener("click", (e) => {
+      const rm = e.target.closest("[data-rm]");
+      if (!rm) return;
+
+      const item = e.target.closest(".cartItem");
+      const id = item?.getAttribute("data-id");
+      if (!id) return;
+
+      state.cart.delete(id);
+      toast("Đã bỏ khỏi giỏ 🧺");
+      render();
+    });
+
+    // click outside to close cart dropdown
+    document.addEventListener("click", (e) => {
+      if (!els.cartDrop || !els.cartWrap) return;
+      if (!els.cartDrop.classList.contains("isOpen")) return;
+
+      const inside = els.cartWrap.contains(e.target);
+      if (!inside) closeCart();
+    });
+
+    // modal open/close
+    els.btnSearch?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openModal();
+    });
+
+    els.modal?.addEventListener("click", (e) => {
+      if (e.target && e.target.dataset && e.target.dataset.close) closeModal();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeModal();
+        closeCart();
+      }
+    });
+
+    // search input: filter as you type
+    els.q?.addEventListener("input", () => {
       state.q = els.q.value || "";
       render();
     });
 
-    // click cart (demo)
-    els.btnCart.addEventListener("click", () => {
-      toast(
-        state.cart.size
-          ? `Giỏ: ${state.cart.size} món 🛒`
-          : "Giỏ đang trống 😄",
-      );
+    // ✅ Enter => áp dụng search và đóng textField (đóng modal + blur)
+    els.q?.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+
+      e.preventDefault();
+      const q = (els.q.value || "").trim().toLowerCase();
+      const count = !q
+        ? products.length
+        : products.filter((p) =>
+            (p.brand + " " + p.name).toLowerCase().includes(q),
+          ).length;
+
+      closeModal();
+      els.q.blur();
+      toast(`Đã lọc: ${count} sản phẩm 🔎`);
     });
 
     // active nav highlight (nhìn cho giống mẫu)
-    els.navLinks.forEach((a) => {
+    els.navLinks?.forEach((a) => {
       a.addEventListener("click", () => {
         els.navLinks.forEach((x) => x.classList.remove("isActive"));
         a.classList.add("isActive");

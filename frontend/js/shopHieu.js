@@ -3,10 +3,11 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 
-  const LS_ORDERS = "shop_orders_v1";
+  const LS_ORDERS = "shop_orders_v2";
+  const STATUS_FLOW = ["pending", "paid", "shipping", "done"];
+  const VIETQR_BASE = "https://img.vietqr.io/image/momo-0983947901-qr_only.png";
 
   const els = {
-    // grid
     grid: $("#shopGrid"),
 
     // badges + toast
@@ -72,6 +73,10 @@
     ckPhone: $("#ckPhone"),
     ckAddr: $("#ckAddr"),
     ckPay: $("#ckPay"),
+    ckQrBox: $("#ckQrBox"),
+    ckQrImg: $("#ckQrImg"),
+    ckQrAmount: $("#ckQrAmount"),
+    ckQrDesc: $("#ckQrDesc"),
     btnPayConfirm: $("#btnPayConfirm"),
 
     // invoice modal
@@ -80,9 +85,9 @@
     btnInvPrint: $("#btnInvPrint"),
   };
 
-  // ---------------------------------------------------------
-  // Demo data (thay bằng API sau cũng OK)
-  // ---------------------------------------------------------
+  // -----------------------------
+  // Demo products
+  // -----------------------------
   function svgDataUrl(title) {
     const t = String(title || "Product").slice(0, 28);
     const svg = `
@@ -93,14 +98,9 @@
             <stop offset="0.45" stop-color="#4b6bff"/>
             <stop offset="1" stop-color="#00e5ff"/>
           </linearGradient>
-          <radialGradient id="r" cx="68%" cy="35%" r="65%">
-            <stop offset="0" stop-color="rgba(255,255,255,0.75)"/>
-            <stop offset="1" stop-color="rgba(255,255,255,0)"/>
-          </radialGradient>
         </defs>
         <rect width="100%" height="100%" fill="rgba(14, 10, 22, 1)"/>
-        <circle cx="700" cy="220" r="320" fill="url(#g)" opacity="0.75"/>
-        <circle cx="590" cy="300" r="380" fill="url(#r)" opacity="0.6"/>
+        <circle cx="680" cy="250" r="340" fill="url(#g)" opacity="0.72"/>
         <text x="54" y="640" font-size="54" font-family="system-ui,Segoe UI,Roboto" fill="rgba(255,255,255,0.88)" font-weight="800">
           ${t.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")}
         </text>
@@ -114,8 +114,8 @@
       id: "p1",
       brand: "Premier League",
       name: "2025/26 PUMA Orbita 3 PL Thrill Edition",
-      desc: "Bóng thi đấu phiên bản giới hạn, bề mặt bám sân tốt, đường bay ổn định. Phù hợp đá phủi lẫn tập luyện.",
-      price: 40.0,
+      desc: "Bóng thi đấu phiên bản giới hạn, bề mặt bám sân tốt, đường bay ổn định.",
+      price: 40000,
       colors: 1,
       badge: null,
       was: null,
@@ -124,8 +124,8 @@
       id: "p2",
       brand: "Premier League",
       name: "Topps 2026 Chrome Pack",
-      desc: "Pack thẻ Chrome 2026 – sưu tầm, trưng bày hoặc trao đổi. Bề mặt bóng, in sắc nét, cảm giác “đã tay”.",
-      price: 15.0,
+      desc: "Pack thẻ Chrome 2026 – sưu tầm, trưng bày hoặc trao đổi.",
+      price: 15000,
       colors: 1,
       badge: null,
       was: null,
@@ -134,8 +134,8 @@
       id: "p3",
       brand: "Premier League",
       name: "2025/26 PUMA Orbita 1 PL Thrill (Match Ball)",
-      desc: "Bóng thi đấu chuẩn match ball – độ nảy tốt, trọng lượng cân bằng, phù hợp sân 11 và 7.",
-      price: 135.0,
+      desc: "Bóng thi đấu chuẩn match ball – độ nảy tốt, trọng lượng cân bằng.",
+      price: 135000,
       colors: 1,
       badge: null,
       was: null,
@@ -144,9 +144,9 @@
       id: "p4",
       brand: "Premier League",
       name: "2025/26 PUMA Orbita Brilliance (Training)",
-      desc: "Bóng tập luyện bền bỉ, vỏ dày hơn và giữ form tốt – đá nhiều vẫn “trâu”.",
-      price: 11.99,
-      was: 17.0,
+      desc: "Bóng tập luyện bền bỉ, vỏ dày hơn và giữ form tốt.",
+      price: 11990,
+      was: 17000,
       colors: 1,
       badge: "-30%",
     },
@@ -154,9 +154,9 @@
       id: "p5",
       brand: "Premier League",
       name: "PUMA Core T-shirt",
-      desc: "Áo thun basic, thoáng, form dễ mặc. Hợp đi chơi lẫn tập nhẹ.",
-      price: 12.5,
-      was: 25.0,
+      desc: "Áo thun basic, thoáng, form dễ mặc.",
+      price: 12500,
+      was: 25000,
       colors: 2,
       badge: "-50%",
     },
@@ -165,28 +165,29 @@
       brand: "Premier League",
       name: "Graphic T-shirt",
       desc: "Áo graphic – in nổi bật, chất vải mềm, phối đồ nhanh gọn.",
-      price: 12.5,
-      was: 25.0,
+      price: 12500,
+      was: 25000,
       colors: 1,
       badge: "-50%",
     },
   ].map((p) => ({ ...p, img: svgDataUrl(p.name) }));
 
-  // ---------------------------------------------------------
+  // -----------------------------
   // State
-  // ---------------------------------------------------------
+  // -----------------------------
   const state = {
     cart: new Map(), // id -> qty
     likes: new Set(), // id
-    orders: [], // [{id, createdAt, customer, items, total}]
+    orders: [], // persisted
     q: "",
-    activeId: null, // product detail modal
-    activeOrderId: null, // invoice modal
+    activeId: null,
+    activeOrderId: null,
+    ckDraftId: null, // để nhét vào addInfo (mã hoá đơn)
   };
 
-  // ---------------------------------------------------------
+  // -----------------------------
   // Helpers
-  // ---------------------------------------------------------
+  // -----------------------------
   function esc(s) {
     return String(s ?? "")
       .replaceAll("&", "&amp;")
@@ -196,9 +197,10 @@
       .replaceAll("'", "&#39;");
   }
 
-  function fmtGBP(n) {
+  function fmtMoney(n) {
     const v = Number(n || 0);
-    return "£" + v.toFixed(2);
+    // bạn có thể đổi format theo currency thật
+    return v.toLocaleString("vi-VN");
   }
 
   function toast(msg) {
@@ -213,19 +215,51 @@
     return products.find((p) => p.id === id) || null;
   }
 
+  function statusLabel(s) {
+    if (s === "paid") return "Đã thanh toán";
+    if (s === "shipping") return "Đang giao";
+    if (s === "done") return "Hoàn tất";
+    return "Chờ xử lý";
+  }
+
+  function normalizeStatus(s) {
+    return STATUS_FLOW.includes(s) ? s : "pending";
+  }
+
+  function nextStatus(s) {
+    const cur = normalizeStatus(s);
+    const i = STATUS_FLOW.indexOf(cur);
+    return STATUS_FLOW[(i + 1) % STATUS_FLOW.length];
+  }
+
+  function payLabel(code) {
+    if (code === "CARD") return "Thẻ (Demo)";
+    if (code === "BANK") return "Chuyển khoản (Demo)";
+    if (code === "QR") return "QR MoMo (VietQR)";
+    return "COD";
+  }
+
+  // ✅ amount + description => URL VietQR
+  function qrAmountFromTotal(total) {
+    // VietQR/MoMo thường dùng VND dạng số nguyên, nên lấy tổng (integer)
+    return Math.max(0, Math.round(Number(total || 0)));
+  }
+  function buildVietQrUrl(amount, description) {
+    const a = encodeURIComponent(String(amount || 0));
+    const d = encodeURIComponent(String(description || ""));
+    return `${VIETQR_BASE}?amount=${a}&addInfo=${d}`;
+  }
+
   function getQty(id) {
     return Number(state.cart.get(id) || 0);
   }
-
   function setQty(id, qty) {
     const q = Math.max(0, Math.floor(Number(qty || 0)));
     if (!q) state.cart.delete(id);
     else state.cart.set(id, q);
   }
-
   function addQty(id, delta = 1) {
-    const next = getQty(id) + Number(delta || 0);
-    setQty(id, next);
+    setQty(id, getQty(id) + Number(delta || 0));
   }
 
   function cartCountTotal() {
@@ -233,7 +267,6 @@
     for (const v of state.cart.values()) sum += Number(v || 0);
     return sum;
   }
-
   function cartSubtotal() {
     let sum = 0;
     for (const [id, qty] of state.cart.entries()) {
@@ -259,30 +292,22 @@
     }
   }
 
+  function ensureOrderShape(o) {
+    const x = { ...o };
+    x.status = normalizeStatus(x.status || "pending");
+    x.items = Array.isArray(x.items) ? x.items : [];
+    x.customer = x.customer || {};
+    x.total = Number(x.total || 0);
+    return x;
+  }
+
   function loadOrders() {
     const raw = localStorage.getItem(LS_ORDERS);
     const data = safeJsonParse(raw, []);
-    if (Array.isArray(data)) state.orders = data.map(ensureOrderShape);
-    else state.orders = [];
+    state.orders = Array.isArray(data) ? data.map(ensureOrderShape) : [];
   }
-
   function saveOrders() {
     localStorage.setItem(LS_ORDERS, JSON.stringify(state.orders));
-  }
-
-  function setOrderStatus(orderId, status) {
-    const s = normalizeStatus(status);
-    const i = (state.orders || []).findIndex((x) => x.id === orderId);
-    if (i < 0) return;
-
-    state.orders[i] = { ...state.orders[i], status: s };
-    saveOrders();
-    render();
-
-    // if invoice of same order is open => refresh invoice content
-    if (state.activeOrderId === orderId) {
-      openInvoice(orderId);
-    }
   }
 
   function genOrderId() {
@@ -293,44 +318,20 @@
     return `ODR-${ymd}-${hms}-${rand}`;
   }
 
-  function payLabel(code) {
-    if (code === "CARD") return "Thẻ (Demo)";
-    if (code === "BANK") return "Chuyển khoản (Demo)";
-    return "COD";
+  function setOrderStatus(orderId, status) {
+    const s = normalizeStatus(status);
+    const i = (state.orders || []).findIndex((x) => x.id === orderId);
+    if (i < 0) return;
+
+    state.orders[i] = { ...state.orders[i], status: s };
+    saveOrders();
+    render();
+    if (state.activeOrderId === orderId) openInvoice(orderId);
   }
 
-  const STATUS_FLOW = ["pending", "paid", "shipping", "done"];
-
-  function statusLabel(s) {
-    if (s === "paid") return "Đã thanh toán";
-    if (s === "shipping") return "Đang giao";
-    if (s === "done") return "Hoàn tất";
-    return "Chờ xử lý";
-  }
-
-  function normalizeStatus(s) {
-    return STATUS_FLOW.includes(s) ? s : "pending";
-  }
-
-  function nextStatus(s) {
-    const cur = normalizeStatus(s);
-    const i = STATUS_FLOW.indexOf(cur);
-    return STATUS_FLOW[(i + 1) % STATUS_FLOW.length];
-  }
-
-  function ensureOrderShape(o) {
-    // backward-compat for old saved data
-    const x = { ...o };
-    x.status = normalizeStatus(x.status || "paid");
-    x.items = Array.isArray(x.items) ? x.items : [];
-    x.customer = x.customer || {};
-    x.total = Number(x.total || 0);
-    return x;
-  }
-
-  // ---------------------------------------------------------
-  // Render cards / dropdowns
-  // ---------------------------------------------------------
+  // -----------------------------
+  // Templates
+  // -----------------------------
   function cardHTML(p) {
     const qty = getQty(p.id);
     const liked = state.likes.has(p.id);
@@ -338,7 +339,7 @@
     return `
       <article class="shopCard" data-id="${esc(p.id)}" role="button" tabindex="0" aria-label="Xem chi tiết ${esc(p.name)}">
         <div class="shopCard__img">
-          <img class="shopCard__photo" alt="${esc(p.name)}" src="${esc(p.img)}" />
+          <img class="shopCard__photo" alt="${esc(p.name)}" src="${esc(p.img)}"/>
           ${p.badge ? `<div class="shopCard__badge">${esc(p.badge)}</div>` : ""}
         </div>
 
@@ -347,31 +348,17 @@
           <div class="shopCard__name">${esc(p.name)}</div>
 
           <div class="shopCard__meta">
-            <div class="shopCard__price">${fmtGBP(p.price)}</div>
-            ${p.was ? `<div class="shopCard__was">${fmtGBP(p.was)}</div>` : ""}
+            <div class="shopCard__price">${fmtMoney(p.price)}</div>
+            ${p.was ? `<div class="shopCard__was">${fmtMoney(p.was)}</div>` : ""}
           </div>
 
           <div class="shopCard__colors">${p.colors} colour${p.colors > 1 ? "s" : ""}</div>
 
           <div class="shopCard__actions">
-            <button class="shopBtn" data-add="1" type="button">
-              ${qty ? `Add · x${qty}` : "Add"}
-            </button>
-
-            <button
-              class="shopBtn isGhost shopLike ${liked ? "isLiked" : ""}"
-              data-like="1"
-              type="button"
-              aria-label="Yêu thích"
-              aria-pressed="${liked ? "true" : "false"}"
-            >
+            <button class="shopBtn" data-add="1" type="button">${qty ? `Add · x${qty}` : "Add"}</button>
+            <button class="shopBtn isGhost shopLike ${liked ? "isLiked" : ""}" data-like="1" type="button" aria-label="Yêu thích" aria-pressed="${liked ? "true" : "false"}">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M12 21s-7-4.6-9.5-9.2C.7 8.1 2.9 5 6.5 5c2 0 3.3 1 4.1 2.2C11.4 6 12.7 5 14.7 5c3.6 0 5.8 3.1 4 6.8C19 16.4 12 21 12 21Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linejoin="round"
-                />
+                <path d="M12 21s-7-4.6-9.5-9.2C.7 8.1 2.9 5 6.5 5c2 0 3.3 1 4.1 2.2C11.4 6 12.7 5 14.7 5c3.6 0 5.8 3.1 4 6.8C19 16.4 12 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
               </svg>
             </button>
           </div>
@@ -381,20 +368,19 @@
   }
 
   function cartItemHTML(p, qty) {
-    const lineTotal = Number(p.price || 0) * Number(qty || 0);
+    const line = Number(p.price || 0) * Number(qty || 0);
     return `
       <div class="cartItem" data-id="${esc(p.id)}" role="button" tabindex="0" aria-label="Xem chi tiết ${esc(p.name)}">
         <div>
           <div class="cartItem__name">${esc(p.name)}</div>
           <div class="cartItem__sub">
             <span class="cartItem__qty">x${qty}</span>
-            <span class="cartItem__price">${fmtGBP(lineTotal)}</span>
+            <span class="cartItem__price">${fmtMoney(line)}</span>
           </div>
         </div>
-
         <button class="cartItem__rm" type="button" data-rm="1" aria-label="Bỏ sản phẩm">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
@@ -406,12 +392,11 @@
       <div class="favItem" data-id="${esc(p.id)}" role="button" tabindex="0" aria-label="Xem chi tiết ${esc(p.name)}">
         <div>
           <div class="favItem__name">${esc(p.name)}</div>
-          <div class="favItem__price">${fmtGBP(p.price)}</div>
+          <div class="favItem__price">${fmtMoney(p.price)}</div>
         </div>
-
         <button class="favItem__rm" type="button" data-fav-rm="1" aria-label="Bỏ yêu thích">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
@@ -420,32 +405,31 @@
 
   function orderItemHTML(o) {
     const oo = ensureOrderShape(o);
-    const dt = new Date(oo.createdAt || Date.now());
-    const dateStr = dt.toLocaleString("vi-VN");
+    const dt = new Date(oo.createdAt || Date.now()).toLocaleString("vi-VN");
     const count = (oo.items || []).reduce(
       (s, it) => s + Number(it.qty || 0),
       0,
     );
     const st = normalizeStatus(oo.status);
-    const stLabel = statusLabel(st);
 
     return `
       <div class="ordItem" data-oid="${esc(oo.id)}" role="button" tabindex="0" aria-label="Xem hóa đơn ${esc(oo.id)}">
         <div>
           <div class="ordItem__id">${esc(oo.id)}</div>
-          <div class="ordItem__sub">${dateStr} • ${count} món • ${esc(payLabel(oo.customer?.pay))}</div>
+          <div class="ordItem__sub">${dt} • ${count} món • ${esc(payLabel(oo.customer?.pay))}</div>
         </div>
 
         <div class="ordItem__right">
-          <div class="ordItem__amt">${fmtGBP(oo.total || 0)}</div>
-          <button class="ordStatus ordStatus--${esc(st)}" type="button" data-ord-status="1" aria-label="Đổi trạng thái đơn">
-            ${esc(stLabel)}
-          </button>
+          <div class="ordItem__amt">${fmtMoney(oo.total || 0)}</div>
+          <button class="ordStatus ordStatus--${esc(st)}" type="button" data-ord-status="1">${esc(statusLabel(st))}</button>
         </div>
       </div>
     `;
   }
 
+  // -----------------------------
+  // Renders
+  // -----------------------------
   function renderCartDrop() {
     if (!els.cartList || !els.cartTotal || !els.cartEmpty) return;
 
@@ -456,13 +440,13 @@
     els.cartList.innerHTML = items
       .map(([p, qty]) => cartItemHTML(p, qty))
       .join("");
-    els.cartTotal.textContent = fmtGBP(cartSubtotal());
+    els.cartTotal.textContent = fmtMoney(cartSubtotal());
 
     const empty = items.length === 0;
     els.cartEmpty.style.display = empty ? "block" : "none";
     els.cartList.style.display = empty ? "none" : "grid";
-    if (els.btnClearCart) els.btnClearCart.disabled = empty;
     if (els.btnCheckout) els.btnCheckout.disabled = empty;
+    if (els.btnClearCart) els.btnClearCart.disabled = empty;
   }
 
   function renderFavDrop() {
@@ -482,7 +466,7 @@
 
     const list = Array.from(state.orders || [])
       .slice()
-      .reverse(); // newest first
+      .reverse();
     els.ordList.innerHTML = list.map(orderItemHTML).join("");
 
     const empty = list.length === 0;
@@ -492,7 +476,7 @@
   }
 
   function render() {
-    const q = state.q.trim().toLowerCase();
+    const q = (state.q || "").trim().toLowerCase();
     const list = !q
       ? products
       : products.filter((p) =>
@@ -511,9 +495,9 @@
     renderOrders();
   }
 
-  // ---------------------------------------------------------
-  // Open/close: Search modal
-  // ---------------------------------------------------------
+  // -----------------------------
+  // Open/close helpers
+  // -----------------------------
   function openSearch() {
     closeCart();
     closeFav();
@@ -521,24 +505,17 @@
     closeCheckout();
     closeInvoice();
     closeProduct();
-
-    if (!els.modal) return;
-    els.modal.classList.add("isOpen");
-    els.modal.setAttribute("aria-hidden", "false");
+    els.modal?.classList.add("isOpen");
+    els.modal?.setAttribute("aria-hidden", "false");
     els.btnSearch?.setAttribute("aria-expanded", "true");
     setTimeout(() => els.q?.focus(), 30);
   }
-
   function closeSearch() {
-    if (!els.modal) return;
-    els.modal.classList.remove("isOpen");
-    els.modal.setAttribute("aria-hidden", "true");
+    els.modal?.classList.remove("isOpen");
+    els.modal?.setAttribute("aria-hidden", "true");
     els.btnSearch?.setAttribute("aria-expanded", "false");
   }
 
-  // ---------------------------------------------------------
-  // Cart dropdown
-  // ---------------------------------------------------------
   function openCart() {
     closeSearch();
     closeFav();
@@ -546,28 +523,19 @@
     closeCheckout();
     closeInvoice();
     closeProduct();
-
-    if (!els.cartDrop) return;
-    els.cartDrop.classList.add("isOpen");
-    els.cartDrop.setAttribute("aria-hidden", "false");
+    els.cartDrop?.classList.add("isOpen");
+    els.cartDrop?.setAttribute("aria-hidden", "false");
     els.btnCart?.setAttribute("aria-expanded", "true");
   }
-
   function closeCart() {
-    if (!els.cartDrop) return;
-    els.cartDrop.classList.remove("isOpen");
-    els.cartDrop.setAttribute("aria-hidden", "true");
+    els.cartDrop?.classList.remove("isOpen");
+    els.cartDrop?.setAttribute("aria-hidden", "true");
     els.btnCart?.setAttribute("aria-expanded", "false");
   }
-
   function toggleCart() {
-    if (!els.cartDrop) return;
-    els.cartDrop.classList.contains("isOpen") ? closeCart() : openCart();
+    els.cartDrop?.classList.contains("isOpen") ? closeCart() : openCart();
   }
 
-  // ---------------------------------------------------------
-  // Favorites dropdown
-  // ---------------------------------------------------------
   function openFav() {
     closeSearch();
     closeCart();
@@ -575,45 +543,52 @@
     closeCheckout();
     closeInvoice();
     closeProduct();
-
-    if (!els.favDrop) return;
-    els.favDrop.classList.add("isOpen");
-    els.favDrop.setAttribute("aria-hidden", "false");
+    els.favDrop?.classList.add("isOpen");
+    els.favDrop?.setAttribute("aria-hidden", "false");
     els.btnFav?.setAttribute("aria-expanded", "true");
   }
-
   function closeFav() {
-    if (!els.favDrop) return;
-    els.favDrop.classList.remove("isOpen");
-    els.favDrop.setAttribute("aria-hidden", "true");
+    els.favDrop?.classList.remove("isOpen");
+    els.favDrop?.setAttribute("aria-hidden", "true");
     els.btnFav?.setAttribute("aria-expanded", "false");
   }
-
   function toggleFav() {
-    if (!els.favDrop) return;
-    els.favDrop.classList.contains("isOpen") ? closeFav() : openFav();
+    els.favDrop?.classList.contains("isOpen") ? closeFav() : openFav();
   }
 
-  // ---------------------------------------------------------
-  // Product detail modal
-  // ---------------------------------------------------------
+  function openOrders() {
+    closeSearch();
+    closeCart();
+    closeFav();
+    closeCheckout();
+    closeInvoice();
+    closeProduct();
+    renderOrders();
+    els.ordModal?.classList.add("isOpen");
+    els.ordModal?.setAttribute("aria-hidden", "false");
+    els.btnOrders?.setAttribute("aria-expanded", "true");
+    lockScroll();
+  }
+  function closeOrders() {
+    els.ordModal?.classList.remove("isOpen");
+    els.ordModal?.setAttribute("aria-hidden", "true");
+    els.btnOrders?.setAttribute("aria-expanded", "false");
+    unlockScroll();
+  }
+
   function setPdQty(n) {
     const v = Math.max(1, Math.floor(Number(n || 1)));
     if (els.pdQty) els.pdQty.value = String(v);
   }
-
   function getPdQty() {
     const v = Math.floor(Number(els.pdQty?.value || 1));
     return Math.max(1, isFinite(v) ? v : 1);
   }
-
   function syncPdLikeBtn() {
-    if (!els.pdLike) return;
     const id = state.activeId;
     const liked = id && state.likes.has(id);
-
-    els.pdLike.classList.toggle("isLiked", !!liked);
-    els.pdLike.setAttribute("aria-pressed", liked ? "true" : "false");
+    els.pdLike?.classList.toggle("isLiked", !!liked);
+    els.pdLike?.setAttribute("aria-pressed", liked ? "true" : "false");
   }
 
   function openProduct(id) {
@@ -623,27 +598,23 @@
     closeOrders();
     closeCheckout();
     closeInvoice();
-
     const p = byId(id);
     if (!p || !els.pdModal) return;
 
     state.activeId = p.id;
-
     els.pdBrand && (els.pdBrand.textContent = p.brand || "");
     els.pdName && (els.pdName.textContent = p.name || "");
     els.pdDesc && (els.pdDesc.textContent = p.desc || "");
-
-    if (els.pdPrice) els.pdPrice.textContent = fmtGBP(p.price);
+    if (els.pdPrice) els.pdPrice.textContent = fmtMoney(p.price);
     if (els.pdWas) {
       if (p.was) {
         els.pdWas.style.display = "block";
-        els.pdWas.textContent = fmtGBP(p.was);
+        els.pdWas.textContent = fmtMoney(p.was);
       } else {
         els.pdWas.style.display = "none";
         els.pdWas.textContent = "";
       }
     }
-
     if (els.pdImg) {
       els.pdImg.src = p.img || "";
       els.pdImg.alt = p.name || "Ảnh sản phẩm";
@@ -651,78 +622,56 @@
 
     const current = getQty(p.id);
     setPdQty(current || 1);
-    if (els.pdAdd)
-      els.pdAdd.textContent = current ? "Cập nhật giỏ" : "Thêm vào giỏ";
+    els.pdAdd &&
+      (els.pdAdd.textContent = current ? "Cập nhật giỏ" : "Thêm vào giỏ");
 
     syncPdLikeBtn();
-
     els.pdModal.classList.add("isOpen");
     els.pdModal.setAttribute("aria-hidden", "false");
     lockScroll();
   }
-
   function closeProduct() {
-    if (!els.pdModal) return;
-
-    els.pdModal.classList.remove("isOpen");
-    els.pdModal.setAttribute("aria-hidden", "true");
+    els.pdModal?.classList.remove("isOpen");
+    els.pdModal?.setAttribute("aria-hidden", "true");
     unlockScroll();
     state.activeId = null;
   }
 
-  // ---------------------------------------------------------
-  // Orders modal (history)
-  // ---------------------------------------------------------
-  function openOrders() {
-    closeSearch();
-    closeCart();
-    closeFav();
-    closeCheckout();
-    closeInvoice();
-    closeProduct();
-
-    if (!els.ordModal) return;
-    renderOrders();
-
-    els.ordModal.classList.add("isOpen");
-    els.ordModal.setAttribute("aria-hidden", "false");
-    els.btnOrders?.setAttribute("aria-expanded", "true");
-    lockScroll();
-  }
-
-  function closeOrders() {
-    if (!els.ordModal) return;
-    els.ordModal.classList.remove("isOpen");
-    els.ordModal.setAttribute("aria-hidden", "true");
-    els.btnOrders?.setAttribute("aria-expanded", "false");
-    unlockScroll();
-  }
-
-  // ---------------------------------------------------------
-  // Checkout modal
-  // ---------------------------------------------------------
   function ckItemHTML(p, qty) {
-    const lineTotal = Number(p.price || 0) * Number(qty || 0);
+    const line = Number(p.price || 0) * Number(qty || 0);
     return `
       <div class="ckItem">
         <div>
           <div class="ckItem__name">${esc(p.name)}</div>
-          <div class="ckItem__meta">x${qty} • ${fmtGBP(p.price)} / món</div>
+          <div class="ckItem__meta">x${qty} • ${fmtMoney(p.price)} / món</div>
         </div>
-        <div class="ckItem__price">${fmtGBP(lineTotal)}</div>
+        <div class="ckItem__price">${fmtMoney(line)}</div>
       </div>
     `;
   }
-
   function renderCheckout() {
     if (!els.ckList || !els.ckTotal) return;
 
     const items = Array.from(state.cart.entries())
       .map(([id, qty]) => [byId(id), qty])
       .filter(([p]) => !!p);
-
     els.ckList.innerHTML = items.map(([p, qty]) => ckItemHTML(p, qty)).join("");
-    els.ckTotal.textContent = fmtGBP(cartSubtotal());
+    const total = cartSubtotal();
+    els.ckTotal.textContent = fmtMoney(total);
+
+    // ✅ QR integration: amount + addInfo (mã hoá đơn)
+    const pay = String(els.ckPay?.value || "COD");
+    const isQr = pay === "QR";
+    if (els.ckQrBox && els.ckQrImg && els.ckQrAmount && els.ckQrDesc) {
+      els.ckQrBox.style.display = isQr ? "block" : "none";
+      if (isQr) {
+        const amount = qrAmountFromTotal(total);
+        const desc = state.ckDraftId || genOrderId();
+        els.ckQrAmount.textContent = String(amount);
+        els.ckQrDesc.textContent = desc;
+        els.ckQrImg.src = buildVietQrUrl(amount, desc);
+      }
+    }
   }
 
   function openCheckout() {
@@ -732,30 +681,29 @@
     closeOrders();
     closeInvoice();
     closeProduct();
-
     if (!els.ckModal) return;
     if (!state.cart.size) {
       toast("Giỏ đang trống 😄");
       return;
     }
 
-    renderCheckout();
+    // draft mã hoá đơn để nhét vào addInfo
+    state.ckDraftId = genOrderId();
 
+    renderCheckout();
     els.ckModal.classList.add("isOpen");
     els.ckModal.setAttribute("aria-hidden", "false");
     lockScroll();
     setTimeout(() => els.ckName?.focus(), 30);
   }
-
   function closeCheckout() {
-    if (!els.ckModal) return;
-    els.ckModal.classList.remove("isOpen");
-    els.ckModal.setAttribute("aria-hidden", "true");
+    els.ckModal?.classList.remove("isOpen");
+    els.ckModal?.setAttribute("aria-hidden", "true");
     unlockScroll();
   }
 
-  function buildOrderFromCart() {
-    const items = Array.from(state.cart.entries())
+  function buildOrderItems() {
+    return Array.from(state.cart.entries())
       .map(([id, qty]) => {
         const p = byId(id);
         if (!p) return null;
@@ -767,8 +715,6 @@
         };
       })
       .filter(Boolean);
-
-    return items;
   }
 
   function confirmPayment() {
@@ -787,38 +733,43 @@
       return;
     }
 
-    const items = buildOrderFromCart();
+    const items = buildOrderItems();
     const total = cartSubtotal();
+    const id = state.ckDraftId || genOrderId();
 
     const order = {
-      id: genOrderId(),
+      id,
       createdAt: new Date().toISOString(),
       customer: { name, phone, addr, pay },
-      status: pay === "COD" ? "pending" : "paid",
+      status: pay === "COD" || pay === "QR" ? "pending" : "paid",
       items,
       total,
-      currency: "GBP",
+      currency: "VND",
+      qr:
+        pay === "QR"
+          ? {
+              amount: qrAmountFromTotal(total),
+              addInfo: id,
+              url: buildVietQrUrl(qrAmountFromTotal(total), id),
+            }
+          : null,
     };
 
     state.orders.push(order);
     saveOrders();
 
-    // clear cart
     state.cart.clear();
     render();
 
     closeCheckout();
-    toast("Thanh toán thành công ✅");
+    toast("Đã tạo đơn ✅");
+
     openInvoice(order.id);
   }
 
-  // ---------------------------------------------------------
-  // Invoice modal
-  // ---------------------------------------------------------
   function invoiceHTML(o) {
     const oo = ensureOrderShape(o);
-    const dt = new Date(oo.createdAt || Date.now());
-    const dateStr = dt.toLocaleString("vi-VN");
+    const dt = new Date(oo.createdAt || Date.now()).toLocaleString("vi-VN");
     const st = normalizeStatus(oo.status);
     const stLabel = statusLabel(st);
 
@@ -829,13 +780,24 @@
         <div class="invRow">
           <div>
             <div class="invRow__name">${esc(it.name)}</div>
-            <div class="invRow__meta">x${it.qty} • ${fmtGBP(it.price)} / món</div>
+            <div class="invRow__meta">x${it.qty} • ${fmtMoney(it.price)} / món</div>
           </div>
-          <div class="invRow__amt">${fmtGBP(line)}</div>
+          <div class="invRow__amt">${fmtMoney(line)}</div>
         </div>
       `;
       })
       .join("");
+
+    const qrBlock =
+      oo.customer?.pay === "QR"
+        ? `
+        <div class="invQr">
+          <div class="invQr__ttl">Thanh toán QR</div>
+          <div class="invQr__sub">Quét QR để chuyển khoản • Nội dung: <strong>${esc(oo.id)}</strong></div>
+          <img class="invQr__img" alt="QR thanh toán" src="${buildVietQrUrl(qrAmountFromTotal(oo.total), oo.id)}"/>
+        </div>
+      `
+        : "";
 
     return `
       <div class="invCard">
@@ -843,7 +805,7 @@
           <div>
             <div class="invTop__ttl">European Football Shop</div>
             <div class="invTop__sub">Mã đơn: <strong>${esc(oo.id)}</strong></div>
-            <div class="invTop__sub">${dateStr}</div>
+            <div class="invTop__sub">${dt}</div>
           </div>
           <div>
             <div class="invTop__sub"><strong>Khách:</strong> ${esc(oo.customer?.name || "")}</div>
@@ -852,9 +814,7 @@
             <div class="invTop__sub"><strong>TT:</strong> ${esc(payLabel(oo.customer?.pay))}</div>
             <div class="invTop__sub">
               <strong>Trạng thái:</strong>
-              <button class="invStatus invStatus--${esc(st)}" type="button" data-inv-status="1" aria-label="Đổi trạng thái đơn">
-                ${esc(stLabel)}
-              </button>
+              <button class="invStatus invStatus--${esc(st)}" type="button" data-inv-status="1">${esc(stLabel)}</button>
             </div>
           </div>
         </div>
@@ -863,9 +823,11 @@
           ${rows || ""}
         </div>
 
+        ${qrBlock}
+
         <div class="invTotal">
           <span>Tổng thanh toán</span>
-          <strong>${fmtGBP(oo.total || 0)}</strong>
+          <strong>${fmtMoney(oo.total || 0)}</strong>
         </div>
       </div>
     `;
@@ -878,7 +840,6 @@
     closeOrders();
     closeCheckout();
     closeProduct();
-
     const o = (state.orders || []).find((x) => x.id === orderId);
     if (!o || !els.invModal || !els.invBody) return;
 
@@ -889,11 +850,9 @@
     els.invModal.setAttribute("aria-hidden", "false");
     lockScroll();
   }
-
   function closeInvoice() {
-    if (!els.invModal) return;
-    els.invModal.classList.remove("isOpen");
-    els.invModal.setAttribute("aria-hidden", "true");
+    els.invModal?.classList.remove("isOpen");
+    els.invModal?.setAttribute("aria-hidden", "true");
     unlockScroll();
     state.activeOrderId = null;
   }
@@ -909,6 +868,11 @@
       return;
     }
 
+    const qrLine =
+      o.customer?.pay === "QR"
+        ? `<div class="meta">QR: ${buildVietQrUrl(qrAmountFromTotal(o.total), o.id)}</div>`
+        : "";
+
     const html = `
       <!doctype html>
       <html>
@@ -920,7 +884,7 @@
             body{ font-family: system-ui, -apple-system, Segoe UI, Roboto; padding: 18px; }
             .box{ border:1px solid #ddd; border-radius: 12px; padding: 14px; }
             h2{ margin: 0 0 10px; }
-            .meta{ font-size: 12px; color:#555; margin-bottom: 10px; }
+            .meta{ font-size: 12px; color:#555; margin-bottom: 8px; }
             .row{ display:flex; justify-content:space-between; gap:10px; padding: 10px 0; border-bottom: 1px dashed #ddd; }
             .row:last-child{ border-bottom:0; }
             .name{ font-weight: 700; }
@@ -936,6 +900,7 @@
             <div class="meta">Địa chỉ: ${esc(o.customer?.addr || "")}</div>
             <div class="meta">Thanh toán: ${esc(payLabel(o.customer?.pay))}</div>
             <div class="meta">Trạng thái: ${esc(statusLabel(normalizeStatus(o.status)))}</div>
+            ${qrLine}
 
             ${(o.items || [])
               .map((it) => {
@@ -944,9 +909,9 @@
                 <div class="row">
                   <div>
                     <div class="name">${esc(it.name)}</div>
-                    <div class="small">x${it.qty} • ${fmtGBP(it.price)} / món</div>
+                    <div class="small">x${it.qty} • ${fmtMoney(it.price)} / món</div>
                   </div>
-                  <div><strong>${fmtGBP(line)}</strong></div>
+                  <div><strong>${fmtMoney(line)}</strong></div>
                 </div>
               `;
               })
@@ -954,7 +919,7 @@
 
             <div class="total">
               <span>Tổng</span>
-              <span>${fmtGBP(o.total || 0)}</span>
+              <span>${fmtMoney(o.total || 0)}</span>
             </div>
           </div>
 
@@ -969,20 +934,18 @@
     w.document.close();
   }
 
-  // ---------------------------------------------------------
+  // -----------------------------
   // Events
-  // ---------------------------------------------------------
+  // -----------------------------
   function bind() {
-    // click / keyboard open product detail, add cart, like
+    // grid click
     els.grid?.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       const card = e.target.closest(".shopCard");
       if (!card) return;
-
       const id = card.getAttribute("data-id");
       if (!id) return;
 
-      // clicks on buttons
       if (btn) {
         if (btn.dataset.add) {
           addQty(id, 1);
@@ -1003,12 +966,9 @@
         }
         return;
       }
-
-      // click on card background => open detail
       openProduct(id);
     });
 
-    // accessibility: Enter/Space on card opens modal
     els.grid?.addEventListener("keydown", (e) => {
       const card = e.target.closest?.(".shopCard");
       if (!card) return;
@@ -1018,39 +978,27 @@
       if (id) openProduct(id);
     });
 
-    // search modal open/close
+    // search
     els.btnSearch?.addEventListener("click", (e) => {
       e.stopPropagation();
       openSearch();
     });
     els.modal?.addEventListener("click", (e) => {
-      if (e.target && e.target.dataset && e.target.dataset.close) closeSearch();
+      if (e.target?.dataset?.close) closeSearch();
     });
-
-    // search input: filter as you type
     els.q?.addEventListener("input", () => {
       state.q = els.q.value || "";
       render();
     });
-
-    // Enter => đóng textField (đóng modal + blur)
     els.q?.addEventListener("keydown", (e) => {
       if (e.key !== "Enter") return;
       e.preventDefault();
-
-      const q = (els.q.value || "").trim().toLowerCase();
-      const count = !q
-        ? products.length
-        : products.filter((p) =>
-            (p.brand + " " + p.name).toLowerCase().includes(q),
-          ).length;
-
       closeSearch();
       els.q.blur();
-      toast(`Đã lọc: ${count} sản phẩm 🔎`);
+      toast("Đã áp dụng tìm kiếm 🔎");
     });
 
-    // cart dropdown open/close
+    // cart dropdown
     els.btnCart?.addEventListener("click", (e) => {
       e.stopPropagation();
       toggleCart();
@@ -1071,37 +1019,39 @@
       openCheckout();
     });
 
-    // cart dropdown interactions
     els.cartDrop?.addEventListener("click", (e) => {
-      // remove
       const rm = e.target.closest?.("[data-rm]");
       if (rm) {
         e.stopPropagation();
         const item = e.target.closest(".cartItem");
         const id = item?.getAttribute("data-id");
         if (!id) return;
-
         state.cart.delete(id);
         toast("Đã bỏ khỏi giỏ 🧺");
         render();
         return;
       }
-
-      // open product detail when clicking cart item
       const item = e.target.closest?.(".cartItem");
       const id = item?.getAttribute("data-id");
       if (id) openProduct(id);
     });
 
-    // click outside to close cart dropdown
     document.addEventListener("click", (e) => {
-      if (!els.cartDrop || !els.cartWrap) return;
-      if (!els.cartDrop.classList.contains("isOpen")) return;
-      const inside = els.cartWrap.contains(e.target);
-      if (!inside) closeCart();
+      if (
+        els.cartDrop?.classList.contains("isOpen") &&
+        els.cartWrap &&
+        !els.cartWrap.contains(e.target)
+      )
+        closeCart();
+      if (
+        els.favDrop?.classList.contains("isOpen") &&
+        els.favWrap &&
+        !els.favWrap.contains(e.target)
+      )
+        closeFav();
     });
 
-    // favorites dropdown open/close
+    // favorites dropdown
     els.btnFav?.addEventListener("click", (e) => {
       e.stopPropagation();
       toggleFav();
@@ -1118,7 +1068,6 @@
       render();
     });
 
-    // favorites dropdown interactions
     els.favDrop?.addEventListener("click", (e) => {
       const rm = e.target.closest?.("[data-fav-rm]");
       if (rm) {
@@ -1126,54 +1075,34 @@
         const item = e.target.closest(".favItem");
         const id = item?.getAttribute("data-id");
         if (!id) return;
-
         state.likes.delete(id);
         toast("Đã bỏ yêu thích 💔");
         render();
         return;
       }
-
       const item = e.target.closest?.(".favItem");
       const id = item?.getAttribute("data-id");
       if (id) openProduct(id);
     });
 
-    // click outside to close favorites dropdown
-    document.addEventListener("click", (e) => {
-      if (!els.favDrop || !els.favWrap) return;
-      if (!els.favDrop.classList.contains("isOpen")) return;
-      const inside = els.favWrap.contains(e.target);
-      if (!inside) closeFav();
-    });
-
-    // product modal close
+    // product modal events
     els.pdModal?.addEventListener("click", (e) => {
-      if (e.target && e.target.dataset && e.target.dataset.pdClose)
-        closeProduct();
+      if (e.target?.dataset?.pdClose) closeProduct();
     });
-
-    // product qty controls
     els.pdMinus?.addEventListener("click", () => setPdQty(getPdQty() - 1));
     els.pdPlus?.addEventListener("click", () => setPdQty(getPdQty() + 1));
     els.pdQty?.addEventListener("change", () => setPdQty(getPdQty()));
-
-    // product add to cart with quantity
     els.pdAdd?.addEventListener("click", () => {
       const id = state.activeId;
-      const p = id ? byId(id) : null;
-      if (!p) return;
-
+      if (!id) return;
       const qty = getPdQty();
       setQty(id, qty);
       toast(`Đã cập nhật giỏ: x${qty} ✅`);
       render();
     });
-
-    // product like
     els.pdLike?.addEventListener("click", () => {
       const id = state.activeId;
       if (!id) return;
-
       if (state.likes.has(id)) {
         state.likes.delete(id);
         toast("Đã bỏ yêu thích 💔");
@@ -1185,14 +1114,13 @@
       render();
     });
 
-    // orders history
+    // orders
     els.btnOrders?.addEventListener("click", (e) => {
       e.stopPropagation();
       openOrders();
     });
     els.ordModal?.addEventListener("click", (e) => {
-      if (e.target && e.target.dataset && e.target.dataset.ordClose)
-        closeOrders();
+      if (e.target?.dataset?.ordClose) closeOrders();
     });
     els.btnClearOrders?.addEventListener("click", () => {
       state.orders = [];
@@ -1200,6 +1128,7 @@
       toast("Đã xóa lịch sử giao dịch 🧹");
       render();
     });
+
     els.ordList?.addEventListener("click", (e) => {
       const statusBtn = e.target.closest?.("[data-ord-status]");
       if (statusBtn) {
@@ -1207,7 +1136,6 @@
         const it = e.target.closest?.(".ordItem");
         const oid = it?.getAttribute("data-oid");
         if (!oid) return;
-
         const o = (state.orders || []).find((x) => x.id === oid);
         const next = nextStatus(o?.status);
         setOrderStatus(oid, next);
@@ -1220,14 +1148,14 @@
       if (oid) openInvoice(oid);
     });
 
-    // checkout modal close + confirm
+    // checkout
     els.ckModal?.addEventListener("click", (e) => {
-      if (e.target && e.target.dataset && e.target.dataset.ckClose)
-        closeCheckout();
+      if (e.target?.dataset?.ckClose) closeCheckout();
     });
+    els.ckPay?.addEventListener("change", renderCheckout);
     els.btnPayConfirm?.addEventListener("click", confirmPayment);
 
-    // invoice modal close + print
+    // invoice
     els.invModal?.addEventListener("click", (e) => {
       const st = e.target.closest?.("[data-inv-status]");
       if (st) {
@@ -1240,13 +1168,11 @@
         toast(`Trạng thái: ${statusLabel(next)} ✅`);
         return;
       }
-
-      if (e.target && e.target.dataset && e.target.dataset.invClose)
-        closeInvoice();
+      if (e.target?.dataset?.invClose) closeInvoice();
     });
     els.btnInvPrint?.addEventListener("click", printInvoice);
 
-    // global ESC: close all overlays
+    // esc
     window.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return;
       closeSearch();
@@ -1258,7 +1184,7 @@
       closeProduct();
     });
 
-    // active nav highlight
+    // nav highlight
     els.navLinks?.forEach((a) => {
       a.addEventListener("click", () => {
         els.navLinks.forEach((x) => x.classList.remove("isActive"));

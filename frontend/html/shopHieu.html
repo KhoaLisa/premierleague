@@ -7,7 +7,6 @@
 
     <!-- Header 2 tầng + nền/biến dùng chung -->
     <link rel="stylesheet" href="../css/home.css" />
-
     <!-- CSS riêng trang Shop -->
     <link rel="stylesheet" href="../css/shopHieu.css" />
   </head>
@@ -20,13 +19,12 @@
       <div class="grid"></div>
     </div>
 
-    <!-- ✅ HEADER 2 TẦNG (đồng bộ các trang khác) -->
     <header class="plHeader" id="plHeader">
       <div class="plTop">
         <div class="plTop__in">
           <nav class="plTop__left" aria-label="Thanh phụ">
             <a class="plTop__link" href="home.html">Premier League</a>
-            <a class="plTop__link" href="shop.html">Shop</a>
+            <a class="plTop__link" href="shopHieu.html">Shop</a>
             <a class="plTop__link" href="#">About us</a>
             <a class="plTop__link" href="#">Football &amp; Community</a>
             <a class="plTop__link" href="#">Events</a>
@@ -42,7 +40,6 @@
 
       <div class="plMain">
         <div class="plMain__in">
-          <!-- burger (mobile) -->
           <input class="plNavChk" type="checkbox" id="navChk" />
           <label class="plIconBtn plBurger" for="navChk" aria-label="Mở menu">
             <svg
@@ -73,17 +70,17 @@
             </div>
           </a>
 
-          <!-- nav categories (desktop) -->
           <nav class="shopNav" aria-label="Danh mục shop">
-            <a class="shopNav__a isActive" href="#cat-footballs">Footballs</a>
+            <a class="shopNav__a isActive" href="#top-picks">Top picks</a>
+            <a class="shopNav__a" href="#cat-footballs">Footballs</a>
             <a class="shopNav__a" href="#cat-apparel">Apparel</a>
             <a class="shopNav__a" href="#cat-cards">Trading Cards</a>
             <a class="shopNav__a" href="#cat-accessories">Accessories</a>
-            <a class="shopNav__a" href="#cat-clubs">Clubs</a>
             <a class="shopNav__a" href="#cat-sale">Sale</a>
           </nav>
 
           <div class="shopActions" aria-label="Công cụ">
+            <!-- Cart -->
             <div class="shopCartWrap" id="cartWrap">
               <button
                 class="plIconBtn"
@@ -119,7 +116,6 @@
                 </svg>
               </button>
 
-              <!-- ✅ CART DROPDOWN -->
               <div class="cartDrop" id="cartDrop" aria-hidden="true">
                 <div class="cartDrop__head">
                   <div class="cartDrop__ttl">Giỏ hàng</div>
@@ -156,7 +152,7 @@
                 <div class="cartDrop__foot">
                   <div class="cartDrop__total">
                     <span>Tạm tính</span>
-                    <strong id="cartTotal">£0.00</strong>
+                    <strong id="cartTotal">0</strong>
                   </div>
                   <button class="cartDrop__pay" id="btnCheckout" type="button">
                     Thanh toán
@@ -168,6 +164,7 @@
               </div>
             </div>
 
+            <!-- Favorites -->
             <div class="shopFavWrap" id="favWrap">
               <button
                 class="plIconBtn"
@@ -194,7 +191,6 @@
                 </svg>
               </button>
 
-              <!-- ✅ FAVORITES DROPDOWN -->
               <div class="favDrop" id="favDrop" aria-hidden="true">
                 <div class="favDrop__head">
                   <div class="favDrop__ttl">Yêu thích</div>
@@ -236,6 +232,7 @@
               </div>
             </div>
 
+            <!-- Orders -->
             <button
               class="plIconBtn"
               id="btnOrders"
@@ -267,13 +264,14 @@
               </svg>
             </button>
 
+            <!-- Search -->
             <button
               class="plIconBtn"
               id="btnSearch"
-              aria-controls="searchModal"
-              aria-expanded="false"
               type="button"
               aria-label="Tìm kiếm"
+              aria-controls="searchModal"
+              aria-expanded="false"
             >
               <svg
                 width="18"
@@ -297,7 +295,6 @@
             </button>
           </div>
 
-          <!-- drawer (mobile) -->
           <div class="plDrawer" aria-hidden="true">
             <label class="plDrawer__overlay" for="navChk"></label>
             <aside class="plDrawer__panel" role="dialog" aria-label="Menu">
@@ -323,11 +320,11 @@
                 </label>
               </div>
               <nav class="plDrawer__links">
+                <a href="#top-picks">Top picks</a>
                 <a href="#cat-footballs">Footballs</a>
                 <a href="#cat-apparel">Apparel</a>
                 <a href="#cat-cards">Trading Cards</a>
                 <a href="#cat-accessories">Accessories</a>
-                <a href="#cat-clubs">Clubs</a>
                 <a href="#cat-sale">Sale</a>
               </nav>
             </aside>
@@ -337,7 +334,6 @@
     </header>
 
     <main class="wrap">
-      <!-- ✅ HERO (giống mẫu: ảnh lớn + caption + nút) -->
       <section class="shopHero" aria-label="Giới thiệu">
         <div class="shopHero__inner">
           <div
@@ -360,19 +356,16 @@
         </div>
       </section>
 
-      <!-- ✅ TOP PICKS -->
       <section class="shopBlock" id="top-picks" aria-label="Gợi ý nổi bật">
         <div class="shopBlock__head">
           <h2 class="shopBlock__title">Our top picks</h2>
           <div class="shopBlock__line"></div>
         </div>
 
-        <div class="shopGrid" id="shopGrid">
-          <!-- Cards render bằng JS -->
-        </div>
+        <div class="shopGrid" id="shopGrid"></div>
       </section>
 
-      <!-- ✅ MODAL SEARCH -->
+      <!-- SEARCH MODAL -->
       <div class="shopModal" id="searchModal" aria-hidden="true">
         <div class="shopModal__overlay" data-close="1"></div>
         <div
@@ -425,7 +418,7 @@
               <input
                 id="q"
                 class="shopSearch__inp"
-                placeholder="Nhập tên sản phẩm (vd: bóng, áo, thẻ...)"
+                placeholder="Nhập tên sản phẩm..."
                 autocomplete="off"
               />
             </label>
@@ -437,7 +430,7 @@
         </div>
       </div>
 
-      <!-- ✅ Product Detail Modal -->
+      <!-- PRODUCT DETAIL MODAL -->
       <div class="pdModal" id="pdModal" aria-hidden="true">
         <div class="pdModal__overlay" data-pd-close="1"></div>
 
@@ -448,7 +441,6 @@
         >
           <div class="pdModal__head">
             <div class="pdModal__brand" id="pdBrand">Premier League</div>
-
             <button
               class="plIconBtn"
               type="button"
@@ -482,8 +474,8 @@
               <p class="pdInfo__desc" id="pdDesc">Mô tả sản phẩm</p>
 
               <div class="pdPriceRow">
-                <div class="pdPrice" id="pdPrice">£0.00</div>
-                <div class="pdWas" id="pdWas" style="display: none">£0.00</div>
+                <div class="pdPrice" id="pdPrice">0</div>
+                <div class="pdWas" id="pdWas" style="display: none">0</div>
               </div>
 
               <div class="pdActions">
@@ -545,10 +537,9 @@
         </div>
       </div>
 
-      <!-- ✅ Orders (Transaction History) Modal -->
+      <!-- ORDERS MODAL -->
       <div class="ordModal" id="ordModal" aria-hidden="true">
         <div class="ordModal__overlay" data-ord-close="1"></div>
-
         <div
           class="ordModal__panel"
           role="dialog"
@@ -592,7 +583,7 @@
         </div>
       </div>
 
-      <!-- ✅ Checkout Modal -->
+      <!-- CHECKOUT MODAL -->
       <div class="ckModal" id="ckModal" aria-hidden="true">
         <div class="ckModal__overlay" data-ck-close="1"></div>
 
@@ -629,7 +620,7 @@
                 <div class="ckList" id="ckList"></div>
                 <div class="ckTotalRow">
                   <span>Tổng</span>
-                  <strong id="ckTotal">£0.00</strong>
+                  <strong id="ckTotal">0</strong>
                 </div>
               </div>
 
@@ -672,8 +663,23 @@
                       </option>
                       <option value="CARD">Thẻ (Demo)</option>
                       <option value="BANK">Chuyển khoản (Demo)</option>
+                      <option value="QR">QR MoMo (VietQR)</option>
                     </select>
                   </label>
+
+                  <!-- QR box (hiện khi chọn QR) -->
+                  <div class="ckQr" id="ckQrBox" style="display: none">
+                    <div class="ckQr__ttl">Thanh toán bằng mã QR</div>
+                    <div class="ckQr__sub">
+                      Số tiền: <strong id="ckQrAmount">0</strong> • Nội dung:
+                      <strong id="ckQrDesc">MaHoaDon</strong>
+                    </div>
+                    <img id="ckQrImg" class="ckQr__img" alt="QR thanh toán" />
+                    <div class="ckQr__hint">
+                      Quét QR bằng MoMo/Ngân hàng để thanh toán. Sau khi chuyển
+                      khoản, bạn có thể đổi trạng thái đơn sang “Đã thanh toán”.
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -690,7 +696,7 @@
         </div>
       </div>
 
-      <!-- ✅ Invoice Modal -->
+      <!-- INVOICE MODAL -->
       <div class="invModal" id="invModal" aria-hidden="true">
         <div class="invModal__overlay" data-inv-close="1"></div>
 
@@ -735,7 +741,6 @@
         </div>
       </div>
 
-      <!-- ✅ Toast -->
       <div class="shopToast" id="toast" aria-live="polite"></div>
     </main>
 

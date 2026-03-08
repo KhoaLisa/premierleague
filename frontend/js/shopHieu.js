@@ -72,7 +72,6 @@
     ckName: $("#ckName"),
     ckPhone: $("#ckPhone"),
     ckAddr: $("#ckAddr"),
-    ckPay: $("#ckPay"),
     ckQrBox: $("#ckQrBox"),
     ckQrImg: $("#ckQrImg"),
     ckQrAmount: $("#ckQrAmount"),
@@ -115,7 +114,7 @@
       brand: "Premier League",
       name: "2025/26 PUMA Orbita 3 PL Thrill Edition",
       desc: "Bóng thi đấu phiên bản giới hạn, bề mặt bám sân tốt, đường bay ổn định.",
-      price: 40000,
+      price: 1000,
       colors: 1,
       badge: null,
       was: null,
@@ -125,7 +124,7 @@
       brand: "Premier League",
       name: "Topps 2026 Chrome Pack",
       desc: "Pack thẻ Chrome 2026 – sưu tầm, trưng bày hoặc trao đổi.",
-      price: 15000,
+      price: 1000,
       colors: 1,
       badge: null,
       was: null,
@@ -135,7 +134,7 @@
       brand: "Premier League",
       name: "2025/26 PUMA Orbita 1 PL Thrill (Match Ball)",
       desc: "Bóng thi đấu chuẩn match ball – độ nảy tốt, trọng lượng cân bằng.",
-      price: 135000,
+      price: 1000,
       colors: 1,
       badge: null,
       was: null,
@@ -145,30 +144,30 @@
       brand: "Premier League",
       name: "2025/26 PUMA Orbita Brilliance (Training)",
       desc: "Bóng tập luyện bền bỉ, vỏ dày hơn và giữ form tốt.",
-      price: 11990,
-      was: 17000,
+      price: 1000,
+      was: null,
       colors: 1,
-      badge: "-30%",
+      badge: null,
     },
     {
       id: "p5",
       brand: "Premier League",
       name: "PUMA Core T-shirt",
       desc: "Áo thun basic, thoáng, form dễ mặc.",
-      price: 12500,
-      was: 25000,
+      price: 1000,
+      was: null,
       colors: 2,
-      badge: "-50%",
+      badge: null,
     },
     {
       id: "p6",
       brand: "Premier League",
       name: "Graphic T-shirt",
       desc: "Áo graphic – in nổi bật, chất vải mềm, phối đồ nhanh gọn.",
-      price: 12500,
-      was: 25000,
+      price: 1000,
+      was: null,
       colors: 1,
-      badge: "-50%",
+      badge: null,
     },
   ].map((p) => ({ ...p, img: svgDataUrl(p.name) }));
 
@@ -660,7 +659,7 @@
     els.ckTotal.textContent = fmtMoney(total);
 
     // ✅ QR integration: amount + addInfo (mã hoá đơn)
-    const pay = String(els.ckPay?.value || "COD");
+    const pay = "QR";
     const isQr = pay === "QR";
     if (els.ckQrBox && els.ckQrImg && els.ckQrAmount && els.ckQrDesc) {
       els.ckQrBox.style.display = isQr ? "block" : "none";
@@ -726,7 +725,7 @@
     const name = (els.ckName?.value || "").trim();
     const phone = (els.ckPhone?.value || "").trim();
     const addr = (els.ckAddr?.value || "").trim();
-    const pay = String(els.ckPay?.value || "COD");
+    const pay = "QR";
 
     if (!name || !phone || !addr) {
       toast("Vui lòng nhập đủ thông tin khách hàng ✍️");
@@ -1152,7 +1151,6 @@
     els.ckModal?.addEventListener("click", (e) => {
       if (e.target?.dataset?.ckClose) closeCheckout();
     });
-    els.ckPay?.addEventListener("change", renderCheckout);
     els.btnPayConfirm?.addEventListener("click", confirmPayment);
 
     // invoice

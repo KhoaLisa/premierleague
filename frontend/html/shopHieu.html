@@ -655,20 +655,13 @@
                     ></textarea>
                   </label>
 
-                  <label class="ckField">
-                    <span>Phương thức thanh toán</span>
-                    <select id="ckPay">
-                      <option value="COD">
-                        COD (Thanh toán khi nhận hàng)
-                      </option>
-                      <option value="CARD">Thẻ (Demo)</option>
-                      <option value="BANK">Chuyển khoản (Demo)</option>
-                      <option value="QR">QR MoMo (VietQR)</option>
-                    </select>
-                  </label>
+                  <div class="ckField">
+                    <span>Phương thức thanh toán (QR)</span>
+                    <div class="ckPayOnly">Quét mã QR (MoMo VietQR)</div>
+                  </div>
 
                   <!-- QR box (hiện khi chọn QR) -->
-                  <div class="ckQr" id="ckQrBox" style="display: none">
+                  <div class="ckQr" id="ckQrBox">
                     <div class="ckQr__ttl">Thanh toán bằng mã QR</div>
                     <div class="ckQr__sub">
                       Số tiền: <strong id="ckQrAmount">0</strong> • Nội dung:

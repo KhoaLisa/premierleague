@@ -2,30 +2,31 @@
 <html lang="vi">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>EFI Social</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cộng đồng bóng đá</title>
+    <link rel="stylesheet" href="../css/home.css" />
     <link rel="stylesheet" href="../css/social.css" />
   </head>
   <body>
-    <div class="socialBg" aria-hidden="true">
-      <div class="socialBg__blob socialBg__blob--1"></div>
-      <div class="socialBg__blob socialBg__blob--2"></div>
-      <div class="socialBg__grid"></div>
+    <div class="bg">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="grid"></div>
     </div>
 
     <header class="plHeader">
       <div class="plTop">
         <div class="plTop__in">
           <nav class="plTop__left" aria-label="Thanh phụ">
-            <a href="./home.html" class="plTop__link">Trang chủ dự án</a>
-            <a href="./social.html" class="plTop__link">Cộng đồng EFI</a>
+            <a href="./home.html" class="plTop__link"
+              >European Football Insights</a
+            >
+            <a href="./social.html" class="plTop__link">Cộng đồng</a>
             <a href="./news.html" class="plTop__link">Tin tức</a>
-            <a href="./lichthidau.html" class="plTop__link">Lịch thi đấu</a>
             <a href="./shop.html" class="plTop__link">Cửa hàng</a>
           </nav>
-
           <div class="plTop__right">
-            <span class="plTop__sponsor">Social Experience</span>
+            <a href="./home.html" class="plTop__sponsor">Quay lại trang chủ</a>
           </div>
         </div>
       </div>
@@ -35,7 +36,12 @@
           <input id="plNavChk" class="plNavChk" type="checkbox" />
           <label class="plIconBtn plBurger" for="plNavChk" aria-label="Mở menu">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <path
+                d="M4 7h16M4 12h16M4 17h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
             </svg>
           </label>
 
@@ -49,61 +55,46 @@
 
           <nav class="plNav" aria-label="Menu chính">
             <a class="plNav__link" href="./home.html">Trang chủ</a>
-            <a class="plNav__link isCurrent" href="./social.html" aria-current="page">Mạng xã hội</a>
-            <a class="plNav__link" href="./news.html">Tin tức</a>
             <a class="plNav__link" href="./lichthidau.html">Các trận đấu</a>
-            <a class="plNav__link" href="./player.html">Người chơi</a>
-            <a class="plNav__link" href="./clb.html">Câu lạc bộ</a>
+            <a class="plNav__link" href="./news.html">Tin tức</a>
+            <a class="plNav__link" href="./social.html" aria-current="page"
+              >Cộng đồng</a
+            >
           </nav>
 
           <div class="plRight">
-            <button id="btnOpenQuickSearch" class="plIconBtn" type="button" aria-label="Tìm kiếm">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              </svg>
-            </button>
-
-            <button id="btnLogin" class="plLogin" type="button">Đăng nhập</button>
-
-            <div id="userMenuWrap" class="plUserWrap efiHide">
-              <button id="btnUser" class="plUser" type="button" aria-haspopup="menu" aria-expanded="false">
-                <img id="userAvatar" class="plUser__avt" alt="avatar" />
-                <span id="userName" class="plUser__name"></span>
-                <span class="plUser__chev" aria-hidden="true">▾</span>
-              </button>
-
-              <div id="userMenu" class="plUserMenu hidden" role="menu" aria-label="Tài khoản">
-                <div class="plUserMenu__head">
-                  <div class="plUserMenu__name" id="userName2">User</div>
-                  <div class="plUserMenu__email" id="userEmail2">email</div>
-                </div>
-                <a class="plUserMenu__item" href="./profile.html" role="menuitem">👤 Hồ sơ</a>
-                <a class="plUserMenu__item" href="./home.html" role="menuitem">🏠 Quay lại trang chủ</a>
-                <div class="plUserMenu__sep"></div>
-                <button id="btnLogout" class="plUserMenu__item danger" type="button" role="menuitem">🚪 Đăng xuất</button>
-              </div>
-            </div>
+            <a class="plLogin socialBackBtn" href="./home.html">Về home</a>
           </div>
 
           <div class="plDrawer" aria-hidden="true">
-            <label class="plDrawer__overlay" for="plNavChk" aria-label="Đóng menu"></label>
-            <aside class="plDrawer__panel" role="dialog" aria-label="Menu mobile">
+            <label
+              class="plDrawer__overlay"
+              for="plNavChk"
+              aria-label="Đóng menu"
+            ></label>
+            <aside
+              class="plDrawer__panel"
+              role="dialog"
+              aria-label="Menu mobile"
+            >
               <div class="plDrawer__head">
                 <b>Menu</b>
                 <label class="plIconBtn" for="plNavChk" aria-label="Đóng">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path
+                      d="M6 6l12 12M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
                   </svg>
                 </label>
               </div>
               <div class="plDrawer__links">
                 <a href="./home.html">Trang chủ</a>
-                <a href="./social.html">Mạng xã hội</a>
-                <a href="./news.html">Tin tức</a>
                 <a href="./lichthidau.html">Các trận đấu</a>
-                <a href="./player.html">Người chơi</a>
-                <a href="./clb.html">Câu lạc bộ</a>
-                <a href="./profile.html">Hồ sơ</a>
+                <a href="./news.html">Tin tức</a>
+                <a href="./social.html">Cộng đồng</a>
               </div>
             </aside>
           </div>
@@ -111,242 +102,128 @@
       </div>
     </header>
 
-    <main class="socialPage">
-      <section class="socialHero shell">
-        <div class="socialHero__copy">
-          <p class="socialHero__eyebrow">EFI Community</p>
-          <h1>Nơi fan bóng đá chia sẻ góc nhìn, cảm xúc và khoảnh khắc trận đấu</h1>
-          <p class="socialHero__desc">
-            Một không gian mạng xã hội độc lập với trang chủ dự án, giữ header để điều hướng qua lại,
-            còn toàn bộ phần bên dưới được thiết kế như một news feed hiện đại.
+    <main class="socialWrap">
+      <section class="socialHero socialCard">
+        <div>
+          <p class="socialEyebrow">Mạng xã hội bóng đá</p>
+          <h1>
+            Đăng bài, bàn luận, thả tim và reply như một cộng đồng thật ✨
+          </h1>
+          <p class="socialLead">
+            Bạn có thể đăng nội dung, ảnh bằng URL, gắn hashtag, tìm bài theo
+            hashtag, thích hoặc dislike bài viết, đồng thời tương tác sâu hơn
+            với phần bình luận.
           </p>
         </div>
-
-        <div class="socialHero__actions">
-          <div class="socialSearch">
-            <input id="feedSearchInput" type="text" placeholder="Tìm bài viết, tác giả, hashtag..." />
-            <button id="btnFeedSearch" type="button">Tìm</button>
+        <div class="socialHero__user">
+          <img id="currentUserAvatar" alt="avatar" />
+          <div>
+            <strong id="currentUserName">Khách</strong>
+            <span id="currentUserSub">Đang đăng bằng localStorage demo</span>
           </div>
-          <button id="btnOpenComposer" class="primaryBtn" type="button">Tạo bài viết</button>
         </div>
       </section>
 
-      <section class="socialLayout shell">
-        <aside class="leftCol">
-          <article class="glassCard profileCard">
-            <div class="profileCard__cover"></div>
-            <div class="profileCard__body">
-              <img id="sidebarAvatar" class="profileCard__avatar" alt="avatar" />
-              <h2 id="sidebarName">Fan EFI</h2>
-              <p id="sidebarMeta">Đăng nhập để cá nhân hoá cộng đồng của bạn.</p>
-              <div class="profileStats">
-                <div><strong id="statPosts">0</strong><span>Bài viết</span></div>
-                <div><strong id="statSaved">0</strong><span>Đã lưu</span></div>
-                <div><strong>12</strong><span>Nhóm</span></div>
+      <section class="socialGrid">
+        <div class="socialMain">
+          <article class="socialCard composerCard">
+            <div class="composerHead">
+              <img id="composerAvatar" alt="avatar" class="composerAvatar" />
+              <div>
+                <h2>Tạo bài viết mới</h2>
+                <p>
+                  Viết cảm nghĩ của bạn về trận đấu, cầu thủ hay câu chuyện đang
+                  hot.
+                </p>
               </div>
             </div>
+
+            <form id="postForm" class="composerForm">
+              <textarea
+                id="postContent"
+                rows="5"
+                placeholder="Ví dụ: #Arsenal hôm nay pressing quá cháy, nhưng khâu kết thúc vẫn chưa đủ sắc..."
+              ></textarea>
+
+              <div class="composerGrid">
+                <div>
+                  <label for="postImageUrl">Ảnh URL</label>
+                  <input
+                    id="postImageUrl"
+                    type="url"
+                    placeholder="https://..."
+                  />
+                </div>
+                <div>
+                  <label for="postHashtags">Hashtag bổ sung</label>
+                  <input
+                    id="postHashtags"
+                    type="text"
+                    placeholder="#premierleague, #manutd"
+                  />
+                </div>
+              </div>
+
+              <div class="composerActions">
+                <span class="composerHint"
+                  >Hashtag trong nội dung sẽ tự nhận diện.</span
+                >
+                <button type="submit" class="socialBtn">Đăng bài</button>
+              </div>
+            </form>
           </article>
 
-          <article class="glassCard sideMenu">
-            <h3>Lối tắt</h3>
-            <a href="#">⚽ Thảo luận trận đấu</a>
-            <a href="#">🔥 Chủ đề nóng</a>
-            <a href="#">📸 Ảnh sân cỏ</a>
-            <a href="#">🎙️ Podcast fan</a>
-            <a href="#">🏆 Dự đoán top 4</a>
-          </article>
-
-          <article class="glassCard groupCard">
-            <h3>Nhóm nổi bật</h3>
-            <div class="miniGroup">
-              <b>Manchester United VN</b>
-              <span>18.2k thành viên</span>
-            </div>
-            <div class="miniGroup">
-              <b>Fantasy Premier League Hub</b>
-              <span>9.4k thành viên</span>
-            </div>
-            <div class="miniGroup">
-              <b>Late Night Football Talk</b>
-              <span>6.1k thành viên</span>
-            </div>
-          </article>
-        </aside>
-
-        <section class="centerCol">
-          <article class="storiesRow glassCard">
-            <div class="storiesRow__head">
-              <h3>Stories</h3>
-              <span>Cập nhật cảm xúc nhanh cùng cộng đồng</span>
-            </div>
-            <div class="storiesList" id="storiesList"></div>
-          </article>
-
-          <article class="glassCard composerCard">
-            <div class="composerInline">
-              <img id="composerAvatar" class="composerInline__avatar" alt="avatar" />
-              <button id="btnOpenComposerInline" class="composerInline__trigger" type="button">
-                Bạn đang nghĩ gì về bóng đá hôm nay?
+          <section class="socialCard filterCard">
+            <div class="filterHead">
+              <div>
+                <h2>Tìm theo hashtag</h2>
+                <p>Nhập #arsenal hoặc arsenal đều được.</p>
+              </div>
+              <button
+                id="clearFilterBtn"
+                type="button"
+                class="socialBtn socialBtn--ghost"
+              >
+                Xoá lọc
               </button>
             </div>
-            <div class="composerQuickActions">
-              <button type="button" data-fill="Vừa xem xong trận đấu và cảm xúc vẫn còn nguyên!">🎥 Chia sẻ cảm xúc</button>
-              <button type="button" data-fill="Dự đoán đội hình ra sân cuối tuần này của bạn là gì?">🧠 Đăng dự đoán</button>
-              <button type="button" data-fill="Ảnh sân cỏ đẹp quá, ai có thêm góc chụp nào không?">📸 Đăng ảnh</button>
+            <div class="filterBar">
+              <input
+                id="hashtagSearch"
+                type="text"
+                placeholder="Tìm hashtag..."
+              />
             </div>
+            <div id="activeFilter" class="activeFilter hidden"></div>
+            <div id="popularTags" class="tagCloud"></div>
+          </section>
+
+          <section id="postList" class="postList"></section>
+        </div>
+
+        <aside class="socialSide">
+          <article class="socialCard sideCard">
+            <h3>Tính năng đang có</h3>
+            <ul class="sideList">
+              <li>Đăng bài + ảnh URL</li>
+              <li>Hashtag tự nhận diện</li>
+              <li>Like và dislike bài viết</li>
+              <li>Bình luận, thả tim, dislike bình luận</li>
+              <li>Reply bình luận theo luồng hội thoại</li>
+            </ul>
           </article>
 
-          <article class="feedToolbar glassCard">
-            <div class="feedTabs">
-              <button class="feedTab isActive" data-filter="all" type="button">Tất cả</button>
-              <button class="feedTab" data-filter="mine" type="button">Bài của tôi</button>
-              <button class="feedTab" data-filter="liked" type="button">Đã thích</button>
-              <button class="feedTab" data-filter="saved" type="button">Đã lưu</button>
-            </div>
-            <div class="feedMeta" id="feedMeta">Đang hiển thị toàn bộ bài viết</div>
-          </article>
-
-          <section id="feedList" class="feedList"></section>
-        </section>
-
-        <aside class="rightCol">
-          <article class="glassCard trendCard">
-            <h3>Xu hướng hôm nay</h3>
-            <div class="trendItem">
-              <strong>#NorthLondonDerby</strong>
-              <span>12.4k lượt thảo luận</span>
-            </div>
-            <div class="trendItem">
-              <strong>#TitleRace</strong>
-              <span>9.1k lượt thảo luận</span>
-            </div>
-            <div class="trendItem">
-              <strong>#FPLCaptain</strong>
-              <span>6.8k lượt thảo luận</span>
-            </div>
-          </article>
-
-          <article class="glassCard contactCard">
-            <h3>Đang hoạt động</h3>
-            <div class="contactItem"><span class="dot"></span> Khoa Lisa</div>
-            <div class="contactItem"><span class="dot"></span> Minh Triet</div>
-            <div class="contactItem"><span class="dot"></span> Huyền An</div>
-            <div class="contactItem"><span class="dot"></span> EFI Admin</div>
-          </article>
-
-          <article class="glassCard suggestCard">
-            <h3>Gợi ý theo dõi</h3>
-            <div class="suggestItem">
-              <div>
-                <b>Transfer Insider</b>
-                <span>Tin hậu trường chuyển nhượng</span>
-              </div>
-              <button type="button">Theo dõi</button>
-            </div>
-            <div class="suggestItem">
-              <div>
-                <b>Stats Lab</b>
-                <span>Phân tích dữ liệu trận đấu</span>
-              </div>
-              <button type="button">Theo dõi</button>
-            </div>
-            <div class="suggestItem">
-              <div>
-                <b>Fan Cam Weekly</b>
-                <span>Khoảnh khắc cổ động viên</span>
-              </div>
-              <button type="button">Theo dõi</button>
-            </div>
+          <article class="socialCard sideCard">
+            <h3>Mẹo dùng nhanh</h3>
+            <ul class="sideList">
+              <li>Nhấn vào hashtag để lọc ngay bài liên quan.</li>
+              <li>Dislike sẽ tự bỏ like trước đó và ngược lại.</li>
+              <li>Reply có thể trả lời tiếp nhiều tầng.</li>
+            </ul>
           </article>
         </aside>
       </section>
     </main>
-
-    <div id="composerModal" class="composerModal hidden" aria-hidden="true">
-      <div class="composerModal__overlay" data-close-composer></div>
-      <div class="composerModal__dialog glassCard" role="dialog" aria-modal="true" aria-label="Tạo bài viết">
-        <div class="composerModal__head">
-          <h3>Tạo bài viết mới</h3>
-          <button type="button" class="iconGhost" data-close-composer>✕</button>
-        </div>
-
-        <div class="composerModal__user">
-          <img id="modalAvatar" alt="avatar" />
-          <div>
-            <strong id="modalUserName">Fan EFI</strong>
-            <span>Công khai · cộng đồng bóng đá</span>
-          </div>
-        </div>
-
-        <label class="field">
-          <span>Tiêu đề</span>
-          <input id="postTitleInput" type="text" maxlength="120" placeholder="Ví dụ: Trận này đáng nhớ vì..." />
-        </label>
-
-        <label class="field">
-          <span>Nội dung</span>
-          <textarea id="postBodyInput" rows="7" maxlength="1500" placeholder="Viết cảm nghĩ, phân tích, dự đoán hoặc chia sẻ khoảnh khắc của bạn..."></textarea>
-        </label>
-
-        <div class="composerModal__extras">
-          <label class="field field--inline">
-            <span>Ảnh đại diện bài viết</span>
-            <input id="postImageInput" type="url" placeholder="https://..." />
-          </label>
-          <label class="field field--inline">
-            <span>Hashtag</span>
-            <input id="postTagsInput" type="text" placeholder="#PremierLeague #Matchday" />
-          </label>
-        </div>
-
-        <div class="composerModal__actions">
-          <button id="btnSeedSample" class="ghostBtn" type="button">Điền mẫu</button>
-          <button id="btnSubmitPost" class="primaryBtn" type="button">Đăng bài</button>
-        </div>
-      </div>
-    </div>
-
-    <template id="postTemplate">
-      <article class="glassCard postCard">
-        <div class="postHead">
-          <div class="postAuthor">
-            <img class="postAuthor__avatar" alt="avatar" />
-            <div>
-              <strong class="postAuthor__name"></strong>
-              <div class="postAuthor__meta"></div>
-            </div>
-          </div>
-          <button class="postSaveBtn" type="button">☆</button>
-        </div>
-
-        <div class="postBody">
-          <h3 class="postTitle"></h3>
-          <p class="postText"></p>
-          <div class="postTags"></div>
-          <div class="postImageWrap hidden">
-            <img class="postImage" alt="post image" />
-          </div>
-        </div>
-
-        <div class="postStats">
-          <span class="postLikes">0 lượt thích</span>
-          <span class="postCommentsCount">0 bình luận</span>
-        </div>
-
-        <div class="postActions">
-          <button class="actionBtn btnLike" type="button">👍 Thích</button>
-          <button class="actionBtn btnComment" type="button">💬 Bình luận</button>
-          <button class="actionBtn btnShare" type="button">↗ Chia sẻ</button>
-        </div>
-
-        <div class="commentComposer">
-          <input class="commentInput" type="text" maxlength="280" placeholder="Viết bình luận tử tế nhé..." />
-          <button class="commentSubmit" type="button">Gửi</button>
-        </div>
-
-        <div class="commentList"></div>
-      </article>
-    </template>
 
     <script src="../js/social.js"></script>
   </body>

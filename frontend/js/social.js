@@ -1,105 +1,34 @@
 (() => {
-  const API_BASE = (() => {
-    const host = window.location.hostname;
-    const port = window.location.port;
-    if ((host === "127.0.0.1" || host === "localhost") && port === "5000") return "";
-    return "http://127.0.0.1:5000";
-  })();
-
   const $ = (s, root = document) => root.querySelector(s);
-  const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
+
+  const STORAGE_KEY = "efi_social_posts_v2";
 
   const els = {
-    btnLogin: $("#btnLogin"),
-    btnLogout: $("#btnLogout"),
-    btnUser: $("#btnUser"),
-    userMenuWrap: $("#userMenuWrap"),
-    userMenu: $("#userMenu"),
-    userAvatar: $("#userAvatar"),
-    userName: $("#userName"),
-    userName2: $("#userName2"),
-    userEmail2: $("#userEmail2"),
-    sidebarAvatar: $("#sidebarAvatar"),
+    currentUserAvatar: $("#currentUserAvatar"),
+    currentUserName: $("#currentUserName"),
     composerAvatar: $("#composerAvatar"),
-    modalAvatar: $("#modalAvatar"),
-    sidebarName: $("#sidebarName"),
-    sidebarMeta: $("#sidebarMeta"),
-    modalUserName: $("#modalUserName"),
-    statPosts: $("#statPosts"),
-    statSaved: $("#statSaved"),
-    storiesList: $("#storiesList"),
-    feedList: $("#feedList"),
-    feedMeta: $("#feedMeta"),
-    feedSearchInput: $("#feedSearchInput"),
-    btnFeedSearch: $("#btnFeedSearch"),
-    btnOpenComposer: $("#btnOpenComposer"),
-    btnOpenComposerInline: $("#btnOpenComposerInline"),
-    composerModal: $("#composerModal"),
-    postTitleInput: $("#postTitleInput"),
-    postBodyInput: $("#postBodyInput"),
-    postImageInput: $("#postImageInput"),
-    postTagsInput: $("#postTagsInput"),
-    btnSubmitPost: $("#btnSubmitPost"),
-    btnSeedSample: $("#btnSeedSample"),
-    postTemplate: $("#postTemplate"),
-  };
-
-  const STORE_KEYS = {
-    userId: "efi_user_id",
-    userName: "efi_user_name",
-    userEmail: "efi_user_email",
-    userPicture: "efi_user_picture",
-    posts: "efi_social_posts_v1",
+    postForm: $("#postForm"),
+    postContent: $("#postContent"),
+    postImageUrl: $("#postImageUrl"),
+    postHashtags: $("#postHashtags"),
+    hashtagSearch: $("#hashtagSearch"),
+    clearFilterBtn: $("#clearFilterBtn"),
+    activeFilter: $("#activeFilter"),
+    popularTags: $("#popularTags"),
+    postList: $("#postList"),
   };
 
   const state = {
-    filter: "all",
-    search: "",
     posts: [],
+    filterTag: "",
   };
 
-  const store = {
-    get userId() {
-      const v = localStorage.getItem(STORE_KEYS.userId);
-      return v ? parseInt(v, 10) : null;
-    },
-    get userName() {
-      return localStorage.getItem(STORE_KEYS.userName) || "";
-    },
-    get userEmail() {
-      return localStorage.getItem(STORE_KEYS.userEmail) || "";
-    },
-    get userPicture() {
-      return localStorage.getItem(STORE_KEYS.userPicture) || "";
-    },
-    clearUser() {
-      Object.values(STORE_KEYS).slice(0, 4).forEach((k) => localStorage.removeItem(k));
-    },
-  };
-
-  function apiGet(path) {
-    return fetch(`${API_BASE}${path}`, { method: "GET" }).then(async (res) => {
-      if (!res.ok) throw new Error(`GET ${path} -> ${res.status}`);
-      return res.json();
-    });
+  function uid(prefix = "id") {
+    return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
   }
 
-  async function hydrateUserProfileIfMissing() {
-    if (!store.userId) return;
-    if (store.userName && store.userEmail && store.userPicture) return;
-    try {
-      const data = await apiGet(`/api/me?user_id=${store.userId}`);
-      const user = data.user || {};
-      if (user.name) localStorage.setItem(STORE_KEYS.userName, user.name);
-      if (user.email) localStorage.setItem(STORE_KEYS.userEmail, user.email);
-      if (user.picture) localStorage.setItem(STORE_KEYS.userPicture, user.picture);
-    } catch (err) {
-      console.warn("hydrate user fail", err);
-    }
-  }
-
-  function escapeHtml(str) {
-    return String(str ?? "")
+  function escapeHtml(value) {
+    return String(value ?? "")
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
@@ -107,493 +36,523 @@
       .replaceAll("'", "&#039;");
   }
 
-  function getAvatarUrl(name = "Fan EFI", picture = "") {
-    if (picture) return picture;
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2a0634&color=ffffff`;
+  function normalizeTag(tag) {
+    return String(tag || "")
+      .trim()
+      .toLowerCase()
+      .replace(/^#+/, "")
+      .replace(/[^\p{L}\p{N}_-]+/gu, "");
   }
 
-  function getDisplayUser() {
-    const name = store.userName || (store.userId ? `User #${store.userId}` : "Fan EFI");
-    const email = store.userEmail || "Chưa đăng nhập";
-    const avatar = getAvatarUrl(name, store.userPicture);
-    return { name, email, avatar };
+  function extractHashtags(text) {
+    const matches = String(text || "").match(/#[\p{L}\p{N}_-]+/gu) || [];
+    return matches.map((x) => normalizeTag(x));
   }
 
-  function seedStories() {
-    const stories = [
-      {
-        name: "An Khang",
-        text: "Đêm nay phải thắng thôi!",
-        image: "https://images.unsplash.com/photo-1547347298-4074fc3086f0?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Thu Hà",
-        text: "Goal cam góc này đẹp quá.",
-        image: "https://images.unsplash.com/photo-1518604666860-9ed391f76460?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Minh Đức",
-        text: "Đội hình ra sân ổn áp chưa?",
-        image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=900&q=80",
-      },
-      {
-        name: "Linh Nhi",
-        text: "Sân cỏ tối nay đúng điện ảnh.",
-        image: "https://images.unsplash.com/photo-1486286701208-1d58e9338013?auto=format&fit=crop&w=900&q=80",
-      },
-    ];
-
-    els.storiesList.innerHTML = stories
-      .map((story) => {
-        const avatar = getAvatarUrl(story.name);
-        return `
-          <article class="storyCard" style="background-image:url('${story.image}')">
-            <img class="storyCard__avatar" src="${avatar}" alt="${escapeHtml(story.name)}" />
-            <b>${escapeHtml(story.name)}</b>
-            <span>${escapeHtml(story.text)}</span>
-          </article>
-        `;
-      })
-      .join("");
+  function parseExtraHashtags(input) {
+    return String(input || "")
+      .split(/[\s,]+/)
+      .map((x) => normalizeTag(x))
+      .filter(Boolean);
   }
 
-  function defaultPosts() {
+  function uniqueTags(tags) {
+    return [...new Set((tags || []).map(normalizeTag).filter(Boolean))];
+  }
+
+  function formatTime(iso) {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return "Vừa xong";
+    return new Intl.DateTimeFormat("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(date);
+  }
+
+  function getCurrentUser() {
+    const id = localStorage.getItem("efi_user_id") || "guest";
+    const name =
+      localStorage.getItem("efi_user_name") ||
+      localStorage.getItem("efi_user_email") ||
+      "Khách";
+    const avatar =
+      localStorage.getItem("efi_user_picture") ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=1d1028&color=fff`;
+    return { id: String(id), name, avatar };
+  }
+
+  function savePosts() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.posts));
+  }
+
+  function createSeedData() {
     return [
       {
-        id: crypto.randomUUID(),
-        authorName: "EFI Admin",
-        authorAvatar: getAvatarUrl("EFI Admin"),
-        userId: -1,
-        createdAt: Date.now() - 1000 * 60 * 34,
-        title: "Cuối tuần này ai là đội có áp lực lớn nhất?",
-        body: "Mình thấy cuộc đua top 4 đang căng thật sự. Không chỉ điểm số sát nhau mà lịch thi đấu cũng bắt đầu dồn. Theo mọi người, đội nào đang chịu áp lực tâm lý lớn nhất lúc này?",
-        image: "https://images.unsplash.com/photo-1508098682722-e99c643e7485?auto=format&fit=crop&w=1200&q=80",
-        tags: ["#Top4Race", "#PremierLeague"],
-        likes: 82,
+        id: uid("post"),
+        author: "Lisa Fan",
+        authorId: "seed_lisa",
+        avatar:
+          "https://ui-avatars.com/api/?name=Lisa+Fan&background=2b0038&color=fff",
+        content:
+          "Hôm nay #Arsenal đá khá ổn ở khâu kiểm soát bóng nhưng mình vẫn thấy hàng công hơi thiếu lạnh lùng ở 1/3 cuối sân. Mọi người nghĩ sao?",
+        imageUrl:
+          "https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1200&q=80",
+        hashtags: ["arsenal"],
+        createdAt: new Date(Date.now() - 1000 * 60 * 42).toISOString(),
+        likedBy: ["seed_lisa"],
+        dislikedBy: [],
         comments: [
           {
-            id: crypto.randomUUID(),
-            author: "Khánh Vy",
-            text: "Mình vote cho đội đang phải đá 2 mặt trận, dễ hụt hơi lắm.",
-            createdAt: Date.now() - 1000 * 60 * 28,
+            id: uid("comment"),
+            author: "Minh",
+            authorId: "seed_minh",
+            avatar:
+              "https://ui-avatars.com/api/?name=Minh&background=22304a&color=fff",
+            text: "Đúng luôn, đặc biệt là pha xử lý cuối của cánh phải. Nhưng tuyến giữa vẫn rất ổn ❤️",
+            createdAt: new Date(Date.now() - 1000 * 60 * 28).toISOString(),
+            heartedBy: ["seed_lisa"],
+            dislikedBy: [],
+            replies: [
+              {
+                id: uid("reply"),
+                author: "Huy",
+                authorId: "seed_huy",
+                avatar:
+                  "https://ui-avatars.com/api/?name=Huy&background=122f24&color=fff",
+                text: "Mình thấy nếu có thêm tiền đạo chớp thời cơ tốt hơn thì khác hẳn.",
+                createdAt: new Date(Date.now() - 1000 * 60 * 18).toISOString(),
+                heartedBy: [],
+                dislikedBy: [],
+                replies: [],
+              },
+            ],
           },
         ],
-        likedBy: [],
-        savedBy: [],
       },
       {
-        id: crypto.randomUUID(),
-        authorName: "Stats Lab",
-        authorAvatar: getAvatarUrl("Stats Lab"),
-        userId: -2,
-        createdAt: Date.now() - 1000 * 60 * 96,
-        title: "Một con số đáng chú ý về khả năng pressing",
-        body: "5 vòng gần nhất, cường độ thu hồi bóng bên 1/3 sân đối phương tăng rõ. Điều thú vị là đội có pressing hiệu quả nhất chưa chắc là đội cầm bóng nhiều nhất. Data đẹp để đào sâu thêm nha 😎",
-        image: "",
-        tags: ["#Data", "#Pressing", "#TacticalTalk"],
-        likes: 51,
-        comments: [],
+        id: uid("post"),
+        author: "Premier Talk",
+        authorId: "seed_talk",
+        avatar:
+          "https://ui-avatars.com/api/?name=Premier+Talk&background=3c0d0d&color=fff",
+        content:
+          "Một topic vui: đội nào đang có hàng thủ đáng xem nhất mùa này? #PremierLeague #Football",
+        imageUrl: "",
+        hashtags: ["premierleague", "football"],
+        createdAt: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
         likedBy: [],
-        savedBy: [],
-      },
-      {
-        id: crypto.randomUUID(),
-        authorName: "Fan Cam Weekly",
-        authorAvatar: getAvatarUrl("Fan Cam Weekly"),
-        userId: -3,
-        createdAt: Date.now() - 1000 * 60 * 180,
-        title: "Khoảnh khắc sân khách nhưng hát như sân nhà",
-        body: "Có những trận nhìn qua màn hình thôi cũng nổi da gà. Fan đội khách đứng kín một góc khán đài mà tạo cảm giác như chiếm trọn bầu không khí. Ai có clip hay ảnh đẹp thì quăng xuống bình luận đi.",
-        image: "https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1200&q=80",
-        tags: ["#FanCulture", "#Matchday"],
-        likes: 67,
+        dislikedBy: [],
         comments: [],
-        likedBy: [],
-        savedBy: [],
       },
     ];
   }
 
   function loadPosts() {
     try {
-      const raw = localStorage.getItem(STORE_KEYS.posts);
-      const parsed = raw ? JSON.parse(raw) : null;
-      state.posts = Array.isArray(parsed) && parsed.length ? parsed : defaultPosts();
-      persistPosts();
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        state.posts = createSeedData();
+        savePosts();
+        return;
+      }
+      const parsed = JSON.parse(raw);
+      state.posts = Array.isArray(parsed) ? parsed : createSeedData();
     } catch (err) {
-      console.warn("load posts fail", err);
-      state.posts = defaultPosts();
-      persistPosts();
+      console.warn("loadPosts failed", err);
+      state.posts = createSeedData();
+      savePosts();
     }
   }
 
-  function persistPosts() {
-    localStorage.setItem(STORE_KEYS.posts, JSON.stringify(state.posts));
-  }
-
-  function closeUserMenu() {
-    els.userMenu?.classList.add("hidden");
-    els.btnUser?.setAttribute("aria-expanded", "false");
-  }
-
-  function toggleUserMenu() {
-    if (!els.userMenu) return;
-    const opening = els.userMenu.classList.contains("hidden");
-    els.userMenu.classList.toggle("hidden", !opening);
-    els.btnUser?.setAttribute("aria-expanded", String(opening));
-  }
-
-  function setAuthUI() {
-    const user = getDisplayUser();
-    const loggedIn = !!store.userId;
-
-    els.btnLogin?.classList.toggle("efiHide", loggedIn);
-    els.userMenuWrap?.classList.toggle("efiHide", !loggedIn);
-
-    [els.userAvatar, els.sidebarAvatar, els.composerAvatar, els.modalAvatar].forEach((img) => {
-      if (img) img.src = user.avatar;
-    });
-
-    if (els.userName) els.userName.textContent = user.name;
-    if (els.userName2) els.userName2.textContent = user.name;
-    if (els.userEmail2) els.userEmail2.textContent = user.email;
-    if (els.sidebarName) els.sidebarName.textContent = user.name;
-    if (els.sidebarMeta) {
-      els.sidebarMeta.textContent = loggedIn
-        ? `Đã đăng nhập bằng ${user.email}`
-        : "Đăng nhập để đăng bài bằng tài khoản của bạn.";
-    }
-    if (els.modalUserName) els.modalUserName.textContent = user.name;
-  }
-
-  function formatTime(ts) {
-    const diff = Date.now() - Number(ts);
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "Vừa xong";
-    if (mins < 60) return `${mins} phút trước`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours} giờ trước`;
-    const days = Math.floor(hours / 24);
-    if (days < 7) return `${days} ngày trước`;
-    return new Date(ts).toLocaleDateString("vi-VN");
-  }
-
-  function getCurrentUserToken() {
-    return store.userId ? `user:${store.userId}` : "guest";
+  function renderUser() {
+    const user = getCurrentUser();
+    if (els.currentUserAvatar) els.currentUserAvatar.src = user.avatar;
+    if (els.composerAvatar) els.composerAvatar.src = user.avatar;
+    if (els.currentUserName) els.currentUserName.textContent = user.name;
   }
 
   function getVisiblePosts() {
-    const q = state.search.trim().toLowerCase();
-    const currentToken = getCurrentUserToken();
-    return state.posts
-      .filter((post) => {
-        if (state.filter === "mine" && post.userId !== store.userId) return false;
-        if (state.filter === "liked" && !post.likedBy.includes(currentToken)) return false;
-        if (state.filter === "saved" && !post.savedBy.includes(currentToken)) return false;
-        if (!q) return true;
-        const haystack = `${post.authorName} ${post.title} ${post.body} ${(post.tags || []).join(" ")}`.toLowerCase();
-        return haystack.includes(q);
-      })
-      .sort((a, b) => b.createdAt - a.createdAt);
+    const tag = normalizeTag(state.filterTag);
+    if (!tag)
+      return [...state.posts].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      );
+    return [...state.posts]
+      .filter((post) => (post.hashtags || []).map(normalizeTag).includes(tag))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }
 
-  function updateStats() {
-    const currentToken = getCurrentUserToken();
-    const myPosts = state.posts.filter((p) => p.userId === store.userId).length;
-    const savedPosts = state.posts.filter((p) => p.savedBy.includes(currentToken)).length;
-    if (els.statPosts) els.statPosts.textContent = String(myPosts);
-    if (els.statSaved) els.statSaved.textContent = String(savedPosts);
+  function countComments(list) {
+    return (list || []).reduce(
+      (sum, item) => sum + 1 + countComments(item.replies || []),
+      0,
+    );
   }
 
-  function renderFeed() {
-    const posts = getVisiblePosts();
-    const currentToken = getCurrentUserToken();
-    els.feedList.innerHTML = "";
-
-    if (els.feedMeta) {
-      const labelMap = {
-        all: "Đang hiển thị toàn bộ bài viết",
-        mine: "Đang hiển thị bài viết của bạn",
-        liked: "Đang hiển thị bài viết bạn đã thích",
-        saved: "Đang hiển thị bài viết bạn đã lưu",
-      };
-      els.feedMeta.textContent = `${labelMap[state.filter]} · ${posts.length} kết quả`;
-    }
-
-    if (!posts.length) {
-      els.feedList.innerHTML = `<article class="glassCard emptyState">Không có bài viết nào khớp bộ lọc hiện tại ✨</article>`;
-      updateStats();
-      return;
-    }
-
-    posts.forEach((post) => {
-      const node = els.postTemplate.content.firstElementChild.cloneNode(true);
-      const likeActive = post.likedBy.includes(currentToken);
-      const saveActive = post.savedBy.includes(currentToken);
-
-      $(".postAuthor__avatar", node).src = post.authorAvatar || getAvatarUrl(post.authorName);
-      $(".postAuthor__name", node).textContent = post.authorName;
-      $(".postAuthor__meta", node).textContent = `${formatTime(post.createdAt)} · ${post.tags.join(" ") || "#Football"}`;
-      $(".postTitle", node).textContent = post.title;
-      $(".postText", node).textContent = post.body;
-      $(".postLikes", node).textContent = `${post.likes} lượt thích`;
-      $(".postCommentsCount", node).textContent = `${post.comments.length} bình luận`;
-
-      const saveBtn = $(".postSaveBtn", node);
-      saveBtn.textContent = saveActive ? "★" : "☆";
-      saveBtn.classList.toggle("isSaved", saveActive);
-
-      const likeBtn = $(".btnLike", node);
-      likeBtn.classList.toggle("isActive", likeActive);
-      likeBtn.textContent = likeActive ? "💙 Đã thích" : "👍 Thích";
-
-      const tagsWrap = $(".postTags", node);
-      tagsWrap.innerHTML = (post.tags || [])
-        .map((tag) => `<span class="postTag">${escapeHtml(tag)}</span>`)
-        .join("");
-
-      const imageWrap = $(".postImageWrap", node);
-      const imageEl = $(".postImage", node);
-      if (post.image) {
-        imageWrap.classList.remove("hidden");
-        imageEl.src = post.image;
-      } else {
-        imageWrap.classList.add("hidden");
-      }
-
-      const commentList = $(".commentList", node);
-      commentList.innerHTML = post.comments
-        .slice()
-        .reverse()
-        .map(
-          (comment) => `
-            <article class="commentItem">
-              <strong>${escapeHtml(comment.author)}</strong>
-              <div class="commentItem__meta">${formatTime(comment.createdAt)}</div>
-              <p>${escapeHtml(comment.text)}</p>
-            </article>
-          `,
-        )
-        .join("");
-
-      saveBtn.addEventListener("click", () => toggleSave(post.id));
-      likeBtn.addEventListener("click", () => toggleLike(post.id));
-      $(".btnComment", node).addEventListener("click", () => $(".commentInput", node).focus());
-      $(".btnShare", node).addEventListener("click", () => sharePost(post));
-      $(".commentSubmit", node).addEventListener("click", () => submitComment(post.id, $(".commentInput", node)));
-      $(".commentInput", node).addEventListener("keydown", (e) => {
-        if (e.key === "Enter") submitComment(post.id, e.currentTarget);
+  function gatherTagStats() {
+    const map = new Map();
+    state.posts.forEach((post) => {
+      (post.hashtags || []).forEach((tag) => {
+        const key = normalizeTag(tag);
+        map.set(key, (map.get(key) || 0) + 1);
       });
-
-      els.feedList.appendChild(node);
     });
-
-    updateStats();
+    return [...map.entries()].sort((a, b) => b[1] - a[1]);
   }
 
-  function toggleLike(postId) {
-    const token = getCurrentUserToken();
-    const post = state.posts.find((p) => p.id === postId);
-    if (!post) return;
-    const idx = post.likedBy.indexOf(token);
-    if (idx >= 0) {
-      post.likedBy.splice(idx, 1);
-      post.likes = Math.max(0, post.likes - 1);
-    } else {
-      post.likedBy.push(token);
-      post.likes += 1;
+  function renderPopularTags() {
+    const stats = gatherTagStats();
+    if (!stats.length) {
+      els.popularTags.innerHTML =
+        '<span class="metaText">Chưa có hashtag nào.</span>';
+      return;
     }
-    persistPosts();
-    renderFeed();
+    els.popularTags.innerHTML = stats
+      .map(
+        ([tag, count]) =>
+          `<button type="button" class="tagChip" data-tag="${escapeHtml(tag)}">#${escapeHtml(tag)} <span>${count}</span></button>`,
+      )
+      .join("");
   }
 
-  function toggleSave(postId) {
-    const token = getCurrentUserToken();
-    const post = state.posts.find((p) => p.id === postId);
-    if (!post) return;
-    const idx = post.savedBy.indexOf(token);
-    if (idx >= 0) post.savedBy.splice(idx, 1);
-    else post.savedBy.push(token);
-    persistPosts();
-    renderFeed();
-  }
-
-  function submitComment(postId, inputEl) {
-    const text = String(inputEl?.value || "").trim();
-    if (!text) return;
-    const post = state.posts.find((p) => p.id === postId);
-    if (!post) return;
-    const user = getDisplayUser();
-    post.comments.push({
-      id: crypto.randomUUID(),
-      author: user.name,
-      text,
-      createdAt: Date.now(),
-    });
-    inputEl.value = "";
-    persistPosts();
-    renderFeed();
-  }
-
-  async function sharePost(post) {
-    const text = `${post.title}\n\n${post.body}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: post.title, text });
-        return;
-      } catch (err) {
-        console.warn("share cancelled", err);
-      }
+  function renderActiveFilter() {
+    const tag = normalizeTag(state.filterTag);
+    if (!tag) {
+      els.activeFilter.classList.add("hidden");
+      els.activeFilter.textContent = "";
+      return;
     }
-    try {
-      await navigator.clipboard.writeText(text);
-      alert("Đã sao chép nội dung bài viết để chia sẻ ✨");
-    } catch {
-      alert("Không thể chia sẻ tự động, nhưng bạn vẫn có thể copy nội dung bài viết thủ công nhé.");
-    }
+    els.activeFilter.classList.remove("hidden");
+    els.activeFilter.textContent = `Đang lọc theo hashtag #${tag}`;
   }
 
-  function openComposer(prefill = "") {
-    els.composerModal?.classList.remove("hidden");
-    els.composerModal?.setAttribute("aria-hidden", "false");
-    if (prefill && els.postBodyInput) {
-      els.postBodyInput.value = prefill;
-    }
+  function renderTextWithTags(text) {
+    return escapeHtml(text).replace(
+      /#([\p{L}\p{N}_-]+)/gu,
+      (_, tag) =>
+        `<button type="button" class="tagChip tagChip--inline" data-tag="${escapeHtml(normalizeTag(tag))}">#${escapeHtml(tag)}</button>`,
+    );
   }
 
-  function closeComposer() {
-    els.composerModal?.classList.add("hidden");
-    els.composerModal?.setAttribute("aria-hidden", "true");
+  function renderComments(comments, postId, depth = 0) {
+    if (!comments?.length) return "";
+    return `
+      <div class="${depth ? "replyList" : "commentList"}">
+        ${comments
+          .map((comment) => {
+            const user = getCurrentUser();
+            const hearted = (comment.heartedBy || []).includes(user.id);
+            const disliked = (comment.dislikedBy || []).includes(user.id);
+            return `
+              <div class="commentItem" data-comment-id="${comment.id}">
+                <div class="commentTop">
+                  <img src="${escapeHtml(comment.avatar)}" alt="avatar" class="commentAvatar" />
+                  <div class="commentBubble">
+                    <div class="commentIdentity">
+                      <div>
+                        <h4 class="commentName">${escapeHtml(comment.author)}</h4>
+                        <div class="commentMeta">${formatTime(comment.createdAt)}</div>
+                      </div>
+                    </div>
+                    <div class="commentText">${renderTextWithTags(comment.text)}</div>
+                    <div class="commentActions">
+                      <button type="button" class="commentActionBtn ${hearted ? "is-active" : ""}" data-action="heart-comment" data-post-id="${postId}" data-comment-id="${comment.id}">❤️ ${comment.heartedBy?.length || 0}</button>
+                      <button type="button" class="commentActionBtn ${disliked ? "is-negative" : ""}" data-action="dislike-comment" data-post-id="${postId}" data-comment-id="${comment.id}">👎 ${comment.dislikedBy?.length || 0}</button>
+                      <button type="button" class="commentActionBtn" data-action="toggle-reply" data-post-id="${postId}" data-comment-id="${comment.id}">↩️ Trả lời</button>
+                    </div>
+
+                    <div class="replyBox hidden" data-reply-box="${comment.id}">
+                      <form class="replyForm" data-post-id="${postId}" data-comment-id="${comment.id}">
+                        <div class="replyFormRow">
+                          <input class="inlineInput" name="replyText" type="text" placeholder="Viết phản hồi cho bình luận này..." />
+                          <button type="submit" class="socialBtn">Gửi</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                ${comment.replies?.length ? `<div class="replyWrap">${renderComments(comment.replies, postId, depth + 1)}</div>` : ""}
+              </div>
+            `;
+          })
+          .join("")}
+      </div>
+    `;
   }
 
-  function resetComposer() {
-    [els.postTitleInput, els.postBodyInput, els.postImageInput, els.postTagsInput].forEach((el) => {
-      if (el) el.value = "";
-    });
-  }
+  function renderPosts() {
+    const user = getCurrentUser();
+    const visible = getVisiblePosts();
 
-  function normalizeTags(raw) {
-    return String(raw || "")
-      .split(/[\s,]+/)
-      .map((item) => item.trim())
-      .filter(Boolean)
-      .map((item) => (item.startsWith("#") ? item : `#${item}`));
-  }
-
-  function submitPost() {
-    const title = String(els.postTitleInput?.value || "").trim();
-    const body = String(els.postBodyInput?.value || "").trim();
-    const image = String(els.postImageInput?.value || "").trim();
-    const tags = normalizeTags(els.postTagsInput?.value || "");
-
-    if (!title || !body) {
-      alert("Bạn cần nhập ít nhất tiêu đề và nội dung bài viết nhé.");
+    if (!visible.length) {
+      els.postList.innerHTML = `
+        <article class="socialCard emptyBox">
+          <h3>Chưa có bài phù hợp</h3>
+          <p>Thử đổi hashtag đang tìm hoặc đăng bài mới để bắt đầu cuộc trò chuyện.</p>
+        </article>
+      `;
       return;
     }
 
-    const user = getDisplayUser();
-    state.posts.unshift({
-      id: crypto.randomUUID(),
-      authorName: user.name,
-      authorAvatar: user.avatar,
-      userId: store.userId,
-      createdAt: Date.now(),
-      title,
-      body,
-      image,
-      tags: tags.length ? tags : ["#Community"],
-      likes: 0,
-      comments: [],
-      likedBy: [],
-      savedBy: [],
-    });
+    els.postList.innerHTML = visible
+      .map((post) => {
+        const liked = (post.likedBy || []).includes(user.id);
+        const disliked = (post.dislikedBy || []).includes(user.id);
+        return `
+          <article class="socialCard postCard" data-post-id="${post.id}">
+            <div class="postTop">
+              <div class="postIdentity">
+                <img src="${escapeHtml(post.avatar)}" alt="avatar" class="postAvatar" />
+                <div>
+                  <h3 class="postName">${escapeHtml(post.author)}</h3>
+                  <div class="postTime">${formatTime(post.createdAt)}</div>
+                </div>
+              </div>
+            </div>
 
-    persistPosts();
-    resetComposer();
-    closeComposer();
-    state.filter = "all";
-    $$(".feedTab").forEach((btn) => btn.classList.toggle("isActive", btn.dataset.filter === "all"));
-    renderFeed();
+            <div class="postContent">${renderTextWithTags(post.content)}</div>
+            ${post.imageUrl ? `<div class="postImage"><img src="${escapeHtml(post.imageUrl)}" alt="ảnh bài viết" loading="lazy" /></div>` : ""}
+            ${(post.hashtags || []).length ? `<div class="postTags">${post.hashtags.map((tag) => `<button type="button" class="tagChip" data-tag="${escapeHtml(tag)}">#${escapeHtml(tag)}</button>`).join("")}</div>` : ""}
+
+            <div class="postStats">
+              <div class="leftStat">
+                <span>👍 ${post.likedBy?.length || 0}</span>
+                <span>👎 ${post.dislikedBy?.length || 0}</span>
+              </div>
+              <div class="rightStat">
+                <span>💬 ${countComments(post.comments || [])} bình luận</span>
+              </div>
+            </div>
+
+            <div class="postActions">
+              <button type="button" class="actionBtn ${liked ? "is-active" : ""}" data-action="like-post" data-post-id="${post.id}">👍 Thích</button>
+              <button type="button" class="actionBtn ${disliked ? "is-negative" : ""}" data-action="dislike-post" data-post-id="${post.id}">👎 Dislike</button>
+            </div>
+
+            <div class="commentSection">
+              <form class="commentForm" data-post-id="${post.id}">
+                <div class="commentInputRow">
+                  <img src="${escapeHtml(user.avatar)}" alt="avatar" class="commentAvatar" />
+                  <input class="inlineInput" name="commentText" type="text" placeholder="Viết bình luận cho bài này..." />
+                  <button type="submit" class="socialBtn">Bình luận</button>
+                </div>
+              </form>
+              ${renderComments(post.comments || [], post.id)}
+            </div>
+          </article>
+        `;
+      })
+      .join("");
+  }
+
+  function renderAll() {
+    renderUser();
+    renderActiveFilter();
+    renderPopularTags();
+    renderPosts();
+  }
+
+  function makePost(content, imageUrl, extraTags) {
+    const user = getCurrentUser();
+    const tags = uniqueTags([
+      ...extractHashtags(content),
+      ...parseExtraHashtags(extraTags),
+    ]);
+    return {
+      id: uid("post"),
+      author: user.name,
+      authorId: user.id,
+      avatar: user.avatar,
+      content: String(content || "").trim(),
+      imageUrl: String(imageUrl || "").trim(),
+      hashtags: tags,
+      createdAt: new Date().toISOString(),
+      likedBy: [],
+      dislikedBy: [],
+      comments: [],
+    };
+  }
+
+  function insertPost(post) {
+    state.posts.unshift(post);
+    savePosts();
+    renderAll();
+  }
+
+  function findPost(postId) {
+    return state.posts.find((post) => post.id === postId);
+  }
+
+  function walkComments(list, targetId) {
+    for (const comment of list || []) {
+      if (comment.id === targetId) return comment;
+      const nested = walkComments(comment.replies || [], targetId);
+      if (nested) return nested;
+    }
+    return null;
+  }
+
+  function toggleReaction(collection, userId) {
+    const set = new Set(collection || []);
+    if (set.has(userId)) set.delete(userId);
+    else set.add(userId);
+    return [...set];
+  }
+
+  function toggleExclusiveReaction(item, positiveKey, negativeKey, mode) {
+    const userId = getCurrentUser().id;
+    item[positiveKey] = item[positiveKey] || [];
+    item[negativeKey] = item[negativeKey] || [];
+
+    if (mode === "positive") {
+      item[positiveKey] = toggleReaction(item[positiveKey], userId);
+      item[negativeKey] = item[negativeKey].filter((id) => id !== userId);
+    } else {
+      item[negativeKey] = toggleReaction(item[negativeKey], userId);
+      item[positiveKey] = item[positiveKey].filter((id) => id !== userId);
+    }
+  }
+
+  function createComment(text) {
+    const user = getCurrentUser();
+    return {
+      id: uid("comment"),
+      author: user.name,
+      authorId: user.id,
+      avatar: user.avatar,
+      text: String(text || "").trim(),
+      createdAt: new Date().toISOString(),
+      heartedBy: [],
+      dislikedBy: [],
+      replies: [],
+    };
+  }
+
+  function setFilterTag(raw) {
+    state.filterTag = normalizeTag(raw);
+    if (els.hashtagSearch)
+      els.hashtagSearch.value = state.filterTag ? `#${state.filterTag}` : "";
+    renderAll();
+  }
+
+  function handleSubmitPost(event) {
+    event.preventDefault();
+    const content = els.postContent.value.trim();
+    const imageUrl = els.postImageUrl.value.trim();
+    const extraTags = els.postHashtags.value;
+
+    if (!content) {
+      alert("Bạn cần nhập nội dung bài viết trước đã.");
+      return;
+    }
+
+    insertPost(makePost(content, imageUrl, extraTags));
+    els.postForm.reset();
+  }
+
+  function handleCommentSubmit(form, isReply = false) {
+    const postId = form.dataset.postId;
+    const textInput = form.querySelector(
+      '[name="commentText"], [name="replyText"]',
+    );
+    const text = textInput?.value.trim() || "";
+    if (!text) return;
+
+    const post = findPost(postId);
+    if (!post) return;
+
+    if (isReply) {
+      const commentId = form.dataset.commentId;
+      const target = walkComments(post.comments, commentId);
+      if (!target) return;
+      target.replies = target.replies || [];
+      target.replies.push(createComment(text));
+    } else {
+      post.comments = post.comments || [];
+      post.comments.push(createComment(text));
+    }
+
+    savePosts();
+    renderAll();
+  }
+
+  function handleClick(event) {
+    const btn = event.target.closest("[data-action], .tagChip");
+    if (!btn) return;
+
+    const tag = btn.dataset.tag;
+    if (tag) {
+      setFilterTag(tag);
+      return;
+    }
+
+    const action = btn.dataset.action;
+    const postId = btn.dataset.postId;
+    const commentId = btn.dataset.commentId;
+    const post = findPost(postId);
+    if (!post) return;
+
+    if (action === "like-post") {
+      toggleExclusiveReaction(post, "likedBy", "dislikedBy", "positive");
+    } else if (action === "dislike-post") {
+      toggleExclusiveReaction(post, "likedBy", "dislikedBy", "negative");
+    } else if (
+      action === "heart-comment" ||
+      action === "dislike-comment" ||
+      action === "toggle-reply"
+    ) {
+      const comment = walkComments(post.comments, commentId);
+      if (!comment) return;
+
+      if (action === "heart-comment") {
+        toggleExclusiveReaction(comment, "heartedBy", "dislikedBy", "positive");
+      } else if (action === "dislike-comment") {
+        toggleExclusiveReaction(comment, "heartedBy", "dislikedBy", "negative");
+      } else if (action === "toggle-reply") {
+        const box = document.querySelector(
+          `[data-reply-box="${CSS.escape(commentId)}"]`,
+        );
+        if (box) box.classList.toggle("hidden");
+        return;
+      }
+    }
+
+    savePosts();
+    renderAll();
   }
 
   function bindEvents() {
-    els.btnLogin?.addEventListener("click", () => {
-      window.location.href = "./login.html";
+    els.postForm?.addEventListener("submit", handleSubmitPost);
+
+    els.hashtagSearch?.addEventListener("input", (e) => {
+      setFilterTag(e.target.value);
     });
 
-    els.btnLogout?.addEventListener("click", () => {
-      store.clearUser();
-      setAuthUI();
-      closeUserMenu();
-      renderFeed();
-    });
+    els.clearFilterBtn?.addEventListener("click", () => setFilterTag(""));
 
-    els.btnUser?.addEventListener("click", toggleUserMenu);
+    document.addEventListener("click", handleClick);
 
-    document.addEventListener("click", (e) => {
-      if (els.userMenuWrap && !els.userMenuWrap.contains(e.target)) closeUserMenu();
-
-      if (e.target instanceof HTMLElement && e.target.matches("[data-close-composer]")) {
-        closeComposer();
+    document.addEventListener("submit", (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      if (form.matches(".commentForm")) {
+        event.preventDefault();
+        handleCommentSubmit(form, false);
       }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeUserMenu();
-        closeComposer();
+      if (form.matches(".replyForm")) {
+        event.preventDefault();
+        handleCommentSubmit(form, true);
       }
-    });
-
-    els.btnOpenComposer?.addEventListener("click", () => openComposer());
-    els.btnOpenComposerInline?.addEventListener("click", () => openComposer());
-    els.btnSubmitPost?.addEventListener("click", submitPost);
-    els.btnSeedSample?.addEventListener("click", () => {
-      if (els.postTitleInput) els.postTitleInput.value = "Một góc nhìn cá nhân sau trận đấu";
-      if (els.postBodyInput)
-        els.postBodyInput.value =
-          "Mình thấy nhịp độ trận này rất thú vị: đầu trận pressing mạnh, giữa trận chùng xuống rồi cuối trận lại bùng nổ. Điều làm mình thích nhất là cách fan hai đội tạo bầu không khí cực kỳ cuốn.";
-      if (els.postTagsInput) els.postTagsInput.value = "#Matchday #FanTalk #PremierLeague";
-      if (els.postImageInput)
-        els.postImageInput.value =
-          "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=1200&q=80";
-    });
-
-    $$(".composerQuickActions button").forEach((btn) => {
-      btn.addEventListener("click", () => openComposer(btn.dataset.fill || ""));
-    });
-
-    $$(".feedTab").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.filter = btn.dataset.filter || "all";
-        $$(".feedTab").forEach((x) => x.classList.toggle("isActive", x === btn));
-        renderFeed();
-      });
-    });
-
-    const applySearch = () => {
-      state.search = String(els.feedSearchInput?.value || "").trim();
-      renderFeed();
-    };
-
-    els.btnFeedSearch?.addEventListener("click", applySearch);
-    els.feedSearchInput?.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") applySearch();
-    });
-
-    $("#btnOpenQuickSearch")?.addEventListener("click", () => {
-      els.feedSearchInput?.focus();
-      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
 
-  async function init() {
-    await hydrateUserProfileIfMissing();
-    setAuthUI();
-    seedStories();
+  function init() {
     loadPosts();
     bindEvents();
-    renderFeed();
+    renderAll();
   }
 
   init();
